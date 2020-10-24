@@ -1,0 +1,7 @@
+{
+  "name": "basic-social-network",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Hai-Vasyl <hai.vasyl20@gmail.com>",
+  "license": "MIT"
+}
