@@ -7,6 +7,7 @@ const config = {
   target: "node",
   mode: "development",
   entry: "./server/index.ts",
+  devtool: "inline-source-map",
   externals: [nodeExternals()],
   output: {
     filename: "server.js",
@@ -18,7 +19,14 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.(ts|js)$/,
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "ts-loader",
+        },
+      },
+      {
+        test: /\.(js)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -27,12 +35,12 @@ const config = {
     ],
   },
   plugins: [
-    new ForkTsCheckerWebpackPlugin({
-      async: false,
-      typescript: {
-        configFile: "tsconfig.base.json",
-      },
-    }),
+    // new ForkTsCheckerWebpackPlugin({
+    //   async: false,
+    //   typescript: {
+    //     configFile: "tsconfig.base.json",
+    //   },
+    // }),
     new CleanWebpackPlugin(),
   ],
 }
