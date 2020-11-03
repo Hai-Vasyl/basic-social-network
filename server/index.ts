@@ -1,7 +1,7 @@
 import { ApolloServer } from "apollo-server"
 import mongoose from "mongoose"
 import { config } from "dotenv"
-// import isAuth from "./context/isAuth"
+import isAuth from "./context/isAuth"
 import schema from "./schema"
 
 config()
@@ -39,9 +39,7 @@ const isDev = NODE_ENV === "development"
       const server = new ApolloServer({
         ...schema,
         playground: isDev,
-        // context: ({ req }) => {
-        //   return { isAuth: isAuth(req) }
-        // },
+        context: ({ req, res }: { req: any, res: any }) => ({ req, isAuth: isAuth(req) })
       })
 
       server.listen({ port: PORT }).then(({ url }) => {

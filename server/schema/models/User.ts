@@ -7,7 +7,8 @@ const schema = new Schema({
   ava: {
     type: String,
     required: true,
-    default: "https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png",
+    default:
+      "https://dwpdobr8xeaso.cloudfront.net/wgvs-images/avatars/profile_llama@4x.png",
   },
   firstname: { type: String, default: "" },
   lastname: { type: String, default: "" },
@@ -16,7 +17,12 @@ const schema = new Schema({
   address: { type: String, default: "" },
   bio: { type: String, default: "" },
   birth: { type: Date, default: "" },
-  typeUser: { type: String, required: true, default: "user" },
+  typeUser: {
+    type: String,
+    required: true,
+    default: "user",
+    enum: ["user", "admin"],
+  },
   date: { type: Date, required: true },
 })
 

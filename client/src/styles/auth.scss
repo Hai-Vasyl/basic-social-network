@@ -1,0 +1,114 @@
+@import "base";
+
+.wrapper {
+  color: getColor(main);
+}
+
+.btn-handler {
+  display: none;
+}
+
+.field {
+  width: 100%;
+  display: block;
+  margin-bottom: 0.3em;
+  &--close {
+    display: none;
+  }
+  &__title {
+    display: inline-block;
+    padding: 4px 0px;
+  }
+  &__input {
+    display: block;
+    width: 100%;
+    padding: 7px;
+    background-color: transparent;
+    border: 1px solid getColor(second-dark);
+    border-radius: getRadius(main);
+    transition: getTransition(main);
+    outline: none;
+    background-color: getColor(second-light-accent);
+    &:focus {
+      border-color: getColor(active);
+    }
+  }
+  &__msg {
+    font-size: 0.8em;
+    color: getColor(danger);
+    opacity: 0;
+    visibility: hidden;
+    display: block;
+    height: 16px;
+    transition: getTransition(main);
+    &--error {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+.form {
+  width: 450px;
+  max-width: 100%;
+  background-color: getColor(secondary);
+  @extend %center-position;
+  border-radius: getRadius(main);
+  box-shadow: getShadow(main);
+  overflow: hidden;
+  &__title {
+    text-align: center;
+    font-size: 1.7em;
+    padding: getPadding(main);
+    border-bottom: 1px solid getColor(main);
+    color: getColor(title-simple);
+    background-color: getColor(second-light-accent);
+  }
+  &__fields {
+    padding: 25px;
+    padding-bottom: 0px;
+  }
+  &__btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: getPadding(main);
+    padding-top: 15px;
+    .btn:last-child {
+      margin-left: 10px;
+    }
+  }
+}
+
+.btn {
+  padding: 15px 13px;
+  display: flex;
+  align-items: center;
+  color: getColor(font);
+  cursor: pointer;
+  border-radius: getRadius(main);
+  border: 1px solid transparent;
+  transition: getTransition(main);
+  outline: none;
+  &:active {
+    box-shadow: none;
+  }
+  &:hover {
+    border-color: getColor(active);
+  }
+  &__icon {
+    margin: 0px 4px;
+  }
+  &__title {
+    margin: 0px 4px;
+  }
+}
+
+.btn-primary {
+  background-color: getColor(accent);
+  box-shadow: getShadow(main);
+}
+.btn-simple {
+  background-color: transparent;
+  border-color: getColor(second-light);
+}

@@ -1,13 +1,27 @@
-import React from 'react'
+import React, { useEffect } from "react"
+import Auth from "./components/Auth"
+import { SET_AUTH } from "./redux/auth/authTypes"
+import { RootStore } from "./redux/store"
+import { useSelector, useDispatch } from "react-redux"
+import Navbar from "./components/Navbar"
+import Routes from "./components/Routes"
 
 const App: React.FC = () => {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    let auth = localStorage.getItem("auth") || ""
+    if (auth.length) {
+      auth = JSON.parse(auth)
+      dispatch({ type: SET_AUTH, payload: { auth, init: true } })
+    }
+  }, [dispatch])
 
   return (
     <div>
-      <div>Root componen!@#^%$t</div>
-      <p className="wrapper">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero magni rerum exercitationem, blanditiis ab aut dolore commodi nulla deserunt. Asperiores?
-      </p>
+      <Navbar />
+      <Routes />
+      <Auth />
     </div>
   )
 }

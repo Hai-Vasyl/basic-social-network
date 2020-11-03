@@ -1,0 +1,96 @@
+@import "base";
+
+.nav {
+  background-color: getColor(secondary);
+
+  &__menu {
+    width: 975px;
+    padding: 0px 20px;
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 45px;
+  }
+}
+
+.logoLink {
+  font-family: "Kaushan Script", cursive;
+  margin-right: auto;
+  text-decoration: none;
+  color: getColor(font);
+  font-size: 1.4em;
+  margin-right: 26px;
+  &__logotype {
+  }
+}
+
+.search {
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 0px 20px;
+  &__input {
+    flex: 1;
+    background-color: getColor(main);
+    padding: 3px 5px;
+    border-top-left-radius: getRadius(main);
+    border-bottom-left-radius: getRadius(main);
+    outline: none;
+    border: 1px solid transparent;
+    &:focus {
+    }
+  }
+  &__btn {
+    width: 45px;
+    align-self: stretch;
+    display: flex;
+    background-color: transparent;
+    border: 1px solid getColor(main);
+    font-size: 0.8em;
+    cursor: pointer;
+    border-top-right-radius: getRadius(main);
+    border-bottom-right-radius: getRadius(main);
+  }
+  &__icon {
+    margin: auto;
+  }
+}
+
+.dropdown {
+  display: none;
+  position: relative;
+  &__menu {
+    position: absolute;
+  }
+  &__btn {
+  }
+  &__ava {
+  }
+}
+
+.link {
+  color: getColor(font);
+  text-decoration: none;
+  font-size: 1.3em;
+  // padding: 14px 13px;
+  margin-left: 26px;
+  display: flex;
+  & > * {
+    margin: auto;
+  }
+  &--active {
+  }
+}
+
+.link-extend {
+  &__icon {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  &__title {
+  }
+}

@@ -1,5 +1,4 @@
 const path = require("path")
-const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin")
 const webpack = require("webpack")
 const HTMLWebPackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
@@ -19,6 +18,7 @@ const config = {
   },
   module: {
     rules: [
+      { test: /\.(png|jpg|jpeg|gif)$/, use: ["file-loader"] },
       {
         test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
@@ -51,12 +51,6 @@ const config = {
       template: "./client/public/index.html",
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new ForkTsCheckerWebpackPlugin({
-      async: false,
-      typescript: {
-        configFile: "tsconfig.base.json",
-      },
-    }),
     new CleanWebpackPlugin(),
     new CopyWebpackPlugin({
       patterns: [

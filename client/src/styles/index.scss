@@ -1,7 +1,24 @@
-$main: #333;
+@import "base";
+@import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap");
+// font-family: 'Kaushan Script', cursive;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-.wrapper {
-  background-color: $main;
-  font-size: 1.3em;
-  font-family: sans-serif;
+body {
+  font-family: "Quicksand", sans-serif;
+  background-color: getColor(main);
+  font-size: 1.02em;
+  color: getColor(font);
+}
+
+button,
+input {
+  border: none;
+  font-size: inherit;
+  font-family: inherit;
+  color: getColor(font);
 }

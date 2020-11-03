@@ -3,12 +3,20 @@ export interface IField {
 }
 
 export interface IFieldsMod {
-  [key: string]: { value: string, msg: string[] }
+  [key: string]: { value: string; msg: string[] }
 }
 
-export interface IFieldSnippet { value: string, msg: string[] }
+export interface IFieldSnippet {
+  value: string
+  msg: string[]
+}
 
-export interface ILengthSnippet { min: number, max: number, minMsg: string, maxMsg: string }
+export interface ILengthSnippet {
+  min: number
+  max: number
+  minMsg: string
+  maxMsg: string
+}
 
 export interface IFieldModResult {
   msg: string[]
@@ -25,10 +33,15 @@ export interface IValidLoginResult {
 }
 
 export interface IValidRegisterResult {
-  username: IFieldModResult,
-  email: IFieldModResult,
-  password: IFieldModResult,
-  firstname?: IFieldModResult,
+  username: IFieldModResult
+  email: IFieldModResult
+  password: IFieldModResult
+  firstname?: IFieldModResult
   lastname?: IFieldModResult
   isError: boolean
+}
+
+export interface IIsAuth {
+  auth: boolean
+  userId?: string
 }

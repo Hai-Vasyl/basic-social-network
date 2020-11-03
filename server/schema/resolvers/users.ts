@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 import { config } from "dotenv"
 import { AuthenticationError } from "apollo-server"
 import { registerValid, loginValid } from "../validation/auth"
-import { IField } from "../interfaces"
+import { IField, IIsAuth } from "../interfaces"
 config()
 const { JWT_SECRET }: any = process.env
 
@@ -19,19 +19,21 @@ export const Query = {
       const { username, email, password, firstname, lastname } = validatedFields
 
       const hashedPassword = await bcrypt.hash(password.value, 12)
-      const user = await User.create({
+
+      const user = new User({
         username: username.value,
         email: email.value,
         firstname: firstname?.value,
         lastname: lastname?.value,
         password: hashedPassword,
         typeUser: args.typeUser,
-        date: new Date()
+        date: new Date(),
       })
+      const newUser = await user.save()
 
-      const token = jwt.sign({ userId: user._id }, JWT_SECRET)
+      const token = jwt.sign({ userId: newUser._id }, JWT_SECRET)
 
-      return { user, token }
+      return { user: newUser, token }
     } catch (error) {
       throw new AuthenticationError(error.message)
     }
@@ -50,5 +52,13 @@ export const Query = {
     } catch (error) {
       throw new AuthenticationError(error.message)
     }
+  },
+  sayHello(_: any, __: any, { isAuth }: { isAuth: IIsAuth }) {
+    if (!isAuth.auth) {
+      throw new Error("Access denied!")
+    }
+
+    const str = "hello world!"
+    return str
   },
 }
