@@ -54,18 +54,18 @@ export default gql`
       typeUser: String
     ): Auth
     sayHello: String!
+    userChats: [Chat]!
+    chatMessages(chat: ID!): [Message]!
   }
   type Mutation {
     createChat(
       title: String!
       description: String
       image: String
-      secondOwner: ID
       type: String!
-    ): [Chat!]!
+    ): [Chat]!
     createMessage(content: String!, chat: ID!): Message!
-    addUserAccess(chatId: ID!, userId: ID): [Chat]!
-    deleteChat(chatId: ID!): String!
+    addUserAccess(chatId: ID, userId: ID!): [Chat]!
     removeUserAccess(chatId: ID!, userId: ID): [Chat]!
   }
 `

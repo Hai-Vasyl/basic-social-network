@@ -45,3 +45,31 @@ export interface IIsAuth {
   auth: boolean
   userId?: string
 }
+
+export interface IUser {
+  id: string
+  username: string
+  email: string
+  ava: string
+  firstname: string
+  lastname: string
+  phone?: string
+  status?: string
+  address?: string
+  bio?: string
+  birth?: string
+  typeUser: string
+  date: string
+}
+
+export interface IChat {
+  id: string
+  title: string
+  channel: string
+  description: string
+  date: string
+  image: string
+  owner?: IUser
+  owners?: IUser[]
+  type: string
+}

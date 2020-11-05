@@ -7,7 +7,7 @@ const schema = new Schema({
   date: { type: Date, required: true },
   image: { type: String, default: "" },
   owner: { type: Types.ObjectId, ref: "User" },
-  owners: [{ type: Types.ObjectId, ref: "User" }],
+  owners: [{ type: Types.ObjectId, ref: "User", required: false }],
   type: {
     type: String,
     required: true,
