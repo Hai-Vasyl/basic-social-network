@@ -1,14 +1,17 @@
 import React, { ReactNode } from "react"
 import { Route, Switch } from "react-router-dom"
-import { useSelector } from "react-redux"
 import { RootStore } from "../redux/store"
 import { IRoute } from "../interfaces"
 import { routes } from "../modules/routes"
+import { useSelector, useDispatch } from "react-redux"
+import { RESET_TOGGLE } from "../redux/toggle/toggleTypes"
 
 const Routes = () => {
   const {
     auth: { token, user },
+    toggle: { dropDown, authForm },
   } = useSelector((state: RootStore) => state)
+  const dispatch = useDispatch()
 
   const mapReduce = (routes: IRoute[]): ReactNode => {
     return routes.map(({ exact, path, Component }) => {
@@ -25,6 +28,11 @@ const Routes = () => {
 
   return (
     <>
+      <div
+        className={`background ${
+          (dropDown || authForm) && "background--active"
+        }`}
+        onClick={() => dispatch({ type: RESET_TOGGLE })}></div>
       {token ? (
         user.typeUser === "admin" ? (
           <Switch>{mapReduce(routes.admin)}</Switch>

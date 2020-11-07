@@ -1,12 +1,17 @@
 import { User } from "../models"
-import { IFieldsMod, IField, IValidRegisterResult, IValidLoginResult } from "../interfaces"
+import {
+  IFieldsMod,
+  IField,
+  IValidRegisterResult,
+  IValidLoginResult,
+} from "../interfaces"
 import {
   isEmpty,
   isEmail,
   isUnique,
   isContains,
   isLength,
-  comparePassword
+  comparePassword,
 } from "./snippets"
 
 async function register(fields: IField): Promise<IValidRegisterResult> {
@@ -43,14 +48,9 @@ async function register(fields: IField): Promise<IValidRegisterResult> {
       minMsg: "Password must contain at least 4 characters!",
       maxMsg: "Password must be no more than 25 characters!",
     })
-    if (
-      email.msg.length ||
-      username.msg.length ||
-      password.msg.length
-    ) {
+    if (email.msg.length || username.msg.length || password.msg.length) {
       return { username, email, password, isError: true }
     }
-
 
     email = await isUnique(
       fieldsMod.email,
@@ -71,12 +71,16 @@ async function register(fields: IField): Promise<IValidRegisterResult> {
     return { username, email, password, isError: false }
   } catch (error) {
     const errorMsg = `Register validation error: ${error.message}`
-    console.log(errorMsg)
 
     const setError = (value: string) => {
       return { value, msg: [errorMsg] }
     }
-    return { username: setError(fields.username), email: setError(fields.email), password: setError(fields.password), isError: false }
+    return {
+      username: setError(fields.username),
+      email: setError(fields.email),
+      password: setError(fields.password),
+      isError: false,
+    }
   }
 }
 
@@ -134,12 +138,15 @@ async function login(fields: IField): Promise<IValidLoginResult> {
     }
   } catch (error) {
     const errorMsg = `Login validation error: ${error.message}`
-    console.log(errorMsg)
 
     const setError = (value: string) => {
       return { value, msg: [errorMsg] }
     }
-    return { email: setError(fields.email), password: setError(fields.password), isError: false }
+    return {
+      email: setError(fields.email),
+      password: setError(fields.password),
+      isError: false,
+    }
   }
 }
 

@@ -1,0 +1,53 @@
+@import "base";
+
+.field {
+  width: 100%;
+  display: block;
+  margin-bottom: 0.5em;
+  opacity: 1;
+  transition: getTransition(main);
+  height: 80px;
+  z-index: 3;
+  background-color: getColor(secondary);
+  &--close {
+    opacity: 0;
+    transform: scale(0);
+    height: 0;
+    z-index: 2;
+    margin-bottom: 0em;
+  }
+  &__title {
+    display: inline-block;
+    padding: 4px 0px;
+  }
+  &__input {
+    display: block;
+    width: 100%;
+    padding: 7px;
+    background-color: transparent;
+    border: 1px solid getColor(second-light);
+    border-radius: getRadius(main);
+    transition: getTransition(main);
+    outline: none;
+    &:focus {
+      border-color: getColor(accent);
+    }
+  }
+  &__msg {
+    font-size: 0.8em;
+    color: getColor(danger);
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    align-items: center;
+    height: 16px;
+    transition: getTransition(main);
+    &--error {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  &__error {
+    margin-right: 4px;
+  }
+}

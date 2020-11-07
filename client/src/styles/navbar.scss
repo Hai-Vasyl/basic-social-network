@@ -1,8 +1,8 @@
 @import "base";
 
 .nav {
-  background-color: getColor(secondary);
-
+  background-color: getColor(second-light-accent);
+  box-shadow: getShadow(main);
   &__menu {
     width: 975px;
     padding: 0px 20px;
@@ -16,14 +16,12 @@
 }
 
 .logoLink {
-  font-family: "Kaushan Script", cursive;
+  font-family: "Dancing Script", cursive;
   margin-right: auto;
   text-decoration: none;
   color: getColor(font);
   font-size: 1.4em;
   margin-right: 26px;
-  &__logotype {
-  }
 }
 
 .search {
@@ -40,19 +38,23 @@
     border-bottom-left-radius: getRadius(main);
     outline: none;
     border: 1px solid transparent;
+    transition: getTransition(main);
     &:focus {
+      border-color: getColor(accent);
+    }
+    &::placeholder {
+      color: getColor(second-light);
     }
   }
   &__btn {
     width: 45px;
     align-self: stretch;
     display: flex;
-    background-color: transparent;
-    border: 1px solid getColor(main);
+    background-color: getColor(second-light);
     font-size: 0.8em;
-    cursor: pointer;
     border-top-right-radius: getRadius(main);
     border-bottom-right-radius: getRadius(main);
+    outline: none;
   }
   &__icon {
     margin: auto;
@@ -60,37 +62,135 @@
 }
 
 .dropdown {
-  display: none;
   position: relative;
+  margin-left: 26px;
+  display: flex;
+  align-items: center;
   &__menu {
     position: absolute;
+    top: 45px;
+    border-top: 1px solid getColor(accent);
+    width: 180px;
+    right: -15px;
+    z-index: 3;
+    background-color: getColor(secondary);
+    border-radius: getRadius(main);
+    padding: 6px 0;
+    transition: getTransition(main);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px) scale(0.9);
+    box-shadow: getShadow(main);
+    &--active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0px) scale(1);
+    }
+  }
+  &__triangle {
+    position: absolute;
+    width: 15px;
+    top: -8px;
+    right: 22.5px;
+    height: 15px;
+    background-color: getColor(secondary);
+    transform: rotateZ(45deg);
+    border-top: 1px solid getColor(accent);
+    border-left: 1px solid getColor(accent);
+    z-index: -99;
+    border-radius: getRadius(main);
   }
   &__btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    outline: none;
+    border: 1px solid getColor(second-light);
+    transition: getTransition(main);
+    &--active {
+      border-color: getColor(accent);
+    }
   }
   &__ava {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 }
 
 .link {
   color: getColor(font);
   text-decoration: none;
-  font-size: 1.3em;
-  // padding: 14px 13px;
+  font-size: 1.2em;
   margin-left: 26px;
   display: flex;
+  transition: getTransition(main);
   & > * {
     margin: auto;
   }
   &--active {
+    color: getColor(accent);
   }
 }
 
 .link-extend {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: getColor(font);
+  width: 100%;
+  padding: 10px 15px;
+  background-color: getColor(secondary);
+  outline: none;
+  transition: getTransition(main);
+  &--active {
+    background-color: getColor(second-light-accent);
+    .link-extend__icon {
+      color: getColor(accent);
+    }
+  }
+  &:hover {
+    background-color: getColor(second-light-accent);
+  }
+  &:last-child {
+    border-top: 1px solid getColor(main);
+  }
   &__icon {
-    width: 100%;
-    height: 100%;
-    display: block;
+    transition: getTransition(main);
   }
   &__title {
+    margin-left: 7px;
+    font-size: 0.85em;
+  }
+}
+
+.link-signup {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: getColor(font);
+  padding: 5px 10px;
+  margin-left: 26px;
+  width: 150px;
+  background-color: transparent;
+  border: 1px solid getColor(second-light);
+  border-radius: getRadius(main);
+  outline: none;
+  transition: getTransition(main);
+  &--active {
+    border-color: getColor(accent);
+    .link-signup__icon {
+      color: getColor(accent);
+    }
+  }
+  &:hover {
+    border-color: getColor(accent);
+  }
+  &__icon {
+    margin-right: 7px;
+    transition: getTransition(main);
+  }
+  &__title {
+    font-size: 0.85em;
   }
 }

@@ -1,0 +1,33 @@
+@import "base";
+
+.btn {
+  padding: 15px 13px;
+  display: flex;
+  align-items: center;
+  color: getColor(font);
+  border-radius: getRadius(main);
+  transition: getTransition(main);
+  outline: none;
+  &:active {
+    box-shadow: none;
+    transform: scale(0.95);
+  }
+  &:hover {
+    border-color: getColor(accent);
+  }
+  &__icon {
+    margin: 0px 4px;
+  }
+  &__title {
+    margin: 0px 4px;
+  }
+}
+
+.btn-primary {
+  background-image: getGradient(main);
+  box-shadow: getShadow(main);
+}
+.btn-simple {
+  background-color: transparent;
+  border: 1px solid getColor(second-light);
+}

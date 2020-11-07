@@ -1,28 +1,20 @@
 $colors: (
-  main: #4c4c63,
-  secondary: lighten(#4c4c63, 10%),
-  second-dark: darken(#4c4c63, 1%),
-  second-light: lighten(#4c4c63, 20%),
-  second-light-accent: lighten(#4c4c63, 14%),
+  main: #2b2b39,
+  secondary: lighten(#2b2b39, 8%),
+  second-dark: darken(#2b2b39, 0%),
+  second-light: lighten(#2b2b39, 20%),
+  second-light-accent: lighten(#2b2b39, 14%),
   font: white,
-  active: whitesmoke,
   accent: #4a9edf,
+  accent-gradient: #4a77df,
   title-simple: rgb(199, 199, 199),
   danger: rgb(247, 120, 120),
+  bg: #2b2b3992,
 );
 $shadows: (
   main: (
-    0px 2px 3px rgba(50, 49, 56, 0.769),
+    0px 2px 3px rgb(36, 35, 41),
   ),
-);
-$radiuses: (
-  main: 5px,
-);
-$paddings: (
-  main: 20px,
-);
-$transitions: (
-  main: 0.3s ease,
 );
 
 @function getColor($color) {
@@ -40,6 +32,27 @@ $transitions: (
 @function getTransition($transition) {
   @return map-get($transitions, $transition);
 }
+@function getGradient($gradient) {
+  @return map-get($gradients, $gradient);
+}
+
+$radiuses: (
+  main: 3px,
+);
+$paddings: (
+  main: 20px,
+);
+$transitions: (
+  main: 0.3s ease,
+);
+$gradients: (
+  main:
+    linear-gradient(
+      to bottom right,
+      getColor(accent),
+      getColor(accent-gradient)
+    ),
+);
 
 %center-position {
   position: absolute;

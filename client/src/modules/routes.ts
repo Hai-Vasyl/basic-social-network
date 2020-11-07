@@ -22,7 +22,6 @@ export const getLinks = (userId: string): ILink[] => {
     },
     {
       to: "/bookmarks",
-      exact: true,
       Title: BsBookmarks,
       className: "link",
       activeClassName: "link--active",
@@ -31,8 +30,8 @@ export const getLinks = (userId: string): ILink[] => {
       to: `/profile/${userId}`,
       exact: true,
       Title: BsPerson,
-      className: "link",
-      activeClassName: "link--active",
+      className: "link-extend",
+      activeClassName: "link-extend--active",
     },
   ]
 }

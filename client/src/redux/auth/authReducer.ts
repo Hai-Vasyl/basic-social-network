@@ -19,7 +19,7 @@ const initState: Auth = {
   },
 }
 
-const authReducer = (state = initState, action: AuthReducerTypes) => {
+const authReducer = (state = initState, action: AuthReducerTypes): Auth => {
   switch (action.type) {
     case SET_AUTH:
       if (action.payload.init) {

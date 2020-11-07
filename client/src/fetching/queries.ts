@@ -4,6 +4,7 @@ export const LOGIN_USER = gql`
   query LOGIN_USER($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       user {
+        id
         username
         email
         ava
@@ -23,21 +24,10 @@ export const LOGIN_USER = gql`
 `
 
 export const REGISTER_USER = gql`
-  query REGISTER_USER(
-    $username: String!
-    $email: String!
-    $password: String!
-    $firstname: String
-    $lastname: String
-  ) {
-    register(
-      username: $username
-      email: $email
-      password: $password
-      firstname: $firstname
-      lastname: $lastname
-    ) {
+  query REGISTER_USER($username: String!, $email: String!, $password: String!) {
+    register(username: $username, email: $email, password: $password) {
       user {
+        id
         username
         email
         ava
@@ -52,6 +42,28 @@ export const REGISTER_USER = gql`
         date
       }
       token
+    }
+  }
+`
+
+export const GET_USER_CHATS = gql`
+  query {
+    userChats {
+      id
+      title
+      channel
+      description
+      date
+      image
+      owner {
+        id
+      }
+      owners {
+        id
+        username
+        ava
+      }
+      type
     }
   }
 `
