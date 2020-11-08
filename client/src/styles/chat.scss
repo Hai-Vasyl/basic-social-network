@@ -1,0 +1,261 @@
+@import "base";
+
+.chat {
+  // temporary
+  width: 935px;
+  // padding: 0px 20px;
+  height: 90vh;
+  max-width: 100%;
+  margin: 0 auto;
+  //
+  display: flex;
+  &__sidebar {
+    width: 320px;
+    background-color: getColor(secondary);
+  }
+  &__main {
+    flex: 1;
+    border-right: 1px solid getColor(secondary);
+    border-bottom: 1px solid getColor(secondary);
+  }
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    background-color: getColor(second-light-accent);
+    padding: 10px;
+    border-bottom: 1px solid getColor(main);
+    height: 47px;
+  }
+  &__btn-add {
+    display: flex;
+    align-items: center;
+    font-size: 1.2em;
+    margin-right: 10px;
+    background-color: transparent;
+    border: 1px solid getColor(second-light);
+    padding: 2px;
+    border-radius: getRadius(main);
+    & * > {
+      margin: auto;
+    }
+  }
+  &__searchbar {
+    flex: 1;
+    display: flex;
+    background-color: getColor(secondary);
+    border-radius: getRadius(main);
+    align-items: center;
+  }
+  &__search {
+    flex: 1;
+    background-color: transparent;
+    padding: 3px;
+    border-top-left-radius: getRadius(main);
+    border-bottom-left-radius: getRadius(main);
+  }
+  &__btn-search {
+    display: flex;
+    font-size: 1em;
+    padding: 0px 6px;
+    color: getColor(second-light);
+    background-color: transparent;
+    border-top-right-radius: getRadius(main);
+    border-bottom-right-radius: getRadius(main);
+    &* > {
+      margin: auto;
+    }
+  }
+  &__chats-stack {
+  }
+}
+
+.chat-link {
+  background-color: transparent;
+  display: flex;
+  border-bottom: 1px solid getColor(second-light-accent);
+  align-items: center;
+  padding: 10px 18px;
+  width: 100%;
+  border-left: 1px solid transparent;
+  transition: getTransition(main);
+  &--active {
+    border-left-color: getColor(accent);
+  }
+  &__img-container {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    position: relative;
+    margin-right: 15px;
+    border: 1px solid getColor(second-light);
+  }
+  &__img {
+    @extend %image;
+    border-radius: 50%;
+    padding: 4px;
+  }
+  &__type {
+    position: absolute;
+    width: 27px;
+    height: 27px;
+    z-index: 2;
+    border: 1px solid getColor(font);
+    border-radius: 50%;
+    bottom: -2px;
+    right: -4px;
+    padding: 4px;
+    background-image: linear-gradient(
+      to bottom right,
+      getColor(bg),
+      getColor(accent-gradient)
+    );
+  }
+  &__title-container {
+  }
+  &__title {
+  }
+}
+
+.msg-container {
+  height: calc(90vh - 47px - 62px);
+}
+
+.message {
+  width: 395px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  margin-bottom: 1em;
+  &__mine {
+    margin-left: auto;
+    flex-direction: row-reverse;
+    // margin-left: 0px;
+    margin-right: 10px;
+    .message__container-content {
+      background-color: getColor(accent);
+      border-right-color: transparent;
+      border-left: none;
+      border-right: 1px solid getColor(font);
+    }
+    .message__username {
+    }
+    .message__unit {
+      margin-left: 0px;
+      margin-right: 5px;
+    }
+    .message__triange {
+      left: auto;
+      right: -5px;
+      background-color: getColor(accent);
+      border: none;
+      border-top: 1px solid getColor(font);
+      border-right: 1px solid getColor(font);
+    }
+    .message__content {
+      background-color: getColor(accent);
+    }
+    .message__container-username {
+      text-align: right;
+    }
+    .message__date {
+      color: getColor(font);
+    }
+  }
+  &__user {
+  }
+  &__user-link {
+    display: block;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin: 0px 7px;
+  }
+  &__ava {
+    @extend %image;
+  }
+  &__unit {
+    width: 100%;
+    position: relative;
+    margin-left: 5px;
+    z-index: 3;
+  }
+  &__triange {
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    background-color: getColor(second-light-accent);
+    z-index: 0;
+    top: 50%;
+    left: -5px;
+    border-bottom: 1px solid getColor(accent);
+    border-left: 1px solid getColor(accent);
+    transform: translateY(-50%) rotate(45deg);
+  }
+  &__username {
+    font-size: 0.9em;
+    color: getColor(title-simple);
+    text-decoration: none;
+  }
+  &__container-username {
+  }
+  &__container-content {
+    border-left: 1px solid getColor(accent);
+    border-radius: getRadius(main);
+    background-color: getColor(second-light-accent);
+    box-shadow: getShadow(main);
+  }
+  &__content {
+    position: relative;
+    display: block;
+    padding: 5px;
+    background-color: getColor(second-light-accent);
+    z-index: 4;
+    border-top-left-radius: getRadius(main);
+    border-top-right-radius: getRadius(main);
+  }
+  &__date {
+    padding: 2px;
+    display: block;
+    border-top: 1px solid getColor(second-light);
+    font-size: 0.6em;
+    text-align: center;
+    color: getColor(title-simple);
+  }
+}
+
+// .chat-controller {
+//   display: flex;
+//   flex-direction: column;
+//   // height: calc(90vh - 47px);
+// }
+
+.create-msg {
+  background-color: getColor(secondary);
+  display: flex;
+  padding: 15px 0;
+  // align
+  &__btn {
+    font-size: 1.6em;
+    background-color: transparent;
+    display: flex;
+    margin: 0px 15px;
+    & > * {
+      margin: auto;
+    }
+  }
+  &__clip-file {
+  }
+  &__form {
+    flex: 1;
+    display: flex;
+  }
+  &__input {
+    flex: 1;
+    background-color: getColor(main);
+    padding: 6px;
+    border-radius: getRadius(main);
+  }
+  &__emoji {
+  }
+}

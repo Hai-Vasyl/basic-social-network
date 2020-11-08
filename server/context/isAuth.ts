@@ -4,7 +4,7 @@ config()
 const { JWT_SECRET }: any = process.env
 
 const isAuth = (req: { headers: { authorization: any } }) => {
-  const auth = req.headers.authorization
+  const auth = req && req.headers && req.headers.authorization
   const authDenied = { auth: false }
   if (!auth) {
     return authDenied

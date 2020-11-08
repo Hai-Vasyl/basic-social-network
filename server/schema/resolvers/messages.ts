@@ -1,4 +1,4 @@
-import { Message } from "../models"
+import { Message, Chat } from "../models"
 import { IField, IIsAuth } from "../interfaces"
 
 export const Query = {
@@ -21,25 +21,38 @@ export const Query = {
   },
 }
 
+export const Subscription = {
+  newMessage: {
+    subscribe(_: any, { channels }: { channels: string[] }, { pubsub }: any) {
+      return pubsub.asyncIterator(channels)
+    },
+  },
+}
+
 export const Mutation = {
   async createMessage(
     _: any,
-    { content, chat }: IField,
-    { isAuth }: { isAuth: IIsAuth }
+    { content, chat: chatId }: IField,
+    { isAuth, pubsub }: { isAuth: IIsAuth; pubsub: any }
   ) {
     try {
       if (!isAuth.auth) {
         throw new Error("Access denied!")
       }
       //TODO: validation for each field and check in models
+      const chat: any = await Chat.findById(chatId)
+      if (!chat?.id) {
+        throw new Error("Chat is not exists!")
+      }
       const message = new Message({
         content,
-        chat,
+        chat: chatId,
         owner: isAuth.userId,
         date: new Date(),
       })
       const newMessage = await message.save()
 
+      pubsub.publish(chat.channel, { newMessage })
       return newMessage
     } catch (error) {
       throw new Error(`Create message error: ${error.message}`)

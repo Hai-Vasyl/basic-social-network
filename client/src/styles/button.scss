@@ -7,7 +7,6 @@
   color: getColor(font);
   border-radius: getRadius(main);
   transition: getTransition(main);
-  outline: none;
   &:active {
     box-shadow: none;
     transform: scale(0.95);

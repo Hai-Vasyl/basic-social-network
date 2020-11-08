@@ -47,7 +47,7 @@ export const REGISTER_USER = gql`
 `
 
 export const GET_USER_CHATS = gql`
-  query {
+  query GET_USER_CHATS {
     userChats {
       id
       title
@@ -64,6 +64,24 @@ export const GET_USER_CHATS = gql`
         ava
       }
       type
+    }
+  }
+`
+
+export const GET_CHAT_MESSAGES = gql`
+  query GET_CHAT_MESSAGES($chat: ID!) {
+    chatMessages(chat: $chat) {
+      id
+      content
+      date
+      owner {
+        id
+        username
+        ava
+      }
+      chat {
+        id
+      }
     }
   }
 `

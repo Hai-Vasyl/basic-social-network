@@ -54,7 +54,6 @@
     font-size: 0.8em;
     border-top-right-radius: getRadius(main);
     border-bottom-right-radius: getRadius(main);
-    outline: none;
   }
   &__icon {
     margin: auto;
@@ -104,7 +103,6 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    outline: none;
     border: 1px solid getColor(second-light);
     transition: getTransition(main);
     &--active {
@@ -112,9 +110,7 @@
     }
   }
   &__ava {
-    width: 100%;
-    height: 100%;
-    display: block;
+    @extend %image;
   }
 }
 
@@ -141,7 +137,6 @@
   width: 100%;
   padding: 10px 15px;
   background-color: getColor(secondary);
-  outline: none;
   transition: getTransition(main);
   &--active {
     background-color: getColor(second-light-accent);
@@ -175,7 +170,6 @@
   background-color: transparent;
   border: 1px solid getColor(second-light);
   border-radius: getRadius(main);
-  outline: none;
   transition: getTransition(main);
   &--active {
     border-color: getColor(accent);

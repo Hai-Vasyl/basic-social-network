@@ -27,6 +27,7 @@ input {
 
 button {
   cursor: pointer;
+  outline: none;
 }
 
 .background {
@@ -43,4 +44,8 @@ button {
     opacity: 1;
     visibility: visible;
   }
+}
+
+.btn-handler {
+  display: none;
 }

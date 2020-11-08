@@ -68,4 +68,8 @@ export default gql`
     addUserAccess(chatId: ID, userId: ID!): [Chat]!
     removeUserAccess(chatId: ID!, userId: ID): [Chat]!
   }
+  type Subscription {
+    newMessage(channels: [String]!): Message!
+    # newMessage: Message!
+  }
 `

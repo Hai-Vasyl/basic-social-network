@@ -1,4 +1,4 @@
-import { ApolloServer } from "apollo-server"
+import { ApolloServer, PubSub } from "apollo-server"
 import mongoose from "mongoose"
 import { config } from "dotenv"
 import isAuth from "./context/isAuth"
@@ -36,11 +36,15 @@ const isDev = NODE_ENV === "development"
       () => console.log("MongoDB started successfully!")
     )
 
+    const pubsub = new PubSub()
+
     const server = new ApolloServer({
       ...schema,
       playground: isDev,
       context: ({ req, res }: { req: any; res: any }) => ({
         req,
+        res,
+        pubsub,
         isAuth: isAuth(req),
       }),
     })
