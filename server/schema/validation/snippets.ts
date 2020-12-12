@@ -17,7 +17,12 @@ function isEmail(field: IFieldSnippet, msg: string) {
   return field
 }
 
-async function isUnique(field: IFieldSnippet, msg: string, Model: any, prop: string) {
+async function isUnique(
+  field: IFieldSnippet,
+  msg: string,
+  Model: any,
+  prop: string
+) {
   try {
     const collection = await Model.find({ [prop]: field.value })
 
@@ -28,12 +33,14 @@ async function isUnique(field: IFieldSnippet, msg: string, Model: any, prop: str
     return field
   } catch (error) {
     const errorMsg = `Error isUnique: ${error.message}`
-    console.log(errorMsg)
     return { ...field, msg: [errorMsg] }
   }
 }
 
-function isLength(field: IFieldSnippet, { min, max, minMsg, maxMsg }: ILengthSnippet) {
+function isLength(
+  field: IFieldSnippet,
+  { min, max, minMsg, maxMsg }: ILengthSnippet
+) {
   if (field.value.length < min) {
     field.msg.push(minMsg)
   } else if (field.value.length > max) {
@@ -42,7 +49,12 @@ function isLength(field: IFieldSnippet, { min, max, minMsg, maxMsg }: ILengthSni
   return field
 }
 
-async function isContains(field: IFieldSnippet, msg: string, Model: any, prop: string) {
+async function isContains(
+  field: IFieldSnippet,
+  msg: string,
+  Model: any,
+  prop: string
+) {
   try {
     const instance = await Model.findOne({ [prop]: field.value })
     if (!instance) {
@@ -51,12 +63,15 @@ async function isContains(field: IFieldSnippet, msg: string, Model: any, prop: s
     return { instance, field }
   } catch (error) {
     const errorMsg = `Error isContains: ${error.message}`
-    console.log(errorMsg)
     return { field: { ...field, msg: [errorMsg] } }
   }
 }
 
-async function comparePassword(password: IFieldSnippet, hashedPassword: string, msg: string) {
+async function comparePassword(
+  password: IFieldSnippet,
+  hashedPassword: string,
+  msg: string
+) {
   try {
     const isValid = await bcrypt.compare(password.value, hashedPassword)
     if (!isValid) {
@@ -66,16 +81,11 @@ async function comparePassword(password: IFieldSnippet, hashedPassword: string, 
     return { passwordVerified: password, isSimilar: true }
   } catch (error) {
     const errorMsg = `Compare password error: ${error.message}`
-    console.log(errorMsg)
-    return { passwordVerified: { value: password.value, msg: [errorMsg] }, isSimilar: false }
+    return {
+      passwordVerified: { value: password.value, msg: [errorMsg] },
+      isSimilar: false,
+    }
   }
 }
 
-export {
-  isEmpty,
-  isEmail,
-  isUnique,
-  isContains,
-  isLength,
-  comparePassword,
-}
+export { isEmpty, isEmail, isUnique, isContains, isLength, comparePassword }

@@ -53,12 +53,4 @@ export const Query = {
       throw new AuthenticationError(error.message)
     }
   },
-  sayHello(_: any, __: any, { isAuth }: { isAuth: IIsAuth }) {
-    if (!isAuth.auth) {
-      throw new Error("Access denied!")
-    }
-
-    const str = "hello world!"
-    return str
-  },
 }

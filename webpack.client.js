@@ -33,8 +33,8 @@ const config = {
             loader: MiniCssExtractPlugin.loader,
             options: {
               publicPath: "/dist/client/",
-              hmr: true,
-              reloadAll: true,
+              // hmr: true,
+              // reloadAll: true,
             },
           },
           "css-loader",

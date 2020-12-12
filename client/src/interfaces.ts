@@ -15,3 +15,31 @@ export interface ILink {
   className: string
   activeClassName: string
 }
+
+export interface IChatOwner {
+  id: string
+  ava: string
+  username: string
+}
+
+// export interface IChatLink {
+//   id: string
+//   image: string
+//   owner: {
+//     id: string
+//   }
+//   title: string
+//   type: string
+// }
+
+export interface IUserLink {
+  id: string
+  username: string
+  email: string
+  ava: string
+}
+
+// export interface ISearched {
+//   users: IUserLink
+//   chats: IChatLink
+// }

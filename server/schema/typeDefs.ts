@@ -43,6 +43,14 @@ export default gql`
     user: User
     token: String
   }
+  type Searched {
+    users: [User]!
+    chats: [Chat]!
+  }
+  type ChatUserInfo {
+    user: User
+    chat: Chat
+  }
   type Query {
     login(email: String!, password: String!): Auth
     register(
@@ -53,9 +61,10 @@ export default gql`
       lastname: String
       typeUser: String
     ): Auth
-    sayHello: String!
     userChats: [Chat]!
     chatMessages(chat: ID!): [Message]!
+    searchChats(searchStr: String!): Searched
+    getChatUserInfo(isChat: Boolean!, id: ID!): ChatUserInfo
   }
   type Mutation {
     createChat(
@@ -70,6 +79,5 @@ export default gql`
   }
   type Subscription {
     newMessage(channels: [String]!): Message!
-    # newMessage: Message!
   }
 `

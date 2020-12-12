@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useRef } from "react"
 import { RootStore } from "../redux/store"
 import { useSelector, useDispatch } from "react-redux"
 import { GET_CHAT_MESSAGES } from "../fetching/queries"
@@ -7,7 +7,8 @@ import { useQuery } from "@apollo/client"
 import { Link } from "react-router-dom"
 import moment from "moment"
 
-const MsgContainer = () => {
+const MsgContainer: React.FC = () => {
+  const anchorMsg = useRef<HTMLDivElement>(null)
   const {
     auth: { user },
     currentChat: { chatId, messages },
@@ -15,16 +16,19 @@ const MsgContainer = () => {
   const dispatch = useDispatch()
   const { data, error, loading } = useQuery(GET_CHAT_MESSAGES, {
     variables: { chat: chatId },
+    fetchPolicy: "cache-and-network",
   })
 
   useEffect(() => {
-    // TODO: add to dependencies [data or chatId]
     if (data && data.chatMessages) {
       dispatch({ type: SET_MESSAGES_CHAT, payload: data.chatMessages })
     }
   }, [dispatch, data])
 
-  console.log({ data, error })
+  useEffect(() => {
+    anchorMsg.current?.scrollIntoView({ behavior: "smooth" })
+  })
+
   return (
     <div className='msg-container'>
       {messages.map((msg) => {
@@ -66,6 +70,7 @@ const MsgContainer = () => {
           </div>
         )
       })}
+      <div className='msg-anchor' ref={anchorMsg}></div>
     </div>
   )
 }

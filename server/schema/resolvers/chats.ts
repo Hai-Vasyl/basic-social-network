@@ -1,6 +1,10 @@
-import { Chat, UserChat, Message } from "../models"
+import { Chat, User, UserChat, Message } from "../models"
 import { IIsAuth, IField, IChat } from "../interfaces"
 import { v4 as uuidv4 } from "uuid"
+
+interface IAllAnyFields {
+  [key: string]: any
+}
 
 async function createChat(
   { title, description, image, type }: IField,
@@ -80,6 +84,88 @@ export const Query = {
       return allChats
     } catch (error) {
       throw new Error(`Getting all user chats error: ${error.message}`)
+    }
+  },
+  async getChatUserInfo(
+    _: any,
+    { isChat, id }: { isChat: boolean; id: string },
+    { isAuth }: { isAuth: IIsAuth }
+  ) {
+    try {
+      if (!isAuth.auth) {
+        throw new Error("Access denied!")
+      }
+      //TODO: add validation and check in models
+      let data
+      if (isChat) {
+        data = await Chat.findById(id)
+      } else {
+        data = await User.findById(id)
+      }
+
+      if (!data?.id) {
+        throw new Error("This chat or user is not exists anymore!")
+      }
+      return isChat ? { user: null, chat: data } : { user: data, chat: null }
+    } catch (error) {
+      throw new Error(`Getting User or Chat info error: ${error.message}`)
+    }
+  },
+  async searchChats(
+    _: any,
+    { searchStr }: { searchStr: string },
+    { isAuth }: { isAuth: IIsAuth }
+  ) {
+    try {
+      if (!isAuth.auth) {
+        throw new Error("Access denied!")
+      }
+      //TODO: add validation and check in models
+
+      const chats = await getAllUserChats(isAuth.userId)
+      const searchedChats = await Chat.find({
+        $text: { $search: searchStr },
+        type: { $in: ["public", "privet"] },
+      })
+      const searchedUsers = await User.find({ $text: { $search: searchStr } })
+
+      let allSearched: IAllAnyFields = {
+        chats: [],
+        users: [],
+      }
+
+      searchedChats.forEach((chat) => {
+        let isConsists = false
+        chats.forEach((userChat) => {
+          if (userChat.id === chat.id) {
+            isConsists = true
+          }
+        })
+        if (!isConsists) {
+          allSearched.chats.push(chat)
+        }
+      })
+
+      searchedUsers.forEach((user) => {
+        let isConsists = false
+        chats.forEach((userChat) => {
+          if (userChat && userChat.owners && userChat.owners.length) {
+            if (
+              String(userChat.owners[0]) === String(user.id) ||
+              String(userChat.owners[1]) === String(user.id)
+            ) {
+              isConsists = true
+            }
+          }
+        })
+        if (!isConsists) {
+          allSearched.users.push(user)
+        }
+      })
+
+      return allSearched
+    } catch (error) {
+      throw new Error(`Search chats and users error: ${error.message}`)
     }
   },
 }

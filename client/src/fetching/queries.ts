@@ -85,3 +85,59 @@ export const GET_CHAT_MESSAGES = gql`
     }
   }
 `
+export const SEARCH_CHATS = gql`
+  query SEARCH_CHATS($searchStr: String!) {
+    searchChats(searchStr: $searchStr) {
+      users {
+        id
+        username
+        email
+        ava
+      }
+      chats {
+        id
+        title
+        image
+        type
+        owner {
+          id
+        }
+      }
+    }
+  }
+`
+export const GET_CHAT_INFO = gql`
+  query GET_CHAT_INFO($isChat: Boolean!, $id: String!) {
+    getChatUserInfo(isChat: $isChat, id: $id) {
+      user {
+        id
+        username
+        email
+        ava
+        firstname
+        lastname
+        date
+      }
+      chat {
+        id
+        title
+        description
+        date
+        image
+        owner {
+          id
+          username
+          email
+          ava
+        }
+        owners {
+          id
+          username
+          email
+          ava
+        }
+        type
+      }
+    }
+  }
+`
