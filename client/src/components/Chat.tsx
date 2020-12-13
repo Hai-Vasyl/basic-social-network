@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { RootStore } from "../redux/store"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { AiOutlinePaperClip, AiOutlineSmile } from "react-icons/ai"
 import { BsPlus, BsSearch, BsLock, BsPeople, BsPerson } from "react-icons/bs"
 import { CREATE_MESSAGE } from "../fetching/mutations"
@@ -12,7 +12,25 @@ import { IChat } from "../redux/chats/chatsTypes"
 import ChatLink from "./ChatLink"
 import UserLink from "./UserLink"
 import ChatConnect from "./ChatConnect"
-import "../styles/chat.scss"
+import { SET_ACTIVE_CHAT } from "../redux/chatActive/chatActiveTypes"
+// @ts-ignore
+import styles from "../styles/chat.module"
+
+// users {
+//   id
+//   username
+//   email
+//   ava
+// }
+// chats {
+//   id
+//   title
+//   image
+//   type
+//   owner {
+//     id
+//   }
+// }
 
 const Chat: React.FC = () => {
   const {
@@ -20,6 +38,7 @@ const Chat: React.FC = () => {
     chats,
     currentChat: { chatId },
   } = useSelector((state: RootStore) => state)
+  const dispatch = useDispatch()
   const [message, setMessage] = useState("")
   const [searchedText, setSearchedText] = useState("")
   const [createMessage, { data, error, loading }] = useMutation(CREATE_MESSAGE)
@@ -28,10 +47,34 @@ const Chat: React.FC = () => {
     error: searchError,
     loading: searchLoad,
   } = useQuery(SEARCH_CHATS, { variables: { searchStr: searchedText } })
+  const [activeChat, setActiveChat] = useState({
+    id: "",
+    title: "",
+    image: "",
+    type: "",
+  })
 
   useEffect(() => {
-    localStorage.setItem("activeChat", chatId || "")
-  }, [chatId])
+    if (!chatId) {
+      return
+    }
+    let activeChatData = [...chats].find((chat) => chat.id === chatId)
+
+    const ownerActiveChat =
+      activeChatData?.owners &&
+      activeChatData.owners.find((owner) => owner.id !== user.id)
+    const chatIndividual = activeChatData?.type === "individual"
+    setActiveChat({
+      id: activeChatData?.id || "",
+      title: chatIndividual
+        ? ownerActiveChat?.username || ""
+        : activeChatData?.title || "",
+      image: chatIndividual
+        ? ownerActiveChat?.ava || ""
+        : activeChatData?.image || "",
+      type: activeChatData?.type || "",
+    })
+  }, [chatId, chats])
 
   const getOwnerChat = (owners: IChatOwner[]) => {
     const chatOwner = owners.find((owner) => owner.id !== user.id)
@@ -54,61 +97,62 @@ const Chat: React.FC = () => {
     setMessage("")
   }
 
-  // const isMyChats = chatId.split("_").length !== 2
+  const activeChatPinned = chatId && chatId.split("_").length !== 2
   console.log("DATA searched chats: ", searchData)
+  console.log("Active chat: ", activeChat)
   return (
-    <div className='chat'>
-      <div className='chat__sidebar'>
-        <div className='chat__toolbar'>
-          <button className='chat__btn-add'>
+    <div className={styles.chat}>
+      <div className={styles.chat__sidebar}>
+        <div className={styles.chat__toolbar}>
+          <button className={styles.chat__btn_add}>
             <BsPlus />
           </button>
-          <form className='chat__searchbar'>
+          <form className={styles.chat__searchbar}>
             <input
               type='text'
-              className='chat__search'
+              className={styles.chat__search}
               value={searchedText}
               onChange={handleChangeSearch}
             />
-            <button className='chat__btn-search'>
+            <button className={styles.chat__btn_search}>
               <BsSearch />
             </button>
           </form>
         </div>
-        <div className='chat__stacks'>
-          <div className='chat__searched-stack'>
+        <div className={styles.chat__stacks}>
+          <div className={styles.chat__searched_stack}>
             <div
-              className={`chat__labels ${
+              className={`${styles.chat__labels} ${
                 !searchedText &&
                 !(
                   searchData &&
                   (searchData.searchChats.chats.length ||
                     searchData.searchChats.users.length)
                 ) &&
-                "chat__labels--close"
+                styles.chat__labels__close
               }`}
             >
               Search results
             </div>
             <div
-              className={`chat__empty-plug ${
+              className={`${styles.chat__empty_plug} ${
                 searchedText &&
                 !(
                   searchData &&
                   (searchData.searchChats.chats.length ||
                     searchData.searchChats.users.length)
                 ) &&
-                "chat__empty-plug--active"
+                styles.chat__empty_plug__active
               }`}
             >
               Nothing found
             </div>
-            <div className=''>
+            <div>
               {searchData &&
                 searchData.searchChats.chats.map((chat: IChat) => {
                   return (
                     <ChatLink
-                      unattached={true}
+                      attached={false}
                       key={chat.id}
                       chatOwner={undefined}
                       chat={chat}
@@ -122,13 +166,18 @@ const Chat: React.FC = () => {
               {searchData &&
                 searchData.searchChats.users.map((user: IUserLink) => {
                   return (
-                    <UserLink unattached={true} user={user} userId={chatId} />
+                    <UserLink
+                      attached={false}
+                      key={user.id}
+                      user={user}
+                      userId={chatId}
+                    />
                   )
                 })}
             </div>
           </div>
-          <div className='chat__chats-stack'>
-            <div className='chat__labels'>Your chats</div>
+          <div className={styles.chat__chats_stack}>
+            <div className={styles.chat__labels}>Your chats</div>
             {chats.map((chat) => {
               const chatIndividual = chat.type === "individual"
               const chatOwner: IChatOwner | undefined = getOwnerChat(
@@ -136,7 +185,7 @@ const Chat: React.FC = () => {
               )
               return (
                 <ChatLink
-                  unattached={false}
+                  attached={true}
                   key={chat.id}
                   chatOwner={chatOwner}
                   chat={chat}
@@ -148,38 +197,47 @@ const Chat: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className='chat__main'>
-        <div className='chat__toolbar'>
-          <button className='chat__btn-add'>
-            <BsPlus />
-          </button>
+      <div className={styles.chat__main}>
+        <div className={styles.chat__toolbar}>
+          {chatId && chatId.split("_").length !== 2 && (
+            <button className={styles.chat__btn_add}>
+              <BsPlus />
+            </button>
+          )}
         </div>
-        <div className='chat-controller'>
-          {/* {isMyChats ? ( */}
-          <>
-            <MsgContainer />
-            <div className='create-msg'>
-              <button className='create-msg__btn create-msg__clip-file'>
-                <AiOutlinePaperClip />
-              </button>
-              <form onSubmit={handleSubmitForm} className='create-msg__form'>
-                <input
-                  className='create-msg__input'
-                  type='text'
-                  value={message}
-                  placeholder='Write a message'
-                  onChange={handleChangeForm}
-                />
-                <button className='btn-handler'></button>
-              </form>
-              <button className='create-msg__btn create-msg__emoji'>
-                <AiOutlineSmile />
-              </button>
-            </div>
-          </>
-          {/* ) : (
+        <div className={styles.chat_controller}>
+          {activeChatPinned ? (
+            <>
+              <MsgContainer />
+              <div className={styles.create_msg}>
+                <button
+                  className={`${styles.create_msg__btn} ${styles.create_msg__clip_file}`}
+                >
+                  <AiOutlinePaperClip />
+                </button>
+                <form
+                  onSubmit={handleSubmitForm}
+                  className={styles.create_msg__form}
+                >
+                  <input
+                    className={styles.create_msg__input}
+                    type='text'
+                    value={message}
+                    placeholder='Write a message'
+                    onChange={handleChangeForm}
+                  />
+                  <button className='btn-handler'></button>
+                </form>
+                <button
+                  className={`${styles.create_msg__btn} ${styles.create_msg__emoji}`}
+                >
+                  <AiOutlineSmile />
+                </button>
+              </div>
+            </>
+          ) : (
             <div>Hello world</div>
-          )} */}
+          )}
         </div>
       </div>
     </div>

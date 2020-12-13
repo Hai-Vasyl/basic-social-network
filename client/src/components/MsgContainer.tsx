@@ -6,6 +6,8 @@ import { SET_MESSAGES_CHAT } from "../redux/chatActive/chatActiveTypes"
 import { useQuery } from "@apollo/client"
 import { Link } from "react-router-dom"
 import moment from "moment"
+// @ts-ignore
+import styles from "../styles/chat.module"
 
 const MsgContainer: React.FC = () => {
   const anchorMsg = useRef<HTMLDivElement>(null)
@@ -30,47 +32,50 @@ const MsgContainer: React.FC = () => {
   })
 
   return (
-    <div className='msg-container'>
+    <div className={styles.msg_container}>
       {messages.map((msg) => {
-        const date = new Date(Number(msg.date)).toString()
-        const dateRender = `${moment(date).calendar()} (${moment(date)
-          .startOf("hour")
-          .fromNow()})`
+        const date = new Date(Number(msg.date))
+        const dateRender = `${moment(date).calendar()} (${moment(
+          date
+        ).fromNow()})`
         return (
           <div
             key={msg.id}
-            className={`message ${
-              user.id === msg.owner.id && "message__mine"
-            }`}>
-            <div className='message__user'>
+            className={`${styles.message} ${
+              user.id === msg.owner.id && styles.message__mine
+            }`}
+          >
+            <div className={styles.message__user}>
               <Link
-                className='message__user-link'
-                to={`/profile/${msg.owner.id}`}>
+                className={styles.message__user_link}
+                to={`/profile/${msg.owner.id}`}
+              >
                 <img
                   src={msg.owner.ava}
-                  className='message__ava'
+                  className={styles.message__ava}
                   alt='userAva'
                 />
               </Link>
             </div>
-            <div className='message__unit'>
-              <span className='message__triange'></span>
-              <div className='message__container-username'>
+            <div className={styles.message__unit}>
+              <span className={styles.message__triange}></span>
+              <div className={styles.message__container_username}>
                 <Link
                   to={`/profile/${msg.owner.id}`}
-                  className='message__username'>
+                  className={styles.message__username}
+                >
                   {msg.owner.username}
                 </Link>
               </div>
-              <div className='message__container-content'>
-                <span className='message__content'>{msg.content}</span>
-                <span className='message__date'>{dateRender}</span>
+              <div className={styles.message__container_content}>
+                <span className={styles.message__content}>{msg.content}</span>
+                <span className={styles.message__date}>{dateRender}</span>
               </div>
             </div>
           </div>
         )
       })}
-      <div className='msg-anchor' ref={anchorMsg}></div>
+      <div className={styles.msg_anchor} ref={anchorMsg}></div>
     </div>
   )
 }

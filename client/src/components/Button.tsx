@@ -1,5 +1,6 @@
 import React from "react"
-import "../styles/button.scss"
+// @ts-ignore
+import styles from "../styles/button.module"
 
 interface IButtonProps {
   click(
@@ -12,9 +13,9 @@ interface IButtonProps {
 
 const Button: React.FC<IButtonProps> = ({ Icon, click, title, exClass }) => {
   return (
-    <button className={`btn ${exClass}`} onClick={click}>
-      <Icon className='btn__icon' />
-      <span className='btn__title'>{title}</span>
+    <button className={`${styles.btn} ${exClass}`} onClick={click}>
+      <Icon className={styles.btn__icon} />
+      <span className={styles.btn__title}>{title}</span>
     </button>
   )
 }

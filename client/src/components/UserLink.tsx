@@ -3,32 +3,37 @@ import { useDispatch } from "react-redux"
 import { SET_ACTIVE_CHAT } from "../redux/chatActive/chatActiveTypes"
 import { IUserLink } from "../interfaces"
 import { BsPerson } from "react-icons/bs"
+// @ts-ignore
+import styles from "../styles/chat.module"
 
 interface IUserLinkProps {
   user: IUserLink
   userId: string
-  unattached: boolean
+  attached: boolean
 }
 
-const UserLink: React.FC<IUserLinkProps> = ({ user, userId, unattached }) => {
+const UserLink: React.FC<IUserLinkProps> = ({ user, userId, attached }) => {
   const dispatch = useDispatch()
 
   return (
     <button
-      className={`chat-link ${userId === user.id && "chat-link--active"}`}
+      className={`${styles.chat_link} ${
+        userId === user.id && styles.chat_link__active
+      }`}
       key={user.id}
       onClick={() =>
         dispatch({
           type: SET_ACTIVE_CHAT,
-          payload: `${unattached && "user"}_${user.id}`,
+          payload: `${attached ? "" : "user_"}${user.id}`,
         })
-      }>
-      <div className='chat-link__img-container'>
-        <img className='chat-link__img' src={user.ava} alt='chatImage' />
-        <BsPerson className='chat-link__type' />
+      }
+    >
+      <div className={styles.chat_link__img_container}>
+        <img className={styles.chat_link__img} src={user.ava} alt='chatImage' />
+        <BsPerson className={styles.chat_link__type} />
       </div>
-      <div className='chat-link__title-container'>
-        <span className='chat-link__title'>{user.username}</span>
+      <div className={styles.chat_link__title_container}>
+        <span className={styles.chat_link__title}>{user.username}</span>
       </div>
     </button>
   )

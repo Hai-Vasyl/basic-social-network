@@ -80,7 +80,7 @@
     visibility: hidden;
     transform: translateY(10px) scale(0.9);
     box-shadow: getShadow(main);
-    &--active {
+    &__active {
       opacity: 1;
       visibility: visible;
       transform: translateY(0px) scale(1);
@@ -105,7 +105,7 @@
     border-radius: 50%;
     border: 1px solid getColor(second-light);
     transition: getTransition(main);
-    &--active {
+    &__active {
       border-color: getColor(accent);
     }
   }
@@ -124,12 +124,12 @@
   & > * {
     margin: auto;
   }
-  &--active {
+  &__active {
     color: getColor(accent);
   }
 }
 
-.link-extend {
+.link_extend {
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -138,9 +138,9 @@
   padding: 10px 15px;
   background-color: getColor(secondary);
   transition: getTransition(main);
-  &--active {
+  &__active {
     background-color: getColor(second-light-accent);
-    .link-extend__icon {
+    .link_extend__icon {
       color: getColor(accent);
     }
   }
@@ -159,7 +159,7 @@
   }
 }
 
-.link-signup {
+.link_signup {
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -171,9 +171,9 @@
   border: 1px solid getColor(second-light);
   border-radius: getRadius(main);
   transition: getTransition(main);
-  &--active {
+  &__active {
     border-color: getColor(accent);
-    .link-signup__icon {
+    .link_signup__icon {
       color: getColor(accent);
     }
   }

@@ -7,7 +7,7 @@ import Routes from "./components/Routes"
 import { useQuery, useSubscription } from "@apollo/client"
 import { GET_USER_CHATS } from "./fetching/queries"
 import { NEW_MESSAGE } from "./fetching/subscriptions"
-import { SET_CHATS } from "./redux/chats/chatsTypes"
+import { SET_CHATS, IChat } from "./redux/chats/chatsTypes"
 import {
   SET_ACTIVE_CHAT,
   ADD_MESSAGE_CHAT,
@@ -21,7 +21,9 @@ const App: React.FC = () => {
     chats,
     currentChat: { chatId },
   } = useSelector((state: RootStore) => state)
-  const { data } = useQuery(GET_USER_CHATS, { pollInterval: 60000 })
+  const { data, loading: chatsLoading } = useQuery(GET_USER_CHATS, {
+    pollInterval: 60000,
+  })
   const { data: newMsgData, loading, error } = useSubscription(NEW_MESSAGE, {
     variables: { channels: chats.map((chat) => chat.channel) },
   })
@@ -40,12 +42,53 @@ const App: React.FC = () => {
     if (data && data.userChats) {
       dispatch({ type: SET_CHATS, payload: data.userChats })
     }
-  }, [dispatch, data])
+  }, [dispatch, data, chatId])
 
   useEffect(() => {
-    const chatId = localStorage.getItem("activeChat")
-    dispatch({ type: SET_ACTIVE_CHAT, payload: chatId })
-  }, [dispatch])
+    if (!chatsLoading) {
+      const lsChatActive = localStorage.getItem("activeChat")
+      const existsActiveChat = data.userChats.find(
+        (chat: IChat) => chat.id === lsChatActive
+      )
+      if (
+        !!existsActiveChat ||
+        (!existsActiveChat && lsChatActive?.split("_").length === 2)
+      ) {
+        dispatch({ type: SET_ACTIVE_CHAT, payload: lsChatActive })
+      } else {
+        dispatch({ type: SET_ACTIVE_CHAT, payload: "" })
+        localStorage.setItem("activeChat", "")
+      }
+    }
+  }, [dispatch, data, chatsLoading])
+
+  useEffect(() => {
+    if (!chatsLoading) {
+      localStorage.setItem("activeChat", chatId)
+    }
+  }, [chatId, chatsLoading])
+
+  // useEffect(() => {
+  //   if (!chatsLoading) {
+  //     console.log("START SETTING", data && data.userChats)
+  //     const lsChatId = localStorage.getItem("activeChat") || ""
+  //     console.log("8888888888888888888: ", lsChatId)
+  //     const chatActiveExists =
+  //       data && data.userChats.find((chat: IChat) => chat.id === lsChatId)
+  //     console.log({ ___chatActiveExists: chatActiveExists, lsChatId })
+  //     if (
+  //       !!chatActiveExists ||
+  //       (!chatActiveExists && lsChatId.split("_").length === 2)
+  //     ) {
+  //       dispatch({ type: SET_ACTIVE_CHAT, payload: lsChatId })
+  //       localStorage.setItem("activeChat", lsChatId)
+  //     } else {
+  //       console.log("ertert")
+  //       // dispatch({ type: SET_ACTIVE_CHAT, payload: "" })
+  //       // localStorage.setItem("activeChat", "")
+  //     }
+  //   }
+  // }, [dispatch, data, chatId, chatsLoading])
 
   useEffect(() => {
     if (

@@ -4,6 +4,8 @@ import Profile from "../pages/Profile"
 import Bookmarks from "../pages/Bookmarks"
 import { BsBookmarks, BsHouse, BsChatDots, BsPerson } from "react-icons/bs"
 import { ILink } from "../interfaces"
+// @ts-ignore
+import stylesNavbar from "../styles/navbar.module"
 
 export const getLinks = (userId: string): ILink[] => {
   return [
@@ -11,27 +13,27 @@ export const getLinks = (userId: string): ILink[] => {
       to: "/",
       exact: true,
       Title: BsHouse,
-      className: "link",
-      activeClassName: "link--active",
+      className: stylesNavbar.link,
+      activeClassName: stylesNavbar.link__active,
     },
     {
       to: "/conversation",
       Title: BsChatDots,
-      className: "link",
-      activeClassName: "link--active",
+      className: stylesNavbar.link,
+      activeClassName: stylesNavbar.link__active,
     },
     {
       to: "/bookmarks",
       Title: BsBookmarks,
-      className: "link",
-      activeClassName: "link--active",
+      className: stylesNavbar.link,
+      activeClassName: stylesNavbar.link__active,
     },
     {
       to: `/profile/${userId}`,
       exact: true,
       Title: BsPerson,
-      className: "link-extend",
-      activeClassName: "link-extend--active",
+      className: stylesNavbar.link_extend,
+      activeClassName: stylesNavbar.link__active,
     },
   ]
 }

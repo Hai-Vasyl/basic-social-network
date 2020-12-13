@@ -62,6 +62,7 @@ export const GET_USER_CHATS = gql`
         id
         username
         ava
+        email
       }
       type
     }

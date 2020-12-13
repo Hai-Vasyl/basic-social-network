@@ -10,7 +10,8 @@ import {
   AUTHFORM_TOGGLE,
   RESET_TOGGLE,
 } from "../redux/toggle/toggleTypes"
-import "../styles/navbar.scss"
+// @ts-ignore
+import styles from "../styles/navbar.module"
 
 const Navbar: React.FC = () => {
   const {
@@ -25,19 +26,24 @@ const Navbar: React.FC = () => {
 
   const links = getLinks(user.id)
   return (
-    <div className='nav'>
-      <div className='nav__menu'>
+    <div className={styles.nav}>
+      <div className={styles.nav__menu}>
         <NavLink
           exact
           to='/'
-          className='logoLink'
-          onClick={() => dispatch({ type: RESET_TOGGLE })}>
-          <span className='logoLink__logotype'>InWired</span>
+          className={styles.logoLink}
+          onClick={() => dispatch({ type: RESET_TOGGLE })}
+        >
+          <span className={styles.logoLink__logotype}>InWired</span>
         </NavLink>
-        <form className='search'>
-          <input type='text' className='search__input' placeholder='Search' />
-          <button className='search__btn'>
-            <BsSearch className='search__icon' />
+        <form className={styles.search}>
+          <input
+            type='text'
+            className={styles.search__input}
+            placeholder='Search'
+          />
+          <button className={styles.search__btn}>
+            <BsSearch className={styles.search__icon} />
           </button>
         </form>
         {links.map(({ Title, ...link }) => {
@@ -51,31 +57,33 @@ const Navbar: React.FC = () => {
           } else {
             if (link.to === `/profile/${user.id}`) {
               return (
-                <div key={link.to} className='dropdown'>
+                <div key={link.to} className={styles.dropdown}>
                   <button
-                    className={`dropdown__btn ${
-                      dropDown && "dropdown__btn--active"
+                    className={`${styles.dropdown__btn} ${
+                      dropDown && styles.dropdown__btn__active
                     }`}
-                    onClick={handleDropDown}>
+                    onClick={handleDropDown}
+                  >
                     <img
-                      className='dropdown__ava'
+                      className={styles.dropdown__ava}
                       src={user.ava}
                       alt='userAva'
                     />
                   </button>
                   <div
                     onClick={() => dispatch({ type: RESET_TOGGLE })}
-                    className={`dropdown__menu ${
-                      dropDown && "dropdown__menu--active"
-                    }`}>
-                    <span className='dropdown__triangle'></span>
+                    className={`${styles.dropdown__menu} ${
+                      dropDown && styles.dropdown__menu__active
+                    }`}
+                  >
+                    <span className={styles.dropdown__triangle}></span>
                     <NavLink {...link}>
-                      <Title className='link-extend__icon' />
-                      <span className='link-extend__title'>Profile</span>
+                      <Title className={styles.link_extend__icon} />
+                      <span className={styles.link_extend__title}>Profile</span>
                     </NavLink>
-                    <button className='link-extend'>
-                      <AiOutlineLogout className='link-extend__icon' />
-                      <span className='link-extend__title'>Log Out</span>
+                    <button className={styles.link_extend}>
+                      <AiOutlineLogout className={styles.link_extend__icon} />
+                      <span className={styles.link_extend__title}>Log Out</span>
                     </button>
                   </div>
                 </div>
@@ -85,7 +93,8 @@ const Navbar: React.FC = () => {
               <NavLink
                 key={link.to}
                 {...link}
-                onClick={() => dispatch({ type: RESET_TOGGLE })}>
+                onClick={() => dispatch({ type: RESET_TOGGLE })}
+              >
                 <Title />
               </NavLink>
             )
@@ -93,10 +102,13 @@ const Navbar: React.FC = () => {
         })}
         {!token.length && (
           <button
-            className={`link-signup ${authForm && "link-signup--active"}`}
-            onClick={() => dispatch({ type: AUTHFORM_TOGGLE })}>
-            <AiOutlineCheckCircle className='link-signup__icon' />
-            <span className='link-signup__title'>Sign Up</span>
+            className={`${styles.link_signup} ${
+              authForm && styles.link_signup__active
+            }`}
+            onClick={() => dispatch({ type: AUTHFORM_TOGGLE })}
+          >
+            <AiOutlineCheckCircle className={styles.link_signup__icon} />
+            <span className={styles.link_signup__title}>Sign Up</span>
           </button>
         )}
       </div>

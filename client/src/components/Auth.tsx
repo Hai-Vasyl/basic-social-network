@@ -9,7 +9,12 @@ import { IAuthErrors } from "../interfaces"
 import { RootStore } from "../redux/store"
 import Button from "./Button"
 import Field from "./Field"
-import "../styles/auth.scss"
+// @ts-ignore
+import styles from "../styles/auth.module"
+// @ts-ignore
+import stylesButton from "../styles/button.module"
+// @ts-ignore
+import stylesField from "../styles/field.module"
 
 const Auth: React.FC = () => {
   const {
@@ -126,28 +131,30 @@ const Auth: React.FC = () => {
         key={field.param}
         field={field}
         change={handleChange}
-        exClass={isLogin && field.param === "username" ? "field--close" : ""}
+        exClass={
+          isLogin && field.param === "username" ? stylesField.field__close : ""
+        }
       />
     )
   })
 
   return (
-    <div className={`form ${authForm && "form--active"}`}>
-      <h3 className='form__title'>{isLogin ? "Login" : "Register"}</h3>
-      <form className='form__fields' onSubmit={handleSubmit}>
+    <div className={`${styles.form} ${authForm && styles.form__active}`}>
+      <h3 className={styles.form__title}>{isLogin ? "Login" : "Register"}</h3>
+      <form className={styles.form__fields} onSubmit={handleSubmit}>
         {fields}
         <button className='btn-handler'></button>
       </form>
-      <div className='form__btns'>
+      <div className={styles.form__btns}>
         <Button
           click={handleSubmit}
-          exClass='btn-primary'
+          exClass={stylesButton.btn_primary}
           Icon={isLogin ? AiOutlineLogin : AiOutlineCheckCircle}
           title={isLogin ? "Sign In" : "Sign Up"}
         />
         <Button
           click={flipForm}
-          exClass='btn-simple'
+          exClass={stylesButton.btn_simple}
           Icon={isLogin ? AiOutlineCheckCircle : AiOutlineLogin}
           title={isLogin ? "Sign Up" : "Sign In"}
         />

@@ -9,7 +9,7 @@
   height: 80px;
   z-index: 3;
   background-color: getColor(secondary);
-  &--close {
+  &__close {
     opacity: 0;
     transform: scale(0);
     height: 0;
@@ -42,7 +42,7 @@
     align-items: center;
     height: 16px;
     transition: getTransition(main);
-    &--error {
+    &__error {
       opacity: 1;
       visibility: visible;
     }

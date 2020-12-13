@@ -1,6 +1,7 @@
 import React from "react"
 import { BiError } from "react-icons/bi"
-import "../styles/field.scss"
+// @ts-ignore
+import styles from "../styles/field.module"
 
 interface IFieldProps {
   field: {
@@ -16,10 +17,10 @@ interface IFieldProps {
 
 const Field: React.FC<IFieldProps> = ({ field, change, exClass }) => {
   return (
-    <label className={`field ${exClass}`}>
-      <span className='field__title'>{field.title}</span>
+    <label className={`${styles.field} ${exClass}`}>
+      <span className={styles.field__title}>{field.title}</span>
       <input
-        className='field__input'
+        className={styles.field__input}
         name={field.param}
         type={field.type ? field.type : "text"}
         value={field.value}
@@ -27,8 +28,11 @@ const Field: React.FC<IFieldProps> = ({ field, change, exClass }) => {
         autoComplete='off'
       />
       <span
-        className={`field__msg ${field.msg?.length && "field__msg--error"}`}>
-        <BiError className='field__error' /> <span>{field.msg}</span>
+        className={`${styles.field__msg} ${
+          field.msg?.length && styles.field__msg__error
+        }`}
+      >
+        <BiError className={styles.field__error} /> <span>{field.msg}</span>
       </span>
     </label>
   )

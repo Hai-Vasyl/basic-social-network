@@ -22,11 +22,11 @@
   }
 }
 
-.btn-primary {
+.btn_primary {
   background-image: getGradient(main);
   box-shadow: getShadow(main);
 }
-.btn-simple {
+.btn_simple {
   background-color: transparent;
   border: 1px solid getColor(second-light);
 }

@@ -26,7 +26,7 @@
     border-bottom: 1px solid getColor(main);
     height: 47px;
   }
-  &__btn-add {
+  &__btn_add {
     display: flex;
     align-items: center;
     font-size: 1.2em;
@@ -53,7 +53,7 @@
     border-top-left-radius: getRadius(main);
     border-bottom-left-radius: getRadius(main);
   }
-  &__btn-search {
+  &__btn_search {
     display: flex;
     font-size: 1em;
     padding: 0px 6px;
@@ -65,14 +65,14 @@
       margin: auto;
     }
   }
-  &__empty-plug {
+  &__empty_plug {
     display: none;
     color: getColor(second-light);
     font-weight: bold;
     text-align: center;
     font-size: 0.8em;
     padding: 10px 0;
-    &--active {
+    &__active {
       display: block;
     }
   }
@@ -80,9 +80,9 @@
     height: calc(90vh - 47px);
     overflow-y: auto;
   }
-  &__chats-stack {
+  &__chats_stack {
   }
-  &__searched-stack {
+  &__searched_stack {
     max-height: 40vh;
     overflow-y: auto;
     transition: getTransition(main);
@@ -96,7 +96,7 @@
     opacity: 1;
     visibility: visible;
     transition: getTransition(main);
-    &--close {
+    &__close {
       opacity: 0;
       visibility: hidden;
       height: 0;
@@ -105,7 +105,7 @@
   }
 }
 
-.chat-link {
+.chat_link {
   background-color: transparent;
   display: flex;
   border-bottom: 1px solid getColor(second-light-accent);
@@ -114,10 +114,10 @@
   width: 100%;
   border-left: 1px solid transparent;
   transition: getTransition(main);
-  &--active {
+  &__active {
     border-left-color: getColor(accent);
   }
-  &__img-container {
+  &__img_container {
     width: 62px;
     height: 62px;
     border-radius: 50%;
@@ -146,18 +146,18 @@
       getColor(accent-gradient)
     );
   }
-  &__title-container {
+  &__title_container {
   }
   &__title {
   }
 }
 
-.msg-container {
+.msg_container {
   height: calc(90vh - 47px - 62px);
   overflow-y: auto;
 }
 
-.msg-anchor {
+.msg_anchor {
   height: 0px;
 }
 
@@ -173,7 +173,7 @@
     flex-direction: row-reverse;
     // margin-left: 0px;
     margin-right: 10px;
-    .message__container-content {
+    .message__container_content {
       background-color: getColor(accent);
       border-right-color: transparent;
       border-left: none;
@@ -196,7 +196,7 @@
     .message__content {
       background-color: getColor(accent);
     }
-    .message__container-username {
+    .message__container_username {
       text-align: right;
     }
     .message__date {
@@ -205,7 +205,7 @@
   }
   &__user {
   }
-  &__user-link {
+  &__user_link {
     display: block;
     width: 45px;
     height: 45px;
@@ -238,9 +238,9 @@
     color: getColor(title-simple);
     text-decoration: none;
   }
-  &__container-username {
+  &__container_username {
   }
-  &__container-content {
+  &__container_content {
     border-left: 1px solid getColor(accent);
     border-radius: getRadius(main);
     background-color: getColor(second-light-accent);
@@ -271,7 +271,7 @@
 //   // height: calc(90vh - 47px);
 // }
 
-.create-msg {
+.create_msg {
   background-color: getColor(secondary);
   display: flex;
   padding: 15px 0;
@@ -285,7 +285,7 @@
       margin: auto;
     }
   }
-  &__clip-file {
+  &__clip_file {
   }
   &__form {
     flex: 1;

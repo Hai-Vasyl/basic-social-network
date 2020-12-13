@@ -27,16 +27,35 @@ const config = {
         },
       },
       {
-        test: /\.(c|sc|sa)ss$/,
+        test: /\.module\.(c|sc|sa)ss$/,
         use: [
+          // {
+          //   loader: MiniCssExtractPlugin.loader,
+          //   options: {
+          //     publicPath: "/dist/client/",
+          //   },
+          // },
+          "style-loader",
           {
-            loader: MiniCssExtractPlugin.loader,
+            loader: "css-loader",
             options: {
-              publicPath: "/dist/client/",
-              // hmr: true,
-              // reloadAll: true,
+              modules: true,
             },
           },
+          "sass-loader",
+        ],
+      },
+      {
+        test: /\.(c|sc|sa)ss$/,
+        exclude: /\.module.(c|sc|sa)ss$/,
+        use: [
+          // {
+          //   loader: MiniCssExtractPlugin.loader,
+          //   options: {
+          //     publicPath: "/dist/client/",
+          //   },
+          // },
+          "style-loader",
           "css-loader",
           "sass-loader",
         ],

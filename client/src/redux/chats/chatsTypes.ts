@@ -3,6 +3,7 @@ export const SET_CHATS = "SET_CHATS"
 export interface IOwnerChat {
   id: string
   username: string
+  email: string
   ava: string
 }
 

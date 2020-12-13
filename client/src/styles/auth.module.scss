@@ -15,7 +15,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.9);
-  &--active {
+  &__active {
     opacity: 1;
     visibility: visible;
     transform: translate(-50%, -50%) scale(1);
@@ -39,7 +39,7 @@
     justify-content: center;
     padding: getPadding(main);
     padding-top: 15px;
-    .btn:last-child {
+    & > :last-child {
       margin-left: 10px;
     }
   }

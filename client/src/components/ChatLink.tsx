@@ -4,13 +4,15 @@ import { useDispatch } from "react-redux"
 import { SET_ACTIVE_CHAT } from "../redux/chatActive/chatActiveTypes"
 import { IChat } from "../redux/chats/chatsTypes"
 import { BsLock, BsPeople, BsPerson } from "react-icons/bs"
+// @ts-ignore
+import styles from "../styles/chat.module"
 
 interface IChatLinkProps {
   chat: IChat
   chatId: string
   chatIndividual: boolean
   chatOwner: IChatOwner | undefined
-  unattached: boolean
+  attached: boolean
 }
 
 const ChatLink: React.FC<IChatLinkProps> = ({
@@ -18,35 +20,38 @@ const ChatLink: React.FC<IChatLinkProps> = ({
   chat,
   chatId,
   chatIndividual,
-  unattached,
+  attached,
 }) => {
   const dispatch = useDispatch()
   return (
     <button
-      className={`chat-link ${chatId === chat.id && "chat-link--active"}`}
+      className={`${styles.chat_link} ${
+        chatId === chat.id && styles.chat_link__active
+      }`}
       key={chat.id}
       onClick={() =>
         dispatch({
           type: SET_ACTIVE_CHAT,
-          payload: `${unattached && "chat"}_${chat.id}`,
+          payload: `${attached ? "" : "chat_"}${chat.id}`,
         })
-      }>
-      <div className='chat-link__img-container'>
+      }
+    >
+      <div className={styles.chat_link__img_container}>
         <img
-          className='chat-link__img'
+          className={styles.chat_link__img}
           src={chatIndividual ? chatOwner?.ava : chat.image}
           alt='chatImage'
         />
         {chatIndividual ? (
-          <BsPerson className='chat-link__type' />
+          <BsPerson className={styles.chat_link__type} />
         ) : chat.type === "privet" ? (
-          <BsLock className='chat-link__type' />
+          <BsLock className={styles.chat_link__type} />
         ) : (
-          <BsPeople className='chat-link__type' />
+          <BsPeople className={styles.chat_link__type} />
         )}
       </div>
-      <div className='chat-link__title-container'>
-        <span className='chat-link__title'>
+      <div className={styles.chat_link__title_container}>
+        <span className={styles.chat_link__title}>
           {chatIndividual ? chatOwner?.username : chat.title}
         </span>
       </div>
