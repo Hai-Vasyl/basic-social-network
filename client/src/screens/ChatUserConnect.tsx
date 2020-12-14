@@ -2,13 +2,17 @@ import React from "react"
 import { RootStore } from "../redux/store"
 import { useSelector } from "react-redux"
 
-const ChatConnect = () => {
+const ChatUserConnect: React.FC = () => {
   const {
     auth: { user },
-    currentChat: { chatId },
+    currentChat: { route },
   } = useSelector((state: RootStore) => state)
 
-  return <div>Hello world! {chatId}</div>
+  return (
+    <div>
+      Hello world! {route.chatId} {route.keyWord}
+    </div>
+  )
 }
 
-export default ChatConnect
+export default ChatUserConnect

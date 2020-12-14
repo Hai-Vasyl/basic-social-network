@@ -13,11 +13,11 @@ const MsgContainer: React.FC = () => {
   const anchorMsg = useRef<HTMLDivElement>(null)
   const {
     auth: { user },
-    currentChat: { chatId, messages },
+    currentChat: { route, messages },
   } = useSelector((state: RootStore) => state)
   const dispatch = useDispatch()
   const { data, error, loading } = useQuery(GET_CHAT_MESSAGES, {
-    variables: { chat: chatId },
+    variables: { chat: route.chatId },
     fetchPolicy: "cache-and-network",
   })
 

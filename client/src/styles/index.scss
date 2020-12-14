@@ -23,11 +23,11 @@ input {
   font-size: inherit;
   font-family: inherit;
   color: getColor(font);
+  outline: none;
 }
 
 button {
   cursor: pointer;
-  outline: none;
 }
 
 .background {

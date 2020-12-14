@@ -12,7 +12,8 @@ interface IChatLinkProps {
   chatId: string
   chatIndividual: boolean
   chatOwner: IChatOwner | undefined
-  attached: boolean
+  keyWord: string
+  isAuthOwner?: boolean
 }
 
 const ChatLink: React.FC<IChatLinkProps> = ({
@@ -20,7 +21,8 @@ const ChatLink: React.FC<IChatLinkProps> = ({
   chat,
   chatId,
   chatIndividual,
-  attached,
+  keyWord,
+  isAuthOwner,
 }) => {
   const dispatch = useDispatch()
   return (
@@ -32,11 +34,15 @@ const ChatLink: React.FC<IChatLinkProps> = ({
       onClick={() =>
         dispatch({
           type: SET_ACTIVE_CHAT,
-          payload: `${attached ? "" : "chat_"}${chat.id}`,
+          payload: { chatId: chat.id, keyWord },
         })
       }
     >
-      <div className={styles.chat_link__img_container}>
+      <div
+        className={`${styles.chat_link__img_container} ${
+          isAuthOwner && styles.chat_link__img_container__active
+        }`}
+      >
         <img
           className={styles.chat_link__img}
           src={chatIndividual ? chatOwner?.ava : chat.image}

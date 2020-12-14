@@ -9,10 +9,10 @@ import styles from "../styles/chat.module"
 interface IUserLinkProps {
   user: IUserLink
   userId: string
-  attached: boolean
+  keyWord: string
 }
 
-const UserLink: React.FC<IUserLinkProps> = ({ user, userId, attached }) => {
+const UserLink: React.FC<IUserLinkProps> = ({ user, userId, keyWord }) => {
   const dispatch = useDispatch()
 
   return (
@@ -24,7 +24,7 @@ const UserLink: React.FC<IUserLinkProps> = ({ user, userId, attached }) => {
       onClick={() =>
         dispatch({
           type: SET_ACTIVE_CHAT,
-          payload: `${attached ? "" : "user_"}${user.id}`,
+          payload: { chatId: user.id, keyWord },
         })
       }
     >

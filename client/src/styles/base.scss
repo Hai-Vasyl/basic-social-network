@@ -3,8 +3,10 @@ $colors: (
   secondary: lighten(#2b2b39, 8%),
   second-dark: darken(#2b2b39, 0%),
   second-light: lighten(#2b2b39, 20%),
+  second-lighter: lighten(#2b2b39, 30%),
   second-light-accent: lighten(#2b2b39, 14%),
   font: white,
+  font-dark: #333,
   accent: #4a9edf,
   accent-gradient: #4a77df,
   title-simple: rgb(199, 199, 199),
@@ -59,6 +61,11 @@ $gradients: (
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+%flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 %image {
   width: 100%;

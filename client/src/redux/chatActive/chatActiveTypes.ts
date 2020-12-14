@@ -18,7 +18,7 @@ export interface IchatMessage {
 
 export interface setActiveChat {
   type: typeof SET_ACTIVE_CHAT
-  payload: string
+  payload: { chatId: string; keyWord: string }
 }
 export interface setChatMessages {
   type: typeof SET_MESSAGES_CHAT

@@ -13,13 +13,15 @@ import {
   ADD_MESSAGE_CHAT,
 } from "./redux/chatActive/chatActiveTypes"
 import { RootStore } from "./redux/store"
+import { SET_SEARCH_CHAT } from "./redux/searchChat/searchTypes"
 import Chat from "./components/Chat"
 
 const App: React.FC = () => {
   const [initLoad, setInitLoad] = useState(true)
   const {
     chats,
-    currentChat: { chatId },
+    currentChat: { route },
+    searchChat: { searchStr },
   } = useSelector((state: RootStore) => state)
   const { data, loading: chatsLoading } = useQuery(GET_USER_CHATS, {
     pollInterval: 60000,
@@ -42,59 +44,47 @@ const App: React.FC = () => {
     if (data && data.userChats) {
       dispatch({ type: SET_CHATS, payload: data.userChats })
     }
-  }, [dispatch, data, chatId])
+  }, [dispatch, data])
+
+  useEffect(() => {
+    const searchChatStrt = localStorage.getItem("searchChat")
+    dispatch({ type: SET_SEARCH_CHAT, payload: searchChatStrt || "" })
+  }, [dispatch])
 
   useEffect(() => {
     if (!chatsLoading) {
       const lsChatActive = localStorage.getItem("activeChat")
-      const existsActiveChat = data.userChats.find(
-        (chat: IChat) => chat.id === lsChatActive
-      )
-      if (
-        !!existsActiveChat ||
-        (!existsActiveChat && lsChatActive?.split("_").length === 2)
-      ) {
-        dispatch({ type: SET_ACTIVE_CHAT, payload: lsChatActive })
-      } else {
-        dispatch({ type: SET_ACTIVE_CHAT, payload: "" })
-        localStorage.setItem("activeChat", "")
-      }
+      // const existsActiveChat = data.userChats.find(
+      //   (chat: IChat) => chat.id === lsChatActive
+      // )
+      // if (
+      //   !!existsActiveChat ||
+      //   (!existsActiveChat && lsChatActive?.split("_").length === 2)
+      // ) {
+      dispatch({
+        type: SET_ACTIVE_CHAT,
+        payload: lsChatActive?.length
+          ? JSON.parse(lsChatActive)
+          : { chatId: "", keyWord: "" },
+      })
+      // } else {
+      //   dispatch({ type: SET_ACTIVE_CHAT, payload: "" })
+      //   localStorage.setItem("activeChat", "")
+      // }
     }
-  }, [dispatch, data, chatsLoading])
+  }, [dispatch, chatsLoading])
 
   useEffect(() => {
     if (!chatsLoading) {
-      localStorage.setItem("activeChat", chatId)
+      localStorage.setItem("activeChat", JSON.stringify(route))
     }
-  }, [chatId, chatsLoading])
-
-  // useEffect(() => {
-  //   if (!chatsLoading) {
-  //     console.log("START SETTING", data && data.userChats)
-  //     const lsChatId = localStorage.getItem("activeChat") || ""
-  //     console.log("8888888888888888888: ", lsChatId)
-  //     const chatActiveExists =
-  //       data && data.userChats.find((chat: IChat) => chat.id === lsChatId)
-  //     console.log({ ___chatActiveExists: chatActiveExists, lsChatId })
-  //     if (
-  //       !!chatActiveExists ||
-  //       (!chatActiveExists && lsChatId.split("_").length === 2)
-  //     ) {
-  //       dispatch({ type: SET_ACTIVE_CHAT, payload: lsChatId })
-  //       localStorage.setItem("activeChat", lsChatId)
-  //     } else {
-  //       console.log("ertert")
-  //       // dispatch({ type: SET_ACTIVE_CHAT, payload: "" })
-  //       // localStorage.setItem("activeChat", "")
-  //     }
-  //   }
-  // }, [dispatch, data, chatId, chatsLoading])
+  }, [route, chatsLoading])
 
   useEffect(() => {
     if (
       newMsgData &&
       newMsgData.newMessage &&
-      chatId === newMsgData.newMessage.chat.id
+      route.chatId === newMsgData.newMessage.chat.id
     ) {
       dispatch({ type: ADD_MESSAGE_CHAT, payload: newMsgData.newMessage })
     }

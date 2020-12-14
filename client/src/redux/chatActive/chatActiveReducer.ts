@@ -7,12 +7,15 @@ import {
 } from "./chatActiveTypes"
 
 interface IChatActiveState {
-  chatId: string
+  route: {
+    chatId: string
+    keyWord: string
+  }
   messages: IchatMessage[]
 }
 
 const initState: IChatActiveState = {
-  chatId: "",
+  route: { chatId: "", keyWord: "" },
   messages: [],
 }
 
@@ -24,7 +27,7 @@ const chatActiveRedicer = (
     case SET_ACTIVE_CHAT:
       return {
         ...state,
-        chatId: action.payload,
+        route: action.payload,
       }
     case SET_MESSAGES_CHAT:
       return {
