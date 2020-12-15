@@ -14,6 +14,7 @@ import {
 } from "./redux/chatActive/chatActiveTypes"
 import { RootStore } from "./redux/store"
 import { SET_SEARCH_CHAT } from "./redux/searchChat/searchTypes"
+import { SET_SEARCH_MESSAGE } from "./redux/searchMessage/searchTypes"
 import Chat from "./components/Chat"
 
 const App: React.FC = () => {
@@ -47,8 +48,10 @@ const App: React.FC = () => {
   }, [dispatch, data])
 
   useEffect(() => {
-    const searchChatStrt = localStorage.getItem("searchChat")
-    dispatch({ type: SET_SEARCH_CHAT, payload: searchChatStrt || "" })
+    const searchChatStr = localStorage.getItem("searchChat")
+    const searchMessageStr = localStorage.getItem("searchMessage")
+    dispatch({ type: SET_SEARCH_CHAT, payload: searchChatStr || "" })
+    dispatch({ type: SET_SEARCH_MESSAGE, payload: searchMessageStr || "" })
   }, [dispatch])
 
   useEffect(() => {

@@ -3,11 +3,10 @@ import { RootStore } from "../redux/store"
 import { useSelector, useDispatch } from "react-redux"
 import { AiOutlinePaperClip, AiOutlineSmile } from "react-icons/ai"
 import { BsPlus, BsSearch, BsGear, BsThreeDotsVertical } from "react-icons/bs"
-import { CREATE_MESSAGE } from "../fetching/mutations"
 import { SEARCH_CHATS } from "../fetching/queries"
 import { useMutation, useQuery } from "@apollo/client"
 import MsgContainer from "./MsgContainer"
-import { IChatOwner, IUserLink } from "../interfaces"
+import { IChatOwner, IUserLink, IUserSearch, IChatSearch } from "../interfaces"
 import { IChat } from "../redux/chats/chatsTypes"
 import ChatLink from "./ChatLink"
 import UserLink from "./UserLink"
@@ -17,23 +16,13 @@ import { Link } from "react-router-dom"
 // @ts-ignore
 import styles from "../styles/chat.module"
 import ChatRoutes from "../components/ChatRoutes"
-import { SET_SEARCH_CHAT } from "../redux/searchChat/searchTypes"
-
-// users {
-//   id
-//   username
-//   email
-//   ava
-// }
-// chats {
-//   id
-//   title
-//   image
-//   type
-//   owner {
-//     id
-//   }
-// }
+import {
+  SET_SEARCH_CHAT,
+  CLEAR_SEARCH_CHAT,
+} from "../redux/searchChat/searchTypes"
+import keyWords from "../modules/keyWords"
+import ToolbarMain from "./ToolbarMain"
+import SearchSimple from "./SearchSimple"
 
 const Chat: React.FC = () => {
   const {
@@ -43,95 +32,66 @@ const Chat: React.FC = () => {
     searchChat: { searchStr },
   } = useSelector((state: RootStore) => state)
   const dispatch = useDispatch()
-  const [message, setMessage] = useState("")
-  // const [searchedText, setSearchedText] = useState("")
-  const [createMessage, { data, error, loading }] = useMutation(CREATE_MESSAGE)
   const {
     data: searchData,
     error: searchError,
     loading: searchLoad,
   } = useQuery(SEARCH_CHATS, { variables: { searchStr } })
-  const [activeChat, setActiveChat] = useState({
-    id: "",
+  const [searchActiveChat, setSearchActiveChat] = useState({
     title: "",
-    image: "",
-    type: "",
-    owner: "",
   })
+
+  useEffect(() => {
+    const userSearched =
+      searchData &&
+      searchData.searchChats.users.find(
+        (user: IUserSearch) => user.id === route.chatId
+      )
+    const chatSearched =
+      searchData &&
+      searchData.searchChats.chats.find(
+        (chat: IChatSearch) => chat.id === route.chatId
+      )
+    if (!!userSearched) {
+      setSearchActiveChat((prev) => ({ ...prev, title: userSearched.username }))
+    } else if (!!chatSearched) {
+      setSearchActiveChat((prev) => ({ ...prev, title: chatSearched.title }))
+    } else {
+      setSearchActiveChat((prev) => ({ ...prev, title: "" }))
+    }
+  }, [route, searchData])
 
   useEffect(() => {
     localStorage.setItem("searchChat", searchStr)
   }, [searchStr])
-
-  useEffect(() => {
-    let activeChatData = [...chats].find((chat) => chat.id === route.chatId)
-    if (!activeChatData) {
-      return
-    }
-    const ownerActiveChat =
-      activeChatData?.owners &&
-      activeChatData.owners.find((owner) => owner.id !== user.id)
-    const chatIndividual = activeChatData?.type === "individual"
-    setActiveChat({
-      id: chatIndividual ? ownerActiveChat?.id || "" : activeChatData?.id || "",
-      title: chatIndividual
-        ? ownerActiveChat?.username || ""
-        : activeChatData?.title || "",
-      image: chatIndividual
-        ? ownerActiveChat?.ava || ""
-        : activeChatData?.image || "",
-      type: activeChatData?.type || "",
-      owner: chatIndividual ? user.id : activeChatData?.owner?.id || "",
-    })
-  }, [route, chats])
 
   const getOwnerChat = (owners: IChatOwner[]) => {
     const chatOwner = owners.find((owner) => owner.id !== user.id)
     return chatOwner
   }
 
-  const handleChangeForm = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(event.target.value)
-  }
-
-  // const handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSearchedText(event.target.value)
-  // }
-
-  const handleSubmitForm = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if (route.keyWord === "chat-messages") {
-      createMessage({
-        variables: { chat: route.chatId, content: message },
-      })
-      setMessage("")
-    }
-  }
-
-  // const activeChatPinned = chatId && chatId.split("_").length !== 2
-  // console.log("DATA searched chats: ", searchData)
-  // console.log("Active chat: ", activeChat)
   return (
     <div className={styles.chat}>
       <div className={styles.chat__sidebar}>
         <div className={styles.chat__toolbar}>
-          <button className={styles.chat__btn_add}>
-            <BsPlus />
-          </button>
-          <form className={styles.chat__searchbar}>
-            <input
-              type='text'
-              className={styles.chat__search}
-              value={searchStr}
-              onChange={(event) =>
-                dispatch({ type: SET_SEARCH_CHAT, payload: event.target.value })
-              }
-              placeholder='Search chat / user'
-            />
-            <button className={styles.chat__btn_search}>
-              <BsSearch />
-            </button>
-          </form>
+          <SearchSimple
+            searchStr={searchStr}
+            IconBtn={BsPlus}
+            placeholder='Search chat / user'
+            changeForm={(event) =>
+              dispatch({ type: SET_SEARCH_CHAT, payload: event.target.value })
+            }
+            clickBtn={() =>
+              dispatch({
+                type: SET_ACTIVE_CHAT,
+                payload: {
+                  keyWord: keyWords.chatCreateNew,
+                  chatId: route.chatId,
+                },
+              })
+            }
+            clearForm={() => dispatch({ type: CLEAR_SEARCH_CHAT })}
+          />
         </div>
         <div className={styles.chat__stacks}>
           <div className={styles.chat__searched_stack}>
@@ -166,7 +126,7 @@ const Chat: React.FC = () => {
                 searchData.searchChats.chats.map((chat: IChat) => {
                   return (
                     <ChatLink
-                      keyWord='chat-connect'
+                      keyWord={keyWords.chatConnect}
                       key={chat.id}
                       chatOwner={undefined}
                       chat={chat}
@@ -181,7 +141,7 @@ const Chat: React.FC = () => {
                 searchData.searchChats.users.map((user: IUserLink) => {
                   return (
                     <UserLink
-                      keyWord='user-connect'
+                      keyWord={keyWords.userConnect}
                       key={user.id}
                       user={user}
                       userId={route.chatId}
@@ -199,7 +159,7 @@ const Chat: React.FC = () => {
               )
               return (
                 <ChatLink
-                  keyWord='chat-messages'
+                  keyWord={keyWords.chatMessages}
                   key={chat.id}
                   chatOwner={chatOwner}
                   chat={chat}
@@ -216,9 +176,11 @@ const Chat: React.FC = () => {
       </div>
 
       <div className={styles.chat__main}>
+        <ToolbarMain searchActiveChat={searchActiveChat} />
+        {/* 
         <div className={styles.chat__toolbar}>
           <div className={styles.chat__thumbnail}>
-            {route.keyWord === "chat-messages" &&
+            {route.keyWord === keyWords.chatMessages &&
               (activeChat.type === "individual" ? (
                 <Link
                   className={styles.chat__wrapperImg}
@@ -242,7 +204,7 @@ const Chat: React.FC = () => {
             <div className={styles.chat__title}>{activeChat.title}</div>
           </div>
           <div className={styles.chat__toolbar_form}>
-            {route.keyWord === "chat-messages" && (
+            {route.keyWord === keyWords.chatMessages && (
               <form className={styles.chat__searchbar}>
                 <input
                   type='text'
@@ -266,7 +228,7 @@ const Chat: React.FC = () => {
               )}
             </button>
           </div>
-        </div>
+        </div> */}
 
         <div className={styles.chat_controller}>
           <ChatRoutes />

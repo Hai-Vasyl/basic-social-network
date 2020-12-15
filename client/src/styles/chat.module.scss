@@ -22,22 +22,22 @@
     display: flex;
     align-items: center;
     background-color: getColor(second-light-accent);
-    padding: 10px;
+    padding: 5px 10px;
     border-bottom: 1px solid getColor(main);
     height: 47px;
   }
   &__btn_add {
-    display: flex;
-    align-items: center;
-    font-size: 1.2em;
+    // display: flex;
+    // align-items: center;
+    // font-size: 1.2em;
     margin-right: 10px;
-    background-color: transparent;
-    border: 1px solid getColor(second-light);
-    padding: 2px;
-    border-radius: getRadius(main);
-    & * > {
-      margin: auto;
-    }
+    // background-color: transparent;
+    // border: 1px solid getColor(second-light);
+    // padding: 2px;
+    // border-radius: getRadius(main);
+    // & * > {
+    //   margin: auto;
+    // }
   }
   &__searchbar {
     flex: 1;

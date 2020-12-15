@@ -1,6 +1,7 @@
 import React from "react"
 import { useSelector } from "react-redux"
 import { RootStore } from "../redux/store"
+import keyWords from "../modules/keyWords"
 
 import ChatUserConnect from "../screens/ChatUserConnect"
 import ChatMessages from "../screens/ChatMessages"
@@ -16,17 +17,17 @@ const ChatRoutes: React.FC = () => {
 
   const setScreens = () => {
     switch (route.keyWord) {
-      case "chat-messages":
+      case keyWords.chatMessages:
         return <ChatMessages />
-      case "chat-new":
+      case keyWords.chatCreateNew:
         return <ChatCreateNew />
-      case "user-connect":
+      case keyWords.userConnect:
         return <ChatUserConnect />
-      case "chat-connect":
+      case keyWords.chatConnect:
         return <ChatUserConnect />
-      case "chat-edit":
+      case keyWords.chatEdit:
         return <ChatEdit />
-      case "chat-info":
+      case keyWords.chatInfo:
         return <ChatInfo />
       default:
         return <ChatEmpty />

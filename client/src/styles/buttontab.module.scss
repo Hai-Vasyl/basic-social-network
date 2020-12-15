@@ -1,0 +1,14 @@
+@import "base";
+
+.wrapper {
+  display: flex;
+  background-color: transparent;
+  border: 1px solid getColor(second-light);
+  padding: 2px;
+  border-radius: getRadius(main);
+  width: 30px;
+  height: 30px;
+  & > * {
+    margin: auto;
+  }
+}

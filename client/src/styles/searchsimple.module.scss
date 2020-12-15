@@ -1,0 +1,51 @@
+@import "base";
+
+.searchbar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__container {
+    flex: 1;
+    display: flex;
+    margin-left: 10px;
+    background-color: getColor(secondary);
+    border-radius: getRadius(main);
+    align-items: center;
+    position: relative;
+  }
+  &__input {
+    flex: 1;
+    background-color: transparent;
+    padding: 4px 10px;
+    padding-right: 38px;
+    border-top-left-radius: getRadius(main);
+    border-bottom-left-radius: getRadius(main);
+    border: 1px solid transparent;
+    border-radius: getRadius(main);
+    &::placeholder {
+      color: getColor(second-lighter);
+      font-size: 0.9em;
+    }
+    &:focus {
+      border-color: getColor(accent);
+    }
+  }
+  &__btn_search {
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    padding: 2px 6px;
+    color: getColor(second-lighter);
+    background-color: transparent;
+    border-top-right-radius: getRadius(main);
+    border-bottom-right-radius: getRadius(main);
+    position: absolute;
+    right: 0;
+    font-size: 0.9em;
+    border-left: 1px solid getColor(second-light-accent);
+    & > * {
+      margin: auto;
+    }
+  }
+}

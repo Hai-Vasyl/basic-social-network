@@ -1,6 +1,6 @@
 import {
-  SET_SEARCH_CHAT,
-  CLEAR_SEARCH_CHAT,
+  CLEAR_SEARCH_MESSAGE,
+  SET_SEARCH_MESSAGE,
   SearchChatReducerTypes,
 } from "./searchTypes"
 
@@ -12,17 +12,17 @@ const initState: IInitState = {
   searchStr: "",
 }
 
-const searchChatReducer = (
+const searchMessageReducer = (
   state = initState,
   action: SearchChatReducerTypes
 ) => {
   switch (action.type) {
-    case SET_SEARCH_CHAT:
+    case SET_SEARCH_MESSAGE:
       return {
         ...state,
         searchStr: action.payload,
       }
-    case CLEAR_SEARCH_CHAT:
+    case CLEAR_SEARCH_MESSAGE:
       return {
         ...state,
         searchStr: "",
@@ -32,4 +32,4 @@ const searchChatReducer = (
   }
 }
 
-export default searchChatReducer
+export default searchMessageReducer

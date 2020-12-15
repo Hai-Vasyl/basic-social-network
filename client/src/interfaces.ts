@@ -43,3 +43,25 @@ export interface IUserLink {
 //   users: IUserLink
 //   chats: IChatLink
 // }
+
+export interface IUserSearch {
+  id: string
+  username: string
+  email: string
+  ava: string
+}
+
+export interface IChatSearch {
+  id: string
+  title: string
+  image: string
+  type: string
+  owner: {
+    id: string
+  }
+}
+
+export interface ISearch {
+  users: IUserSearch[]
+  chats: IChatSearch[]
+}
