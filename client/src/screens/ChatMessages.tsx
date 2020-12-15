@@ -12,6 +12,7 @@ import styles from "../styles/chat.module"
 const ChatMessages: React.FC = () => {
   const {
     currentChat: { route },
+    searchMessage: { searchStr },
   } = useSelector((state: RootStore) => state)
   const [createMessage, { data, error, loading }] = useMutation(CREATE_MESSAGE)
   const [message, setMessage] = useState("")
@@ -32,6 +33,13 @@ const ChatMessages: React.FC = () => {
 
   return (
     <div className={styles.chat_msgWrapper}>
+      <div
+        className={`${styles.chat__labels} ${
+          !searchStr && styles.chat__labels__close
+        }`}
+      >
+        Search messages
+      </div>
       <MsgContainer />
       <div className={styles.create_msg}>
         <button

@@ -13,6 +13,7 @@ interface SearchSimpleProps {
   clickBtn(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): any
   changeForm(event: React.ChangeEvent<HTMLInputElement>): any
   clearForm(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): any
+  flipForm?: boolean
 }
 
 const SearchSimple: React.FC<SearchSimpleProps> = ({
@@ -22,6 +23,7 @@ const SearchSimple: React.FC<SearchSimpleProps> = ({
   changeForm,
   clearForm,
   clickBtn,
+  flipForm,
 }) => {
   const searchInput = useRef<HTMLInputElement | null>(null)
 
@@ -30,7 +32,9 @@ const SearchSimple: React.FC<SearchSimpleProps> = ({
   }
 
   return (
-    <div className={styles.searchbar}>
+    <div
+      className={`${styles.searchbar} ${flipForm && styles.searchbar__flipped}`}
+    >
       <ButtonTab click={clickBtn} Icon={IconBtn} />
       <div
         className={styles.searchbar__container}

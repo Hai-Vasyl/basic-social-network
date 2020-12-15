@@ -107,6 +107,23 @@ export const SEARCH_CHATS = gql`
     }
   }
 `
+export const SEARCH_MESSAGES = gql`
+  query SEARCH_MESSAGES($searchStr: String!, $chatId: String!) {
+    searchMessages(searchStr: $searchStr, chatId: $chatId) {
+      id
+      content
+      date
+      owner {
+        id
+        username
+        ava
+      }
+      chat {
+        id
+      }
+    }
+  }
+`
 export const GET_CHAT_INFO = gql`
   query GET_CHAT_INFO($isChat: Boolean!, $id: String!) {
     getChatUserInfo(isChat: $isChat, id: $id) {

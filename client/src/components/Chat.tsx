@@ -94,16 +94,14 @@ const Chat: React.FC = () => {
           />
         </div>
         <div className={styles.chat__stacks}>
-          <div className={styles.chat__searched_stack}>
+          <div
+            className={`${styles.chat__searched_stack} ${
+              !searchStr.length && styles.chat__searched_stack__close
+            }`}
+          >
             <div
               className={`${styles.chat__labels} ${
-                !searchStr &&
-                !(
-                  searchData &&
-                  (searchData.searchChats.chats.length ||
-                    searchData.searchChats.users.length)
-                ) &&
-                styles.chat__labels__close
+                !searchStr && styles.chat__labels__close
               }`}
             >
               Search results

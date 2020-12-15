@@ -19,6 +19,26 @@ export const Query = {
       throw new Error(`Getting all chat messages error: ${error.message}`)
     }
   },
+  async searchMessages(
+    _: any,
+    { searchStr, chatId }: IField,
+    { isAuth }: { isAuth: IIsAuth }
+  ) {
+    try {
+      if (!isAuth.auth) {
+        throw new Error("Access denied!")
+      }
+      //TODO: validation for each field and check in models
+
+      const messages = await Message.find({
+        chat: chatId,
+        $text: { $search: searchStr },
+      })
+      return messages
+    } catch (error) {
+      throw new Error(`Getting searched chat messages error: ${error.message}`)
+    }
+  },
 }
 
 export const Subscription = {

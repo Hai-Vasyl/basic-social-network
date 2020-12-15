@@ -21,6 +21,7 @@
   &__toolbar {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     background-color: getColor(second-light-accent);
     padding: 5px 10px;
     border-bottom: 1px solid getColor(main);
@@ -40,38 +41,38 @@
     // }
   }
   &__searchbar {
-    flex: 1;
-    display: flex;
-    background-color: getColor(secondary);
-    border-radius: getRadius(main);
-    align-items: center;
+    // flex: 1;
+    // display: flex;
+    // background-color: getColor(secondary);
+    // border-radius: getRadius(main);
+    // align-items: center;
   }
   &__search {
-    flex: 1;
-    background-color: transparent;
-    padding: 3px 10px;
-    border-top-left-radius: getRadius(main);
-    border-bottom-left-radius: getRadius(main);
-    border: 1px solid transparent;
-    &::placeholder {
-      color: getColor(second-lighter);
-      font-size: 0.9em;
-    }
-    &:focus {
-      border-color: getColor(accent);
-    }
+    // flex: 1;
+    // background-color: transparent;
+    // padding: 3px 10px;
+    // border-top-left-radius: getRadius(main);
+    // border-bottom-left-radius: getRadius(main);
+    // border: 1px solid transparent;
+    // &::placeholder {
+    //   color: getColor(second-lighter);
+    //   font-size: 0.9em;
+    // }
+    // &:focus {
+    //   border-color: getColor(accent);
+    // }
   }
   &__btn_search {
-    display: flex;
-    font-size: 1em;
-    padding: 0px 6px;
-    color: getColor(second-lighter);
-    background-color: transparent;
-    border-top-right-radius: getRadius(main);
-    border-bottom-right-radius: getRadius(main);
-    &* > {
-      margin: auto;
-    }
+    // display: flex;
+    // font-size: 1em;
+    // padding: 0px 6px;
+    // color: getColor(second-lighter);
+    // background-color: transparent;
+    // border-top-right-radius: getRadius(main);
+    // border-bottom-right-radius: getRadius(main);
+    // &* > {
+    //   margin: auto;
+    // }
   }
   &__empty_plug {
     display: none;
@@ -94,6 +95,13 @@
     max-height: 40vh;
     overflow-y: auto;
     transition: getTransition(main);
+    border-bottom: 1px solid getColor(second-dark);
+    &__close {
+      border-width: 0;
+      &::-webkit-scrollbar {
+        width: 0em;
+      }
+    }
   }
   &__labels {
     background-color: getColor(second-light-accent);
@@ -104,25 +112,28 @@
     opacity: 1;
     visibility: visible;
     transition: getTransition(main);
+    border-top: 1px solid getColor(second-lighter);
+    border-bottom: 1px solid getColor(second-dark);
+    height: 29px;
     &__close {
       opacity: 0;
       visibility: hidden;
       height: 0;
       padding: 0;
+      border-width: 0px;
     }
   }
   &__thumbnail {
     @extend %flex-center;
     width: 40%;
-    // border: 1px solid black;
     justify-content: flex-start;
+    margin-right: 10px;
   }
   &__toolbar_form {
     @extend %flex-center;
     width: 60%;
   }
   &__wrapperImg {
-    position: relative;
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -130,6 +141,15 @@
   &__image {
     @extend %image;
     border-radius: 50%;
+  }
+  &__wrapperIcon {
+    border-radius: 0px;
+    display: flex;
+  }
+  &__icon {
+    font-size: 1.4em;
+    color: getColor(second-lighter);
+    margin: auto;
   }
   &__title {
     font-size: 0.9em;
@@ -194,6 +214,7 @@
 .msg_container {
   flex: 1;
   overflow-y: auto;
+  position: relative;
 }
 
 .chat_msgWrapper {
@@ -351,5 +372,21 @@
     }
   }
   &__emoji {
+  }
+}
+
+.msg_plug {
+  @extend %center-position;
+  @extend %flex-center;
+  flex-direction: column;
+  &__icon {
+    font-size: 8em;
+    color: getColor(second-light-accent);
+  }
+  &__title {
+    font-size: 1.3em;
+    margin-top: 1em;
+    color: getColor(second-light-accent);
+    font-weight: bold;
   }
 }

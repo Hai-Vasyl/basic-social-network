@@ -10,9 +10,12 @@ import SearchSimple from "./SearchSimple"
 import {
   CLEAR_SEARCH_MESSAGE,
   SET_SEARCH_MESSAGE,
+  SET_SEARCHED_MESSAGES,
 } from "../redux/searchMessage/searchTypes"
 import { SET_ACTIVE_CHAT } from "../redux/chatActive/chatActiveTypes"
+import { SEARCH_MESSAGES } from "../fetching/queries"
 import ButtonTab from "./ButtonTab"
+import { useQuery } from "@apollo/client"
 
 interface IToolbarProps {
   Icon?: any
@@ -34,9 +37,15 @@ const Toolbar: React.FC<IToolbarProps> = ({
     currentChat: { route },
     chats,
     auth: { user },
-    searchMessage: { searchStr },
+    searchMessage: { searchStr, messages },
   } = useSelector((state: RootStore) => state)
   const dispatch = useDispatch()
+  const { data, loading, error } = useQuery(SEARCH_MESSAGES, {
+    variables: {
+      chatId: route.chatId,
+      searchStr,
+    },
+  })
 
   const [activeChat, setActiveChat] = useState({
     id: "",
@@ -46,6 +55,14 @@ const Toolbar: React.FC<IToolbarProps> = ({
     owner: "",
   })
 
+  useEffect(() => {
+    dispatch({
+      type: SET_SEARCHED_MESSAGES,
+      payload: data && data.searchMessages ? data.searchMessages : [],
+    })
+  }, [dispatch, data])
+
+  console.log("SEARCHED MESSAGES:", { messages })
   useEffect(() => {
     let activeChatData = [...chats].find((chat) => chat.id === route.chatId)
 
@@ -96,8 +113,10 @@ const Toolbar: React.FC<IToolbarProps> = ({
             </div>
           )
         ) : (
-          <div className={styles.chat__wrapperImg}>
-            <Icon className={styles.chat__image} />
+          <div
+            className={`${styles.chat__wrapperImg} ${styles.chat__wrapperIcon}`}
+          >
+            <Icon className={styles.chat__icon} />
           </div>
         )}
         <div className={styles.chat__title}>
@@ -107,13 +126,16 @@ const Toolbar: React.FC<IToolbarProps> = ({
                 route.keyWord === keyWords.chatConnect ||
                 route.keyWord === keyWords.userConnect
                   ? searchedChatTitle
-                  : activeChat.title
+                  : route.keyWord !== keyWords.chatCreateNew
+                  ? activeChat.title
+                  : ""
               }`}
         </div>
       </div>
 
       {route.keyWord === keyWords.chatMessages ? (
         <SearchSimple
+          flipForm
           searchStr={searchStr}
           IconBtn={user.id === activeChat.owner ? BsGear : BsThreeDotsVertical}
           placeholder='Search message'
@@ -147,32 +169,6 @@ const Toolbar: React.FC<IToolbarProps> = ({
           />
         )
       )}
-
-      {/* <div className={styles.chat__toolbar_form}>
-            {route.keyWord === "chat-messages" && (
-              <form className={styles.chat__searchbar}>
-                <input
-                  type='text'
-                  className={styles.chat__search}
-                  // value={searchedText}
-                  // onChange={handleChangeSearch}
-                  placeholder='Search message'
-                />
-                <button className={styles.chat__btn_search}>
-                  <BsSearch />
-                </button>
-              </form>
-            )}
-            <button
-              className={`${styles.chat__btn_add} ${styles.chat__btn_info}`}
-            >
-              {user.id === activeChat.owner ? (
-                <BsGear />
-              ) : (
-                <BsThreeDotsVertical />
-              )}
-            </button>
-          </div> */}
     </>
   )
 }

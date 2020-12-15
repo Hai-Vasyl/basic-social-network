@@ -11,8 +11,8 @@ import {
   BsLink45Deg,
   BsChatDots,
   BsPencilSquare,
-  BsInfo,
   BsChatSquareDots,
+  BsInfoCircle,
 } from "react-icons/bs"
 
 interface IToolbarMainProps {
@@ -70,7 +70,7 @@ const ToolbarMain: React.FC<IToolbarMainProps> = ({ searchActiveChat }) => {
       case keyWords.chatInfo:
         return (
           <Toolbar
-            Icon={BsInfo}
+            Icon={BsInfoCircle}
             title='Information of'
             routeParams={{
               chatId: route.chatId,
