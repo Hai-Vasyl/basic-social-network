@@ -137,7 +137,11 @@ const Toolbar: React.FC<IToolbarProps> = ({
         <SearchSimple
           flipForm
           searchStr={searchStr}
-          IconBtn={user.id === activeChat.owner ? BsGear : BsThreeDotsVertical}
+          IconBtn={
+            activeChat.type === "individual" || user.id !== activeChat.owner
+              ? BsThreeDotsVertical
+              : BsGear
+          }
           placeholder='Search message'
           changeForm={(event) =>
             dispatch({ type: SET_SEARCH_MESSAGE, payload: event.target.value })
@@ -147,9 +151,10 @@ const Toolbar: React.FC<IToolbarProps> = ({
               type: SET_ACTIVE_CHAT,
               payload: {
                 keyWord:
-                  user.id === activeChat.owner
-                    ? keyWords.chatEdit
-                    : keyWords.chatInfo,
+                  activeChat.type === "individual" ||
+                  user.id !== activeChat.owner
+                    ? keyWords.chatInfo
+                    : keyWords.chatEdit,
                 chatId: route.chatId,
               },
             })

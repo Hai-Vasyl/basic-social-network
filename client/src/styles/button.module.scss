@@ -30,3 +30,7 @@
   background-color: transparent;
   border: 1px solid getColor(second-light);
 }
+.btn_activated {
+  background-color: getColor(secondary);
+  border: 1px solid transparent;
+}

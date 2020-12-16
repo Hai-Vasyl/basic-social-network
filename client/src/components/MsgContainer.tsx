@@ -10,6 +10,7 @@ import moment from "moment"
 import styles from "../styles/chat.module"
 import { IchatMessage } from "../redux/chatActive/chatActiveTypes"
 import { BsChat } from "react-icons/bs"
+import { convertDate, convertDateNow } from "../helpers/convertDate"
 
 const MsgContainer: React.FC = () => {
   const anchorMsg = useRef<HTMLDivElement>(null)
@@ -37,9 +38,9 @@ const MsgContainer: React.FC = () => {
   const reduceMapMessages = (messages: IchatMessage[]) => {
     return messages.map((msg) => {
       const date = new Date(Number(msg.date))
-      const dateRender = `${moment(date).calendar()} (${moment(
-        date
-      ).fromNow()})`
+      const dateRender = `${convertDate(msg.date)} (${convertDateNow(
+        msg.date
+      )})`
       return (
         <div
           key={msg.id}

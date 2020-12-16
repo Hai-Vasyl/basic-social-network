@@ -125,7 +125,7 @@ export const SEARCH_MESSAGES = gql`
   }
 `
 export const GET_CHAT_INFO = gql`
-  query GET_CHAT_INFO($isChat: Boolean!, $id: String!) {
+  query GET_CHAT_INFO($isChat: Boolean!, $id: ID!) {
     getChatUserInfo(isChat: $isChat, id: $id) {
       user {
         id
@@ -135,6 +135,7 @@ export const GET_CHAT_INFO = gql`
         firstname
         lastname
         date
+        typeUser
       }
       chat {
         id
@@ -147,12 +148,7 @@ export const GET_CHAT_INFO = gql`
           username
           email
           ava
-        }
-        owners {
-          id
-          username
-          email
-          ava
+          typeUser
         }
         type
       }

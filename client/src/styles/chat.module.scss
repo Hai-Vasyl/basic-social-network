@@ -8,6 +8,7 @@
   max-width: 100%;
   margin: 0 auto;
   //
+  border-bottom: 1px solid getColor(secondary);
   display: flex;
   &__sidebar {
     width: 320px;
@@ -16,7 +17,7 @@
   &__main {
     flex: 1;
     border-right: 1px solid getColor(secondary);
-    border-bottom: 1px solid getColor(secondary);
+    // border-bottom: 4px solid black;
   }
   &__toolbar {
     display: flex;
@@ -40,40 +41,6 @@
     //   margin: auto;
     // }
   }
-  &__searchbar {
-    // flex: 1;
-    // display: flex;
-    // background-color: getColor(secondary);
-    // border-radius: getRadius(main);
-    // align-items: center;
-  }
-  &__search {
-    // flex: 1;
-    // background-color: transparent;
-    // padding: 3px 10px;
-    // border-top-left-radius: getRadius(main);
-    // border-bottom-left-radius: getRadius(main);
-    // border: 1px solid transparent;
-    // &::placeholder {
-    //   color: getColor(second-lighter);
-    //   font-size: 0.9em;
-    // }
-    // &:focus {
-    //   border-color: getColor(accent);
-    // }
-  }
-  &__btn_search {
-    // display: flex;
-    // font-size: 1em;
-    // padding: 0px 6px;
-    // color: getColor(second-lighter);
-    // background-color: transparent;
-    // border-top-right-radius: getRadius(main);
-    // border-bottom-right-radius: getRadius(main);
-    // &* > {
-    //   margin: auto;
-    // }
-  }
   &__empty_plug {
     display: none;
     color: getColor(second-light);
@@ -86,7 +53,7 @@
     }
   }
   &__stacks {
-    height: calc(90vh - 47px);
+    height: calc(90vh - 48px);
     overflow-y: auto;
   }
   &__chats_stack {
@@ -96,6 +63,7 @@
     overflow-y: auto;
     transition: getTransition(main);
     border-bottom: 1px solid getColor(second-dark);
+    @extend %scrollbar;
     &__close {
       border-width: 0;
       &::-webkit-scrollbar {
@@ -215,12 +183,13 @@
   flex: 1;
   overflow-y: auto;
   position: relative;
+  @extend %scrollbar;
 }
 
 .chat_msgWrapper {
   display: flex;
   flex-direction: column;
-  height: calc(90vh - 47px);
+  height: calc(90vh - 48px);
 }
 
 .msg_anchor {
@@ -385,8 +354,21 @@
   }
   &__title {
     font-size: 1.3em;
-    margin-top: 1em;
+    margin: 1em 0;
     color: getColor(second-light-accent);
     font-weight: bold;
   }
+  &__description {
+    font-size: 0.9em;
+    text-align: center;
+    color: getColor(title-simple);
+  }
+}
+
+.chatWrapper {
+  position: relative;
+  height: calc(90vh - 48px);
+  padding: 15px;
+  @extend %scrollbar;
+  background-color: getColor(main-light);
 }

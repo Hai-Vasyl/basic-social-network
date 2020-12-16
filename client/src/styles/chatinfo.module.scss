@@ -1,0 +1,89 @@
+@import "base";
+
+.info {
+  display: flex;
+  margin-bottom: 15px;
+  &__preview {
+  }
+  &__link {
+    width: 200px;
+    height: 200px;
+    display: block;
+    position: relative;
+    border-radius: 50%;
+    padding: 10px;
+    border: 1px solid getColor(secondary);
+    // background-color: getColor(second-lighter);
+  }
+  &__image {
+    @extend %image;
+    border-radius: 50%;
+  }
+  &__icon {
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    border: 1px solid getColor(secondary);
+    background-color: getColor(main-light);
+    color: getColor(font);
+    border-radius: 50%;
+    // padding: 5px;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    & > * {
+      margin: auto;
+      font-size: 1.1em;
+    }
+  }
+  &__about {
+    flex: 1;
+    margin-left: 15px;
+  }
+  &__main {
+  }
+  &__title {
+    text-decoration: none;
+    color: getColor(font);
+    font-size: 1.5em;
+  }
+  &__subtitle {
+    font-size: 0.9em;
+    color: getColor(title-simple);
+  }
+  &__extended {
+    border-top: 1px solid getColor(secondary);
+    padding: 5px 0;
+    margin-top: 15px;
+  }
+  &__field {
+    @extend %flex-center;
+    justify-content: flex-start;
+  }
+  &__text {
+    margin-left: 10px;
+  }
+  &__field_date {
+    font-size: 0.8em;
+    color: getColor(title-simple);
+    margin-top: 5px;
+  }
+  &__btns {
+    display: flex;
+    justify-content: flex-start;
+    border-top: 1px solid getColor(secondary);
+    padding-top: 10px;
+    & > * {
+      margin-left: 10px;
+    }
+    & > :first-child() {
+      margin-left: 0;
+    }
+  }
+  &__btn_unsubscribe {
+    margin-left: auto;
+  }
+  &__plug {
+    color: getColor(second-lighter);
+  }
+}
