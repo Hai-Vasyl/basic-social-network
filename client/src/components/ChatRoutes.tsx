@@ -3,7 +3,7 @@ import { useSelector } from "react-redux"
 import { RootStore } from "../redux/store"
 import keyWords from "../modules/keyWords"
 
-import ChatUserConnect from "../screens/ChatUserConnect"
+// import ChatUserConnect from "../screens/ChatUserConnect"
 import ChatMessages from "../screens/ChatMessages"
 import ChatCreateNew from "../screens/ChatCreateNew"
 import ChatEdit from "../screens/ChatEdit"
@@ -22,9 +22,9 @@ const ChatRoutes: React.FC = () => {
       case keyWords.chatCreateNew:
         return <ChatCreateNew />
       case keyWords.userConnect:
-        return <ChatUserConnect />
+        return <ChatInfo connect='user' />
       case keyWords.chatConnect:
-        return <ChatUserConnect />
+        return <ChatInfo connect='chat' />
       case keyWords.chatEdit:
         return <ChatEdit />
       case keyWords.chatInfo:

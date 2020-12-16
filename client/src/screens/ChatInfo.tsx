@@ -8,24 +8,33 @@ import { RootStore } from "../redux/store"
 import UserInfo from "../components/UserInfo"
 import ChatInfoComponent from "../components/ChatInfo"
 
-const ChatInfo: React.FC = () => {
+interface IChatInfoProps {
+  connect?: string
+}
+
+const ChatInfo: React.FC<IChatInfoProps> = ({ connect }) => {
   const {
     currentChat: { route },
     chats,
     auth: { user },
   } = useSelector((state: RootStore) => state)
-  const chat = chats.find((chat) => chat.id === route.chatId)
-  const isIndividualChat = chat?.type === "individual"
 
+  let isIndividualChat
   let chatOwner
-  if (isIndividualChat) {
-    chatOwner =
-      chat?.owners && chat.owners.find((owner) => owner.id !== user.id)
+  if (!connect?.length) {
+    const chat = chats.find((chat) => chat.id === route.chatId)
+    isIndividualChat = chat?.type === "individual"
+
+    if (isIndividualChat) {
+      chatOwner =
+        chat?.owners && chat.owners.find((owner) => owner.id !== user.id)
+    }
   }
+
   const { data, loading, error } = useQuery(GET_CHAT_INFO, {
     variables: {
       id: isIndividualChat ? chatOwner?.id : route.chatId,
-      isChat: !isIndividualChat,
+      isChat: connect?.length ? connect === "chat" : !isIndividualChat,
     },
   })
 
@@ -35,7 +44,7 @@ const ChatInfo: React.FC = () => {
   }
   return (
     <div className={styles.chatWrapper}>
-      {isIndividualChat ? (
+      {connect === "user" || isIndividualChat ? (
         <UserInfo {...data.getChatUserInfo.user} />
       ) : (
         <ChatInfoComponent {...data.getChatUserInfo.chat} />

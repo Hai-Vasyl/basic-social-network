@@ -9,6 +9,7 @@ import {
   BsPersonPlus,
   BsPerson,
   BsDashCircle,
+  BsSlashCircle,
   BsLock,
   BsPeople,
 } from "react-icons/bs"
@@ -54,15 +55,28 @@ const ChatInfo: React.FC<IChatInfoProps> = (info) => {
               </div>
             )}
           </div>
+          <div className={styles.info__btn}>
+            <Button
+              title='Disconnect'
+              Icon={BsSlashCircle}
+              exClass={stylesBtn.btn_activated}
+              click={() => {}}
+            />
+          </div>
         </div>
         <div className={styles.info__about}>
           <div className={styles.info__main}>
             <div className={styles.info__title}>{info.title}</div>
-            <p className={styles.info__subtitle}>Access: {info.type}</p>
+            <p className={styles.info__subtitle}>
+              Access:
+              <span className={styles.info__subtitle_text}>{info.type}</span>
+            </p>
           </div>
 
           <div className={styles.info__extended}>
-            <div className={styles.info__field}>
+            <div
+              className={`${styles.info__field} ${styles.info__field_section}`}
+            >
               Description:
               <span className={styles.info__text}>
                 {info.description ? (
@@ -77,6 +91,33 @@ const ChatInfo: React.FC<IChatInfoProps> = (info) => {
               <span className={styles.info__text}>
                 {convertDate(info.date)}
               </span>
+            </div>
+          </div>
+
+          <div className={styles.owner}>
+            <Link
+              to={`/profile/${info.owner.id}`}
+              className={styles.owner__link}
+            >
+              <img
+                src={info.owner.ava}
+                alt='userImage'
+                className={styles.owner__avatar}
+              />
+              {info.owner.typeUser === "admin" && (
+                <div className={styles.owner__icon}>
+                  <RiUserSettingsLine />
+                </div>
+              )}
+            </Link>
+            <div className={styles.owner__about}>
+              <Link
+                to={`/profile/${info.owner.id}`}
+                className={styles.owner__title}
+              >
+                {info.owner.username}
+              </Link>
+              <p className={styles.owner__subtitle}>{info.owner.email}</p>
             </div>
           </div>
         </div>
