@@ -38,16 +38,21 @@ const ChatInfo: React.FC<IChatInfoProps> = ({ connect }) => {
     },
   })
 
-  console.log(data)
   if (loading) {
     return <div>LOADING ...</div>
   }
   return (
     <div className={styles.chatWrapper}>
       {connect === "user" || isIndividualChat ? (
-        <UserInfo {...data.getChatUserInfo.user} />
+        <UserInfo
+          isConnect={!!connect?.length}
+          {...data.getChatUserInfo.user}
+        />
       ) : (
-        <ChatInfoComponent {...data.getChatUserInfo.chat} />
+        <ChatInfoComponent
+          isConnect={!!connect?.length}
+          {...data.getChatUserInfo.chat}
+        />
       )}
     </div>
   )

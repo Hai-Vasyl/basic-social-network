@@ -14,13 +14,7 @@ import {
   BsInfoCircle,
 } from "react-icons/bs"
 
-interface IToolbarMainProps {
-  searchActiveChat: {
-    title: string
-  }
-}
-
-const ToolbarMain: React.FC<IToolbarMainProps> = ({ searchActiveChat }) => {
+const ToolbarMain: React.FC = () => {
   const {
     currentChat: { route },
   } = useSelector((state: RootStore) => state)
@@ -32,8 +26,7 @@ const ToolbarMain: React.FC<IToolbarMainProps> = ({ searchActiveChat }) => {
           <Toolbar
             routeParams={{ chatId: "", keyWord: "" }}
             Icon={BsLightning}
-            title='Connect to'
-            searchedChatTitle={searchActiveChat.title}
+            title='Connect to chat'
           />
         )
       case keyWords.userConnect:
@@ -41,8 +34,7 @@ const ToolbarMain: React.FC<IToolbarMainProps> = ({ searchActiveChat }) => {
           <Toolbar
             routeParams={{ chatId: "", keyWord: "" }}
             Icon={BsLink45Deg}
-            title='Subscribe to'
-            searchedChatTitle={searchActiveChat.title}
+            title='Subscribe to user'
           />
         )
       case keyWords.chatCreateNew:

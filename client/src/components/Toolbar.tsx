@@ -20,19 +20,13 @@ import { useQuery } from "@apollo/client"
 interface IToolbarProps {
   Icon?: any
   title?: string
-  searchedChatTitle?: string
   routeParams?: {
     keyWord: string
     chatId: string
   }
 }
 
-const Toolbar: React.FC<IToolbarProps> = ({
-  Icon,
-  title,
-  searchedChatTitle,
-  routeParams,
-}) => {
+const Toolbar: React.FC<IToolbarProps> = ({ Icon, title, routeParams }) => {
   const {
     currentChat: { route },
     chats,
@@ -123,12 +117,11 @@ const Toolbar: React.FC<IToolbarProps> = ({
           {route.keyWord === keyWords.chatMessages
             ? activeChat.title
             : `${title} ${
+                route.keyWord === keyWords.chatCreateNew ||
                 route.keyWord === keyWords.chatConnect ||
                 route.keyWord === keyWords.userConnect
-                  ? searchedChatTitle
-                  : route.keyWord !== keyWords.chatCreateNew
-                  ? activeChat.title
-                  : ""
+                  ? ""
+                  : activeChat.title
               }`}
         </div>
       </div>

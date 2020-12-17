@@ -6,9 +6,14 @@ import {
   Mutation as MMessages,
   Subscription as SMessages,
 } from "./resolvers/messages"
+import {
+  Subscription as SNotifications,
+  Mutation as MNotifications,
+} from "./resolvers/notifications"
 import { Chat } from "./resolvers/chat"
 import { Message } from "./resolvers/message"
 import { UserChat } from "./resolvers/userchat"
+import { Notification } from "./resolvers/notification"
 
 const schema = {
   typeDefs,
@@ -21,13 +26,16 @@ const schema = {
     Mutation: {
       ...MChats,
       ...MMessages,
+      ...MNotifications,
     },
     Subscription: {
       ...SMessages,
+      ...SNotifications,
     },
     Chat,
     Message,
     UserChat,
+    Notification,
   },
 }
 

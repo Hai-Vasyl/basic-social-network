@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Link, useHistory } from "react-router-dom"
 // @ts-ignore
 import styles from "../styles/chatinfo.module"
@@ -8,13 +8,20 @@ import { RiUserSettingsLine } from "react-icons/ri"
 import {
   BsPersonPlus,
   BsPerson,
-  BsDashCircle,
-  BsSlashCircle,
   BsLock,
   BsPeople,
+  BsPlusSquare,
+  BsSlashSquare,
 } from "react-icons/bs"
 import Button from "./Button"
 import { convertDate } from "../helpers/convertDate"
+import { useMutation } from "@apollo/client"
+import { ADD_USER_ACCESS, REMOVE_USER_ACCESS } from "../fetching/mutations"
+import { useSelector, useDispatch } from "react-redux"
+import { RootStore } from "../redux/store"
+import { SET_CHATS } from "../redux/chats/chatsTypes"
+import { SET_ACTIVE_CHAT } from "../redux/chatActive/chatActiveTypes"
+import keyWords from "../modules/keyWords"
 
 interface IChatInfoProps {
   date: string
@@ -30,10 +37,56 @@ interface IChatInfoProps {
     typeUser: string
     username: string
   }
+  isConnect?: boolean
 }
 
 const ChatInfo: React.FC<IChatInfoProps> = (info) => {
   const history = useHistory()
+  const dispatch = useDispatch()
+  const {
+    currentChat: { route },
+    auth: { user },
+  } = useSelector((state: RootStore) => state)
+  const [addAccess, addAData] = useMutation(ADD_USER_ACCESS)
+  const [removeAccess, removeAData] = useMutation(REMOVE_USER_ACCESS)
+
+  useEffect(() => {
+    const addAccessData = addAData.data && addAData.data.addUserAccess
+    const rmAccessData = removeAData.data && removeAData.data.removeUserAccess
+    if (addAccessData) {
+      dispatch({ type: SET_CHATS, payload: addAccessData })
+
+      // let activeChatId
+      // addAccessData.forEach((chat: IChat) => {
+      //   if (chat.type === "individual") {
+      //     const ownerChat =
+      //       chat.owners && chat.owners.find((owner) => owner.id === info.id)
+      //     if (!!ownerChat) {
+      //       activeChatId = chat.id
+      //     }
+      //   }
+      // })
+
+      dispatch({
+        type: SET_ACTIVE_CHAT,
+        payload: { keyWord: keyWords.chatMessages, chatId: info.id },
+      })
+    } else if (rmAccessData) {
+      dispatch({ type: SET_CHATS, payload: rmAccessData })
+      dispatch({
+        type: SET_ACTIVE_CHAT,
+        payload: { keyWord: keyWords.chatConnect, chatId: info.id },
+      })
+    }
+  }, [dispatch, addAData.data, removeAData.data])
+
+  const handleConnect = () => {
+    if (info.isConnect) {
+      addAccess({ variables: { chatId: info.id, userId: user.id } })
+    } else {
+      removeAccess({ variables: { chatId: info.id, userId: user.id } })
+    }
+  }
 
   return (
     <>
@@ -57,10 +110,10 @@ const ChatInfo: React.FC<IChatInfoProps> = (info) => {
           </div>
           <div className={styles.info__btn}>
             <Button
-              title='Disconnect'
-              Icon={BsSlashCircle}
-              exClass={stylesBtn.btn_activated}
-              click={() => {}}
+              title={info.isConnect ? "Connect" : "Disconnect"}
+              Icon={info.isConnect ? BsPlusSquare : BsSlashSquare}
+              exClass={`${stylesBtn.btn_activated}`}
+              click={handleConnect}
             />
           </div>
         </div>

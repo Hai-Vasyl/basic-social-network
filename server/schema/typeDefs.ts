@@ -51,6 +51,16 @@ export default gql`
     user: User
     chat: Chat
   }
+  type Notification {
+    id: ID!
+    title: String!
+    description: String
+    date: String!
+    type: String!
+    chatId: Chat
+    userId: User
+    channel: String!
+  }
   type Query {
     login(email: String!, password: String!): Auth
     register(
@@ -75,10 +85,19 @@ export default gql`
       type: String!
     ): [Chat]!
     createMessage(content: String!, chat: ID!): Message!
+    createNotification(
+      title: String!
+      description: String
+      type: String
+      chatId: ID
+      userId: ID
+      channel: String!
+    ): Notification!
     addUserAccess(chatId: ID, userId: ID!): [Chat]!
     removeUserAccess(chatId: ID!, userId: ID): [Chat]!
   }
   type Subscription {
     newMessage(channels: [String]!): Message!
+    newNotification(channels: [String]!): Notification!
   }
 `

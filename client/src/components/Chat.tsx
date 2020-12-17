@@ -36,30 +36,18 @@ const Chat: React.FC = () => {
     data: searchData,
     error: searchError,
     loading: searchLoad,
+    refetch: refetchSearchChats,
   } = useQuery(SEARCH_CHATS, { variables: { searchStr } })
-  const [searchActiveChat, setSearchActiveChat] = useState({
-    title: "",
-  })
 
   useEffect(() => {
-    const userSearched =
-      searchData &&
-      searchData.searchChats.users.find(
-        (user: IUserSearch) => user.id === route.chatId
-      )
-    const chatSearched =
-      searchData &&
-      searchData.searchChats.chats.find(
-        (chat: IChatSearch) => chat.id === route.chatId
-      )
-    if (!!userSearched) {
-      setSearchActiveChat((prev) => ({ ...prev, title: userSearched.username }))
-    } else if (!!chatSearched) {
-      setSearchActiveChat((prev) => ({ ...prev, title: chatSearched.title }))
-    } else {
-      setSearchActiveChat((prev) => ({ ...prev, title: "" }))
+    if (
+      route.keyWord === keyWords.chatMessages ||
+      route.keyWord === keyWords.userConnect ||
+      route.keyWord === keyWords.chatConnect
+    ) {
+      refetchSearchChats()
     }
-  }, [route, searchData])
+  }, [route])
 
   useEffect(() => {
     localStorage.setItem("searchChat", searchStr)
@@ -174,7 +162,7 @@ const Chat: React.FC = () => {
       </div>
 
       <div className={styles.chat__main}>
-        <ToolbarMain searchActiveChat={searchActiveChat} />
+        <ToolbarMain />
         {/* 
         <div className={styles.chat__toolbar}>
           <div className={styles.chat__thumbnail}>
