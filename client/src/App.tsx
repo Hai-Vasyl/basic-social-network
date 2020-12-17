@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar"
 import Routes from "./components/Routes"
 import { useQuery, useSubscription } from "@apollo/client"
 import { GET_USER_CHATS } from "./fetching/queries"
-import { NEW_MESSAGE } from "./fetching/subscriptions"
+import { NEW_MESSAGE, NEW_NOTIFICATION } from "./fetching/subscriptions"
 import { SET_CHATS, IChat } from "./redux/chats/chatsTypes"
 import {
   SET_ACTIVE_CHAT,
@@ -15,6 +15,7 @@ import {
 import { RootStore } from "./redux/store"
 import { SET_SEARCH_CHAT } from "./redux/searchChat/searchTypes"
 import { SET_SEARCH_MESSAGE } from "./redux/searchMessage/searchTypes"
+import { SET_CHATS_QUEUE } from "./redux/queueChats/queueTypes"
 import Chat from "./components/Chat"
 
 const App: React.FC = () => {
@@ -23,12 +24,17 @@ const App: React.FC = () => {
     chats,
     currentChat: { route },
     searchChat: { searchStr },
+    auth: { user },
+    queueChats: { chats: queueChats },
   } = useSelector((state: RootStore) => state)
   const { data, loading: chatsLoading } = useQuery(GET_USER_CHATS, {
     pollInterval: 60000,
   })
-  const { data: newMsgData, loading, error } = useSubscription(NEW_MESSAGE, {
+  const { data: newMsgData } = useSubscription(NEW_MESSAGE, {
     variables: { channels: chats.map((chat) => chat.channel) },
+  })
+  const { data: newNotification } = useSubscription(NEW_NOTIFICATION, {
+    variables: { channels: [user.id] },
   })
   const dispatch = useDispatch()
 
@@ -52,6 +58,11 @@ const App: React.FC = () => {
     const searchMessageStr = localStorage.getItem("searchMessage")
     dispatch({ type: SET_SEARCH_CHAT, payload: searchChatStr || "" })
     dispatch({ type: SET_SEARCH_MESSAGE, payload: searchMessageStr || "" })
+  }, [dispatch])
+
+  useEffect(() => {
+    const queueChats = localStorage.getItem("queueChats")
+    dispatch({ type: SET_CHATS_QUEUE, payload: JSON.parse(queueChats || "[]") })
   }, [dispatch])
 
   useEffect(() => {
@@ -93,6 +104,7 @@ const App: React.FC = () => {
     }
   }, [dispatch, newMsgData])
 
+  console.log("NEW_NOTIFICATION: ", newNotification)
   if (initLoad) {
     return <div>LOADING ...</div>
   }

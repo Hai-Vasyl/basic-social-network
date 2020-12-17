@@ -18,6 +18,47 @@ export const CREATE_MESSAGE = gql`
   }
 `
 
+export const CREATE_NOTIFICATION = gql`
+  mutation CREATE_NOTIFICATION(
+    $title: String!
+    $description: String
+    $type: String
+    $chatId: ID
+    $userId: ID
+    $channel: String!
+  ) {
+    createNotification(
+      title: $title
+      description: $description
+      type: $type
+      chatId: $chatId
+      userId: $userId
+      channel: $channel
+    ) {
+      id
+      title
+      description
+      channel
+      active
+      date
+      type
+      userId {
+        id
+        username
+        email
+        typeUser
+        ava
+      }
+      chatId {
+        id
+        title
+        type
+        image
+      }
+    }
+  }
+`
+
 export const ADD_USER_ACCESS = gql`
   mutation ADD_USER_ACCESS($chatId: ID, $userId: ID!) {
     addUserAccess(chatId: $chatId, userId: $userId) {

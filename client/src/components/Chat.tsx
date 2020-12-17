@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react"
 import { RootStore } from "../redux/store"
 import { useSelector, useDispatch } from "react-redux"
 import { AiOutlinePaperClip, AiOutlineSmile } from "react-icons/ai"
-import { BsPlus, BsSearch, BsGear, BsThreeDotsVertical } from "react-icons/bs"
+import {
+  BsPlus,
+  BsSearch,
+  BsGear,
+  BsThreeDotsVertical,
+  BsChatSquare,
+} from "react-icons/bs"
 import { SEARCH_CHATS } from "../fetching/queries"
 import { useMutation, useQuery } from "@apollo/client"
 import MsgContainer from "./MsgContainer"
@@ -23,6 +29,7 @@ import {
 import keyWords from "../modules/keyWords"
 import ToolbarMain from "./ToolbarMain"
 import SearchSimple from "./SearchSimple"
+import { REMOVE_CHAT_QUEUE } from "../redux/queueChats/queueTypes"
 
 const Chat: React.FC = () => {
   const {
@@ -30,6 +37,7 @@ const Chat: React.FC = () => {
     chats,
     currentChat: { route },
     searchChat: { searchStr },
+    queueChats: { chats: queueChats },
   } = useSelector((state: RootStore) => state)
   const dispatch = useDispatch()
   const {
@@ -50,8 +58,27 @@ const Chat: React.FC = () => {
   }, [route])
 
   useEffect(() => {
+    refetchSearchChats()
+  }, [chats])
+
+  useEffect(() => {
+    chats.forEach((chat) => {
+      queueChats.forEach((chatId) => {
+        if (chat.id === chatId) {
+          dispatch({ type: REMOVE_CHAT_QUEUE, payload: chatId })
+        }
+      })
+    })
+  }, [chats, dispatch, queueChats])
+
+  useEffect(() => {
     localStorage.setItem("searchChat", searchStr)
   }, [searchStr])
+
+  const handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target
+    dispatch({ type: SET_SEARCH_CHAT, payload: value })
+  }
 
   const getOwnerChat = (owners: IChatOwner[]) => {
     const chatOwner = owners.find((owner) => owner.id !== user.id)
@@ -66,9 +93,7 @@ const Chat: React.FC = () => {
             searchStr={searchStr}
             IconBtn={BsPlus}
             placeholder='Search chat / user'
-            changeForm={(event) =>
-              dispatch({ type: SET_SEARCH_CHAT, payload: event.target.value })
-            }
+            changeForm={handleChangeSearch}
             clickBtn={() =>
               dispatch({
                 type: SET_ACTIVE_CHAT,

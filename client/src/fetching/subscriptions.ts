@@ -25,14 +25,20 @@ export const NEW_NOTIFICATION = gql`
   subscription NEW_NOTIFICATION($channels: [String]!) {
     newNotification(channels: $channels) {
       id
-      content
+      title
+      description
+      channel
+      active
       date
-      owner {
+      type
+      userId {
         id
         username
+        email
+        typeUser
         ava
       }
-      chat {
+      chatId {
         id
         title
         type

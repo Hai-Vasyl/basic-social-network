@@ -60,6 +60,7 @@ export default gql`
     chatId: Chat
     userId: User
     channel: String!
+    active: Boolean!
   }
   type Query {
     login(email: String!, password: String!): Auth
