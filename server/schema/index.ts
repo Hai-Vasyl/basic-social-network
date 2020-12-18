@@ -9,6 +9,7 @@ import {
 import {
   Subscription as SNotifications,
   Mutation as MNotifications,
+  Query as QNotifications,
 } from "./resolvers/notifications"
 import { Chat } from "./resolvers/chat"
 import { Message } from "./resolvers/message"
@@ -22,6 +23,7 @@ const schema = {
       ...QUsers,
       ...QChats,
       ...QMessages,
+      ...QNotifications,
     },
     Mutation: {
       ...MChats,

@@ -1,8 +1,8 @@
-import React from "react"
+import React, { Fragment, useEffect } from "react"
 import { getLinks } from "../modules/routes"
 import { RootStore } from "../redux/store"
 import { NavLink } from "react-router-dom"
-import { BsSearch } from "react-icons/bs"
+import { BsSearch, BsBell } from "react-icons/bs"
 import { AiOutlineLogout, AiOutlineCheckCircle } from "react-icons/ai"
 import { useSelector, useDispatch } from "react-redux"
 import {
@@ -12,18 +12,37 @@ import {
 } from "../redux/toggle/toggleTypes"
 // @ts-ignore
 import styles from "../styles/navbar.module"
+import { useQuery } from "@apollo/client"
+import { GET_USER_NOTIFICATIONS } from "../fetching/queries"
+import { SET_NOTIFICATIONS } from "../redux/notifications/notifTypes"
 
 const Navbar: React.FC = () => {
   const {
     auth: { user, token },
     toggle: { dropDown, authForm },
+    notifications: { notifications },
   } = useSelector((state: RootStore) => state)
   const dispatch = useDispatch()
+  const { data, loading, error } = useQuery(GET_USER_NOTIFICATIONS)
 
+  useEffect(() => {
+    const notifData = data && data.getNotifications
+    if (notifData) {
+      dispatch({ type: SET_NOTIFICATIONS, payload: notifData })
+    }
+  }, [dispatch, data])
+
+  console.log("NOTIFICATIONS", data)
   const handleDropDown = () => {
     dispatch({ type: DROPDOWN_TOGGLE })
   }
 
+  let countUnreadNotif = 0
+  notifications.forEach((notif) => {
+    if (!notif.active) {
+      countUnreadNotif++
+    }
+  })
   const links = getLinks(user.id)
   return (
     <div className={styles.nav}>
@@ -57,36 +76,52 @@ const Navbar: React.FC = () => {
           } else {
             if (link.to === `/profile/${user.id}`) {
               return (
-                <div key={link.to} className={styles.dropdown}>
-                  <button
-                    className={`${styles.dropdown__btn} ${
-                      dropDown && styles.dropdown__btn__active
-                    }`}
-                    onClick={handleDropDown}
-                  >
-                    <img
-                      className={styles.dropdown__ava}
-                      src={user.ava}
-                      alt='userAva'
-                    />
+                <Fragment key={link.to}>
+                  <button className={`${styles.link} ${styles.link_popup}`}>
+                    <span
+                      className={`${styles.link__counter} ${
+                        countUnreadNotif && styles.link__counter__appear
+                      }`}
+                    >
+                      {countUnreadNotif > 5 ? "5+" : countUnreadNotif}
+                    </span>
+                    <BsBell />
                   </button>
-                  <div
-                    onClick={() => dispatch({ type: RESET_TOGGLE })}
-                    className={`${styles.dropdown__menu} ${
-                      dropDown && styles.dropdown__menu__active
-                    }`}
-                  >
-                    <span className={styles.dropdown__triangle}></span>
-                    <NavLink {...link}>
-                      <Title className={styles.link_extend__icon} />
-                      <span className={styles.link_extend__title}>Profile</span>
-                    </NavLink>
-                    <button className={styles.link_extend}>
-                      <AiOutlineLogout className={styles.link_extend__icon} />
-                      <span className={styles.link_extend__title}>Log Out</span>
+                  <div className={styles.dropdown}>
+                    <button
+                      className={`${styles.dropdown__btn} ${
+                        dropDown && styles.dropdown__btn__active
+                      }`}
+                      onClick={handleDropDown}
+                    >
+                      <img
+                        className={styles.dropdown__ava}
+                        src={user.ava}
+                        alt='userAva'
+                      />
                     </button>
+                    <div
+                      onClick={() => dispatch({ type: RESET_TOGGLE })}
+                      className={`${styles.dropdown__menu} ${
+                        dropDown && styles.dropdown__menu__active
+                      }`}
+                    >
+                      <span className={styles.dropdown__triangle}></span>
+                      <NavLink {...link}>
+                        <Title className={styles.link_extend__icon} />
+                        <span className={styles.link_extend__title}>
+                          Profile
+                        </span>
+                      </NavLink>
+                      <button className={styles.link_extend}>
+                        <AiOutlineLogout className={styles.link_extend__icon} />
+                        <span className={styles.link_extend__title}>
+                          Log Out
+                        </span>
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </Fragment>
               )
             }
             return (

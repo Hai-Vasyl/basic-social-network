@@ -77,6 +77,7 @@ export default gql`
     searchChats(searchStr: String!): Searched
     searchMessages(searchStr: String!, chatId: String!): [Message]!
     getChatUserInfo(isChat: Boolean!, id: ID!): ChatUserInfo
+    getNotifications: [Notification]!
   }
   type Mutation {
     createChat(

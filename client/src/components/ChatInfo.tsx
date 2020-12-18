@@ -148,7 +148,9 @@ const ChatInfo: React.FC<IChatInfoProps> = (info) => {
           </div>
           <div className={styles.info__btn}>
             {isNotified && info.type === "privet" ? (
-              <div>Wait until the chat owner allows you to access</div>
+              <div className={styles.info__warning}>
+                Wait until the chat owner allows you to access
+              </div>
             ) : (
               <Button
                 title={

@@ -1,6 +1,22 @@
 import { Notification } from "../models"
 import { IField, IIsAuth } from "../interfaces"
 
+export const Query = {
+  async getNotifications(_: any, __: any, { isAuth }: { isAuth: IIsAuth }) {
+    try {
+      if (!isAuth.auth) {
+        throw new Error("Access denied!")
+      }
+      //TODO: add validation and check in models
+
+      const notifications = await Notification.find({ channel: isAuth.userId })
+      return notifications
+    } catch (error) {
+      throw new Error(`Getting all notifications error: ${error.message}`)
+    }
+  },
+}
+
 export const Subscription = {
   newNotification: {
     subscribe(_: any, { channels }: { channels: string[] }, { pubsub }: any) {

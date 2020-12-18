@@ -69,6 +69,33 @@ export const GET_USER_CHATS = gql`
   }
 `
 
+export const GET_USER_NOTIFICATIONS = gql`
+  query GET_USER_NOTIFICATIONS {
+    getNotifications {
+      id
+      title
+      description
+      channel
+      active
+      date
+      type
+      userId {
+        id
+        username
+        email
+        typeUser
+        ava
+      }
+      chatId {
+        id
+        title
+        type
+        image
+      }
+    }
+  }
+`
+
 export const GET_CHAT_MESSAGES = gql`
   query GET_CHAT_MESSAGES($chat: ID!) {
     chatMessages(chat: $chat) {

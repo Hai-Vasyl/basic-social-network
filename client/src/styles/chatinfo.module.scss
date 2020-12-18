@@ -109,6 +109,10 @@
     justify-content: center;
     margin-top: 15px;
   }
+  &__warning {
+    max-width: 200px;
+    color: getColor(title-simple);
+  }
 }
 
 .owner {

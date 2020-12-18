@@ -121,12 +121,34 @@
   margin-left: 26px;
   display: flex;
   transition: getTransition(main);
+  position: relative;
   & > * {
     margin: auto;
   }
   &__active {
     color: getColor(accent);
   }
+  &__counter {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    font-size: 0.6em;
+    display: none;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    background-color: getColor(danger);
+    & > * {
+      margin: auto;
+    }
+    &__appear {
+      display: block;
+    }
+  }
+}
+
+.link_popup {
+  background-color: transparent;
 }
 
 .link_extend {
