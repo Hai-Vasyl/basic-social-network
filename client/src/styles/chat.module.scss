@@ -1,15 +1,22 @@
 @import "base";
 
 .chat {
-  // temporary
-  width: 935px;
-  // padding: 0px 20px;
+  // @extend %center-position;
+  width: 895px;
   height: 90vh;
   max-width: 100%;
-  margin: 0 auto;
-  //
   border-bottom: 1px solid getColor(secondary);
   display: flex;
+  // box-shadow: getShadow(main);
+  // transition: getTransition(main);
+  // opacity: 0;
+  // visibility: hidden;
+  // transform: translate(-50%, -50%) scale(0.9);
+  // z-index: 10;
+  @extend %popup-fade-out;
+  &__open {
+    @extend %popup-fade-in;
+  }
   &__sidebar {
     width: 320px;
     background-color: getColor(secondary);

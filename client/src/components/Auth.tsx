@@ -140,7 +140,9 @@ const Auth: React.FC = () => {
 
   return (
     <div className={`${styles.form} ${authForm && styles.form__active}`}>
-      <h3 className={styles.form__title}>{isLogin ? "Login" : "Register"}</h3>
+      <h3 className={`popup-title ${styles.form__title}`}>
+        {isLogin ? "Login" : "Register"}
+      </h3>
       <form className={styles.form__fields} onSubmit={handleSubmit}>
         {fields}
         <button className='btn-handler'></button>

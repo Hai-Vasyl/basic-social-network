@@ -38,6 +38,7 @@ const Chat: React.FC = () => {
     currentChat: { route },
     searchChat: { searchStr },
     queueChats: { chats: queueChats },
+    toggle: { chat },
   } = useSelector((state: RootStore) => state)
   const dispatch = useDispatch()
   const {
@@ -86,7 +87,7 @@ const Chat: React.FC = () => {
   }
 
   return (
-    <div className={styles.chat}>
+    <div className={`${styles.chat} ${chat && styles.chat__open}`}>
       <div className={styles.chat__sidebar}>
         <div className={styles.chat__toolbar}>
           <SearchSimple
@@ -188,58 +189,6 @@ const Chat: React.FC = () => {
 
       <div className={styles.chat__main}>
         <ToolbarMain />
-        {/* 
-        <div className={styles.chat__toolbar}>
-          <div className={styles.chat__thumbnail}>
-            {route.keyWord === keyWords.chatMessages &&
-              (activeChat.type === "individual" ? (
-                <Link
-                  className={styles.chat__wrapperImg}
-                  to={`/profile/${activeChat.id}`}
-                >
-                  <img
-                    className={styles.chat__image}
-                    src={activeChat.image}
-                    alt='imgThumbnail'
-                  />
-                </Link>
-              ) : (
-                <div className={styles.chat__wrapperImg}>
-                  <img
-                    className={styles.chat__image}
-                    src={activeChat.image}
-                    alt='imgThumbnail'
-                  />
-                </div>
-              ))}
-            <div className={styles.chat__title}>{activeChat.title}</div>
-          </div>
-          <div className={styles.chat__toolbar_form}>
-            {route.keyWord === keyWords.chatMessages && (
-              <form className={styles.chat__searchbar}>
-                <input
-                  type='text'
-                  className={styles.chat__search}
-                  // value={searchedText}
-                  // onChange={handleChangeSearch}
-                  placeholder='Search message'
-                />
-                <button className={styles.chat__btn_search}>
-                  <BsSearch />
-                </button>
-              </form>
-            )}
-            <button
-              className={`${styles.chat__btn_add} ${styles.chat__btn_info}`}
-            >
-              {user.id === activeChat.owner ? (
-                <BsGear />
-              ) : (
-                <BsThreeDotsVertical />
-              )}
-            </button>
-          </div>
-        </div> */}
 
         <div className={styles.chat_controller}>
           <ChatRoutes />

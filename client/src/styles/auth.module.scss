@@ -1,35 +1,34 @@
 @import "base";
 
 .form {
+  // @extend %center-position;
   width: 450px;
   max-width: 100%;
   background-color: getColor(secondary);
-  // @extend %center-position;
   border-radius: getRadius(main);
-  box-shadow: getShadow(main);
-  transition: getTransition(main);
+  // box-shadow: getShadow(main);
+  // transition: getTransition(main);
   overflow: hidden;
-  opacity: 0;
-  visibility: hidden;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  z-index: 10;
+  // opacity: 0;
+  // visibility: hidden;
+  // transform: translate(-50%, -50%) scale(0.9);
+  // z-index: 10;
+  @extend %popup-fade-out;
   &__active {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
+    @extend %popup-fade-in;
+    // opacity: 1;
+    // visibility: visible;
+    // transform: translate(-50%, -50%) scale(1);
   }
   &__title {
-    text-align: center;
-    font-size: 1.6em;
+    // text-align: center;
+    // font-size: 1.6em;
     padding: getPadding(main);
-    border-bottom: 1px solid getColor(main);
-    color: getColor(title-simple);
-    font-family: "Dancing Script", cursive;
-    font-weight: normal;
-    background-color: getColor(second-light-accent);
+    // border-bottom: 1px solid getColor(main);
+    // color: getColor(title-simple);
+    // font-family: "Dancing Script", cursive;
+    // font-weight: normal;
+    // background-color: getColor(second-light-accent);
   }
   &__fields {
     padding: 25px;

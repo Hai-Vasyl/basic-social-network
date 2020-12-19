@@ -19,6 +19,16 @@ $shadows: (
     0px 2px 3px rgb(36, 35, 41),
   ),
 );
+$fonts: (
+  main: (
+    "Quicksand",
+    sans-serif,
+  ),
+  secondary: (
+    "Dancing Script",
+    cursive,
+  ),
+);
 
 @function getColor($color) {
   @return map-get($colors, $color);
@@ -38,12 +48,16 @@ $shadows: (
 @function getGradient($gradient) {
   @return map-get($gradients, $gradient);
 }
+@function getFont($font) {
+  @return map-get($fonts, $font);
+}
 
 $radiuses: (
   main: 3px,
 );
 $paddings: (
   main: 20px,
+  secondary: 10px,
 );
 $transitions: (
   main: 0.3s ease,
@@ -84,4 +98,21 @@ $gradients: (
   &::-webkit-scrollbar-thumb {
     background-image: getGradient(main);
   }
+}
+%popup-fade-out {
+  // @extend %center-position;
+  position: absolute;
+  top: calc(50% + 21px);
+  left: 50%;
+  box-shadow: getShadow(main);
+  transition: getTransition(main);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%) scale(0.9);
+  z-index: 10;
+}
+%popup-fade-in {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
 }

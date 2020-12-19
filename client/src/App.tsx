@@ -17,6 +17,7 @@ import { SET_SEARCH_CHAT } from "./redux/searchChat/searchTypes"
 import { SET_SEARCH_MESSAGE } from "./redux/searchMessage/searchTypes"
 import { SET_CHATS_QUEUE } from "./redux/queueChats/queueTypes"
 import Chat from "./components/Chat"
+import Notifications from "./components/Notifications"
 
 const App: React.FC = () => {
   const [initLoad, setInitLoad] = useState(true)
@@ -115,6 +116,7 @@ const App: React.FC = () => {
       <Routes />
       <Auth />
       <Chat />
+      <Notifications />
     </div>
   )
 }

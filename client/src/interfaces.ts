@@ -65,3 +65,18 @@ export interface ISearch {
   users: IUserSearch[]
   chats: IChatSearch[]
 }
+
+export interface IOwner {
+  ava: string
+  email: string
+  id: string
+  typeUser: string
+  username: string
+}
+
+export interface IChatCard {
+  id: string
+  title: string
+  type: string
+  image: string
+}

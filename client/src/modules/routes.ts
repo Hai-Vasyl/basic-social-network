@@ -16,12 +16,12 @@ export const getLinks = (userId: string): ILink[] => {
       className: stylesNavbar.link,
       activeClassName: stylesNavbar.link__active,
     },
-    {
-      to: "/conversation",
-      Title: BsChatDots,
-      className: stylesNavbar.link,
-      activeClassName: stylesNavbar.link__active,
-    },
+    // {
+    //   to: "/conversation",
+    //   Title: BsChatDots,
+    //   className: stylesNavbar.link,
+    //   activeClassName: stylesNavbar.link__active,
+    // },
     {
       to: "/bookmarks",
       Title: BsBookmarks,

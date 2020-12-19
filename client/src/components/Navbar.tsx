@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from "react"
 import { getLinks } from "../modules/routes"
 import { RootStore } from "../redux/store"
 import { NavLink } from "react-router-dom"
-import { BsSearch, BsBell } from "react-icons/bs"
+import { BsSearch, BsBell, BsChatDots } from "react-icons/bs"
 import { AiOutlineLogout, AiOutlineCheckCircle } from "react-icons/ai"
 import { useSelector, useDispatch } from "react-redux"
 import {
@@ -15,11 +15,12 @@ import styles from "../styles/navbar.module"
 import { useQuery } from "@apollo/client"
 import { GET_USER_NOTIFICATIONS } from "../fetching/queries"
 import { SET_NOTIFICATIONS } from "../redux/notifications/notifTypes"
+import { CHAT_TOGGLE, NOTIFICATIONS_TOGGLE } from "../redux/toggle/toggleTypes"
 
 const Navbar: React.FC = () => {
   const {
     auth: { user, token },
-    toggle: { dropDown, authForm },
+    toggle: { dropDown, authForm, chat, notifications: notifToggle },
     notifications: { notifications },
   } = useSelector((state: RootStore) => state)
   const dispatch = useDispatch()
@@ -67,9 +68,7 @@ const Navbar: React.FC = () => {
         </form>
         {links.map(({ Title, ...link }) => {
           if (
-            (link.to === "/conversation" ||
-              link.to === "/bookmarks" ||
-              link.to === `/profile/${user.id}`) &&
+            (link.to === "/bookmarks" || link.to === `/profile/${user.id}`) &&
             !token
           ) {
             return
@@ -77,7 +76,20 @@ const Navbar: React.FC = () => {
             if (link.to === `/profile/${user.id}`) {
               return (
                 <Fragment key={link.to}>
-                  <button className={`${styles.link} ${styles.link_popup}`}>
+                  <button
+                    className={`${styles.link} ${styles.link_popup} ${
+                      chat && styles.link__active
+                    }`}
+                    onClick={() => dispatch({ type: CHAT_TOGGLE })}
+                  >
+                    <BsChatDots />
+                  </button>
+                  <button
+                    className={`${styles.link} ${styles.link_popup} ${
+                      notifToggle && styles.link__active
+                    }`}
+                    onClick={() => dispatch({ type: NOTIFICATIONS_TOGGLE })}
+                  >
                     <span
                       className={`${styles.link__counter} ${
                         countUnreadNotif && styles.link__counter__appear

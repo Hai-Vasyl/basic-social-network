@@ -9,7 +9,7 @@ import { RESET_TOGGLE } from "../redux/toggle/toggleTypes"
 const Routes = () => {
   const {
     auth: { token, user },
-    toggle: { dropDown, authForm },
+    toggle: { dropDown, authForm, notifications, chat },
   } = useSelector((state: RootStore) => state)
   const dispatch = useDispatch()
 
@@ -30,9 +30,11 @@ const Routes = () => {
     <>
       <div
         className={`background ${
-          (dropDown || authForm) && "background--active"
+          (dropDown || authForm || notifications || chat) &&
+          "background--active"
         }`}
-        onClick={() => dispatch({ type: RESET_TOGGLE })}></div>
+        onClick={() => dispatch({ type: RESET_TOGGLE })}
+      ></div>
       {token ? (
         user.typeUser === "admin" ? (
           <Switch>{mapReduce(routes.admin)}</Switch>

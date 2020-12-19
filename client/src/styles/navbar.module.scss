@@ -130,13 +130,14 @@
   }
   &__counter {
     position: absolute;
-    top: -3px;
-    right: -3px;
+    top: -5px;
+    right: -5px;
     font-size: 0.6em;
     display: none;
     border-radius: 50%;
     width: 15px;
     height: 15px;
+    color: getColor(font);
     background-color: getColor(danger);
     & > * {
       margin: auto;

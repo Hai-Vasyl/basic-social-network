@@ -3,16 +3,23 @@ import {
   DROPDOWN_TOGGLE,
   AUTHFORM_TOGGLE,
   RESET_TOGGLE,
+  NOTIFICATIONS_TOGGLE,
+  CHAT_OPEN,
+  CHAT_TOGGLE,
 } from "./toggleTypes"
 
 interface IInitState {
   dropDown: boolean
   authForm: boolean
+  chat: boolean
+  notifications: boolean
 }
 
 const initState: IInitState = {
   dropDown: false,
   authForm: false,
+  chat: false,
+  notifications: false,
 }
 
 const toggleReducer = (
@@ -22,19 +29,31 @@ const toggleReducer = (
   switch (action.type) {
     case DROPDOWN_TOGGLE:
       return {
-        ...state,
+        ...initState,
         dropDown: !state.dropDown,
       }
     case AUTHFORM_TOGGLE:
       return {
-        ...state,
+        ...initState,
         authForm: !state.authForm,
       }
-    case RESET_TOGGLE:
+    case NOTIFICATIONS_TOGGLE:
       return {
-        dropDown: false,
-        authForm: false,
+        ...initState,
+        notifications: !state.notifications,
       }
+    case CHAT_TOGGLE:
+      return {
+        ...initState,
+        chat: !state.chat,
+      }
+    case CHAT_OPEN:
+      return {
+        ...initState,
+        chat: true,
+      }
+    case RESET_TOGGLE:
+      return initState
     default:
       return state
   }

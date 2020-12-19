@@ -28,6 +28,8 @@ import { SET_CHATS } from "../redux/chats/chatsTypes"
 import { SET_ACTIVE_CHAT } from "../redux/chatActive/chatActiveTypes"
 import keyWords from "../modules/keyWords"
 import { SET_CHAT_QUEUE } from "../redux/queueChats/queueTypes"
+import { IOwner } from "../interfaces"
+import UserCard from "./UserCard"
 
 interface IChatInfoProps {
   date: string
@@ -36,13 +38,7 @@ interface IChatInfoProps {
   image: string
   title: string
   type: string
-  owner: {
-    ava: string
-    email: string
-    id: string
-    typeUser: string
-    username: string
-  }
+  owner: IOwner
   isConnect?: boolean
 }
 
@@ -203,32 +199,7 @@ const ChatInfo: React.FC<IChatInfoProps> = (info) => {
             </div>
           </div>
 
-          <div className={styles.owner}>
-            <Link
-              to={`/profile/${info.owner.id}`}
-              className={styles.owner__link}
-            >
-              <img
-                src={info.owner.ava}
-                alt='userImage'
-                className={styles.owner__avatar}
-              />
-              {info.owner.typeUser === "admin" && (
-                <div className={styles.owner__icon}>
-                  <RiUserSettingsLine />
-                </div>
-              )}
-            </Link>
-            <div className={styles.owner__about}>
-              <Link
-                to={`/profile/${info.owner.id}`}
-                className={styles.owner__title}
-              >
-                {info.owner.username}
-              </Link>
-              <p className={styles.owner__subtitle}>{info.owner.email}</p>
-            </div>
-          </div>
+          <UserCard user={info.owner} isEnvChat isLink={false} />
         </div>
       </div>
 

@@ -49,3 +49,13 @@ button {
 .btn-handler {
   display: none;
 }
+
+.popup-title {
+  text-align: center;
+  border-bottom: 1px solid getColor(main);
+  color: getColor(title-simple);
+  font-family: getFont(secondary);
+  font-weight: normal;
+  padding: getPadding(secondary);
+  background-color: getColor(second-light-accent);
+}
