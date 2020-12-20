@@ -18,6 +18,7 @@ import { SET_SEARCH_MESSAGE } from "./redux/searchMessage/searchTypes"
 import { SET_CHATS_QUEUE } from "./redux/queueChats/queueTypes"
 import Chat from "./components/Chat"
 import Notifications from "./components/Notifications"
+import { SET_NOTIFICATION } from "./redux/notifications/notifTypes"
 
 const App: React.FC = () => {
   const [initLoad, setInitLoad] = useState(true)
@@ -38,6 +39,13 @@ const App: React.FC = () => {
     variables: { channels: [user.id] },
   })
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    const newNotifData = newNotification && newNotification.newNotification
+    if (newNotifData) {
+      dispatch({ type: SET_NOTIFICATION, payload: newNotification })
+    }
+  }, [dispatch, newNotification])
 
   useEffect(() => {
     let auth = localStorage.getItem("auth") || ""

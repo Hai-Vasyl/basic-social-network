@@ -95,6 +95,7 @@ export default gql`
       userId: ID
       channel: String!
     ): Notification!
+    checkNotification(notifId: ID!): Notification!
     addUserAccess(chatId: ID, userId: ID!): [Chat]!
     removeUserAccess(chatId: ID!, userId: ID): [Chat]!
   }

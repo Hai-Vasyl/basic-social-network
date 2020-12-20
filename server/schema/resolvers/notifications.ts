@@ -53,4 +53,31 @@ export const Mutation = {
       throw new Error(`Creating notification error: ${error.message}`)
     }
   },
+  async checkNotification(
+    _: any,
+    { notifId }: IField,
+    { isAuth }: { isAuth: IIsAuth }
+  ) {
+    try {
+      if (!isAuth.auth) {
+        throw new Error("Access denied!")
+      }
+      //TODO: add validation and check in models
+
+      const notification: any = await Notification.findById(notifId)
+
+      if (notification) {
+        await Notification.updateOne(
+          { _id: notifId },
+          { active: !notification.active }
+        )
+        const notificationNew = await Notification.findById(notifId)
+        return notificationNew
+      } else {
+        throw new Error("Notification doesn't exists!")
+      }
+    } catch (error) {
+      throw new Error(`Checking notification error: ${error.message}`)
+    }
+  },
 }

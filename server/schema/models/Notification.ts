@@ -6,7 +6,12 @@ const schema = new Schema({
   channel: { type: String, required: true },
   active: { type: Boolean, required: true, default: false },
   date: { type: Date, required: true },
-  type: { type: String, required: true, enum: ["access"], default: "access" },
+  type: {
+    type: String,
+    required: true,
+    enum: ["access", "access-denied"],
+    default: "access",
+  },
   chatId: { type: Types.ObjectId, ref: "Chat" },
   userId: { type: Types.ObjectId, ref: "User" },
 })

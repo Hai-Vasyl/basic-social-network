@@ -103,12 +103,12 @@ const ChatInfo: React.FC<IChatInfoProps> = (info) => {
       if (info.type === "privet") {
         createNotification({
           variables: {
-            title: `Access request for ${user.username}`,
-            description: `Access ${user.username} to privet chat ${info.title}`,
+            title: `Access request for user ${user.username}`,
+            description: `Access user ${user.username} to private chat ${info.title}.`,
             type: "access",
             chatId: info.id,
             userId: user.id,
-            channel: user.id,
+            channel: info.owner.id,
           },
         })
       } else {

@@ -1,6 +1,9 @@
 import {
   NotificationsReducerTypes,
   SET_NOTIFICATIONS,
+  UPDATE_NOTIFICATION,
+  DELETE_NOTIFICATION,
+  SET_NOTIFICATION,
   INotification,
 } from "./notifTypes"
 
@@ -20,6 +23,25 @@ const notificationsReducer = (
     case SET_NOTIFICATIONS:
       return {
         notifications: action.payload,
+      }
+    case UPDATE_NOTIFICATION:
+      return {
+        notifications: [...state.notifications].map((notif) => {
+          if (notif.id === action.payload.id) {
+            return action.payload
+          }
+          return notif
+        }),
+      }
+    case DELETE_NOTIFICATION:
+      return {
+        notifications: [...state.notifications].filter(
+          (notif) => notif.id !== action.payload
+        ),
+      }
+    case SET_NOTIFICATION:
+      return {
+        notifications: [action.payload, ...state.notifications],
       }
     default:
       return state

@@ -21,6 +21,7 @@
 
 .notify {
   border: 1px solid getColor(second-light-accent);
+  margin-bottom: 15px;
   &__toolbar {
     @extend %flex-center;
     justify-content: space-between;

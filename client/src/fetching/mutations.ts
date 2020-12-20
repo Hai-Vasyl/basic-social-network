@@ -59,6 +59,33 @@ export const CREATE_NOTIFICATION = gql`
   }
 `
 
+export const CHECK_NOTIFICATION = gql`
+  mutation CHECK_NOTIFICATION($notifId: ID!) {
+    checkNotification(notifId: $notifId) {
+      id
+      title
+      description
+      channel
+      active
+      date
+      type
+      userId {
+        id
+        username
+        email
+        typeUser
+        ava
+      }
+      chatId {
+        id
+        title
+        type
+        image
+      }
+    }
+  }
+`
+
 export const ADD_USER_ACCESS = gql`
   mutation ADD_USER_ACCESS($chatId: ID, $userId: ID!) {
     addUserAccess(chatId: $chatId, userId: $userId) {
