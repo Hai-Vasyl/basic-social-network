@@ -63,13 +63,21 @@ const Chat: React.FC = () => {
   }, [chats])
 
   useEffect(() => {
+    let chatNewActive
     chats.forEach((chat) => {
       queueChats.forEach((chatId) => {
         if (chat.id === chatId) {
           dispatch({ type: REMOVE_CHAT_QUEUE, payload: chatId })
+          chatNewActive = chatId
         }
       })
     })
+    if (chatNewActive) {
+      dispatch({
+        type: SET_ACTIVE_CHAT,
+        payload: { chatId: chatNewActive, keyWord: keyWords.chatMessages },
+      })
+    }
   }, [chats, dispatch, queueChats])
 
   useEffect(() => {

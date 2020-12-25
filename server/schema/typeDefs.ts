@@ -72,12 +72,13 @@ export default gql`
       lastname: String
       typeUser: String
     ): Auth
-    userChats: [Chat]!
+    userChats(userId: ID): [Chat]!
     chatMessages(chat: ID!): [Message]!
     searchChats(searchStr: String!): Searched
     searchMessages(searchStr: String!, chatId: String!): [Message]!
     getChatUserInfo(isChat: Boolean!, id: ID!): ChatUserInfo
     getNotifications: [Notification]!
+    getChatUsers(chatId: ID!): [User]!
   }
   type Mutation {
     createChat(
@@ -95,6 +96,7 @@ export default gql`
       userId: ID
       channel: String!
     ): Notification!
+    deleteNotification(notifId: ID!): String!
     checkNotification(notifId: ID!): Notification!
     addUserAccess(chatId: ID, userId: ID!): [Chat]!
     removeUserAccess(chatId: ID!, userId: ID): [Chat]!

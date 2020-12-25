@@ -15,7 +15,10 @@ import {
 import { RootStore } from "./redux/store"
 import { SET_SEARCH_CHAT } from "./redux/searchChat/searchTypes"
 import { SET_SEARCH_MESSAGE } from "./redux/searchMessage/searchTypes"
-import { SET_CHATS_QUEUE } from "./redux/queueChats/queueTypes"
+import {
+  SET_CHATS_QUEUE,
+  REMOVE_CHAT_QUEUE,
+} from "./redux/queueChats/queueTypes"
 import Chat from "./components/Chat"
 import Notifications from "./components/Notifications"
 import { SET_NOTIFICATION } from "./redux/notifications/notifTypes"
@@ -42,8 +45,15 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const newNotifData = newNotification && newNotification.newNotification
+
     if (newNotifData) {
-      dispatch({ type: SET_NOTIFICATION, payload: newNotification })
+      if (newNotifData.type === "access-denied") {
+        dispatch({
+          type: REMOVE_CHAT_QUEUE,
+          payload: newNotifData.chatId.id,
+        })
+      }
+      dispatch({ type: SET_NOTIFICATION, payload: newNotifData })
     }
   }, [dispatch, newNotification])
 
@@ -113,7 +123,6 @@ const App: React.FC = () => {
     }
   }, [dispatch, newMsgData])
 
-  console.log("NEW_NOTIFICATION: ", newNotification)
   if (initLoad) {
     return <div>LOADING ...</div>
   }

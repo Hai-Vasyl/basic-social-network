@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { Link, useHistory } from "react-router-dom"
 // @ts-ignore
 import styles from "../styles/chatinfo.module"
@@ -13,7 +13,7 @@ import {
 } from "react-icons/bs"
 import Button from "./Button"
 import { convertDate } from "../helpers/convertDate"
-import { useMutation } from "@apollo/client"
+import { useMutation, useQuery } from "@apollo/client"
 import { ADD_USER_ACCESS, REMOVE_USER_ACCESS } from "../fetching/mutations"
 import { SET_CHATS } from "../redux/chats/chatsTypes"
 import { useSelector, useDispatch } from "react-redux"
@@ -21,6 +21,8 @@ import { RootStore } from "../redux/store"
 import { SET_ACTIVE_CHAT } from "../redux/chatActive/chatActiveTypes"
 import keyWords from "../modules/keyWords"
 import { IChat } from "../redux/chats/chatsTypes"
+import { GET_USER_CHATS_ONLY } from "../fetching/queries"
+import ChatCard from "./ChatCard"
 
 interface IUserInfoProps {
   ava: string
@@ -34,15 +36,43 @@ interface IUserInfoProps {
   isConnect?: boolean
 }
 
+interface IUserChat {
+  id: string
+  type: string
+}
+
 const UserInfo: React.FC<IUserInfoProps> = (info) => {
   const history = useHistory()
   const dispatch = useDispatch()
   const {
     currentChat: { route },
     chats,
+    auth: { user },
   } = useSelector((state: RootStore) => state)
+  const [chatsUser, setChatsUser] = useState<IUserChat[]>([])
   const [addAccess, addAData] = useMutation(ADD_USER_ACCESS)
   const [removeAccess, removeAData] = useMutation(REMOVE_USER_ACCESS)
+  const { data: userChats, loading } = useQuery(GET_USER_CHATS_ONLY, {
+    variables: { userId: info.id },
+    fetchPolicy: "no-cache",
+  })
+  const [addUserAccess] = useMutation(ADD_USER_ACCESS, {
+    onCompleted({ addUserAccess: chats }) {
+      setChatsUser(chats)
+    },
+  })
+  const [removeUserAccess] = useMutation(REMOVE_USER_ACCESS, {
+    onCompleted({ removeUserAccess: chats }) {
+      setChatsUser(chats)
+    },
+  })
+
+  useEffect(() => {
+    const chatsUser = userChats && userChats.userChats
+    if (chatsUser) {
+      setChatsUser(chatsUser)
+    }
+  }, [userChats])
 
   useEffect(() => {
     const addAccessData = addAData.data && addAData.data.addUserAccess
@@ -80,6 +110,18 @@ const UserInfo: React.FC<IUserInfoProps> = (info) => {
     } else {
       removeAccess({ variables: { chatId: route.chatId, userId: null } })
     }
+  }
+
+  const toggleConect = (isUserConnected: boolean, chatId: string) => {
+    if (isUserConnected) {
+      removeUserAccess({ variables: { userId: info.id, chatId } })
+    } else {
+      addUserAccess({ variables: { userId: info.id, chatId } })
+    }
+  }
+
+  const checkIsUserConnectChat = (chatId: string) => {
+    return !!chatsUser.find((chat: IUserChat) => chat.id === chatId)
   }
 
   return (
@@ -157,6 +199,33 @@ const UserInfo: React.FC<IUserInfoProps> = (info) => {
           exClass={`${stylesBtn.btn_activated} ${styles.info__btn_unsubscribe}`}
           click={handleSubscribe}
         />
+      </div>
+
+      <div className={styles.access_block}>
+        <div className={styles.access_block__section}>
+          <div className={styles.access_block__title}>
+            Give access to your chats
+          </div>
+          {chats.map((chat) => {
+            if (
+              chat.type === "individual" ||
+              (chat.owner && chat.owner.id !== user.id)
+            ) {
+              return
+            }
+            const isUserConnected = checkIsUserConnectChat(chat.id)
+            return (
+              <ChatCard
+                key={chat.id}
+                isCheck
+                isChecked={isUserConnected}
+                onConnect={() => toggleConect(isUserConnected, chat.id)}
+                chat={chat}
+                isEnvChat
+              />
+            )
+          })}
+        </div>
       </div>
     </>
   )

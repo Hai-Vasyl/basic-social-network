@@ -30,6 +30,8 @@ import keyWords from "../modules/keyWords"
 import { SET_CHAT_QUEUE } from "../redux/queueChats/queueTypes"
 import { IOwner } from "../interfaces"
 import UserCard from "./UserCard"
+import { GET_CHAT_USERS } from "../fetching/queries"
+import { useQuery } from "@apollo/client"
 
 interface IChatInfoProps {
   date: string
@@ -55,6 +57,9 @@ const ChatInfo: React.FC<IChatInfoProps> = (info) => {
   const [createNotification, notificationData] = useMutation(
     CREATE_NOTIFICATION
   )
+  const { data: chatUsers, error, loading } = useQuery(GET_CHAT_USERS, {
+    variables: { chatId: info.id },
+  })
 
   useEffect(() => {
     const addAccessData = addAData.data && addAData.data.addUserAccess
@@ -121,7 +126,6 @@ const ChatInfo: React.FC<IChatInfoProps> = (info) => {
 
   const isNotified =
     queueChats.length && queueChats.find((chatId) => chatId === info.id)
-
   return (
     <>
       <div className={styles.info}>
@@ -198,31 +202,24 @@ const ChatInfo: React.FC<IChatInfoProps> = (info) => {
               </span>
             </div>
           </div>
-
-          <UserCard user={info.owner} isEnvChat isLink={false} />
         </div>
       </div>
 
-      {/* <div className={styles.info__btns}>
-        <Button
-          Icon={BsPersonPlus}
-          title='Follow'
-          exClass={stylesBtn.btn_primary}
-          click={() => {}}
-        />
-        <Button
-          Icon={BsPerson}
-          title='Profile'
-          exClass={stylesBtn.btn_simple}
-          click={() => history.push(`/profile/${info.id}`)}
-        />
-        <Button
-          Icon={BsDashCircle}
-          title='Unsubscribe'
-          exClass={`${stylesBtn.btn_activated} ${styles.info__btn_unsubscribe}`}
-          click={() => {}}
-        />
-      </div> */}
+      <div className={styles.access_block}>
+        <div className={styles.access_block__section}>
+          <div className={styles.access_block__title}>Chat owner</div>
+          <UserCard user={info.owner} isEnvChat isLink={false} />
+        </div>
+        <div className={styles.access_block__section}>
+          <div className={styles.access_block__title}>Chat members</div>
+          {chatUsers &&
+            chatUsers.getChatUsers.map((user: IOwner) => {
+              return (
+                <UserCard key={user.id} user={user} isEnvChat isLink={false} />
+              )
+            })}
+        </div>
+      </div>
     </>
   )
 }

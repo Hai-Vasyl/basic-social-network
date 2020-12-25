@@ -1,6 +1,6 @@
 import { Chat, User, UserChat, Message } from "../models"
-import { IIsAuth, IField, IChat } from "../interfaces"
-import { v4 as uuidv4 } from "uuid"
+import { IUser, IIsAuth, IField, IChat } from "../interfaces"
+import { stringify, v4 as uuidv4 } from "uuid"
 
 interface IAllAnyFields {
   [key: string]: any
@@ -73,14 +73,18 @@ async function getAllUserChats(userId: string | undefined) {
 }
 
 export const Query = {
-  async userChats(_: any, __: any, { isAuth }: { isAuth: IIsAuth }) {
+  async userChats(
+    _: any,
+    { userId }: { userId?: string },
+    { isAuth }: { isAuth: IIsAuth }
+  ) {
     try {
       if (!isAuth.auth) {
         throw new Error("Access denied!")
       }
       //TODO: add validation and check in models
 
-      const allChats = await getAllUserChats(isAuth.userId)
+      const allChats = await getAllUserChats(userId || isAuth.userId)
       return allChats
     } catch (error) {
       throw new Error(`Getting all user chats error: ${error.message}`)
@@ -109,6 +113,31 @@ export const Query = {
       return isChat ? { user: null, chat: data } : { user: data, chat: null }
     } catch (error) {
       throw new Error(`Getting User or Chat info error: ${error.message}`)
+    }
+  },
+  async getChatUsers(
+    _: any,
+    { chatId }: { chatId: string },
+    { isAuth }: { isAuth: IIsAuth }
+  ) {
+    try {
+      if (!isAuth.auth) {
+        throw new Error("Access denied!")
+      }
+      //TODO: add validation and check in models
+
+      const userchats: any = await UserChat.find({ chatId })
+        .populate({ path: "userId" })
+        .select("-password")
+
+      let users: IUser[] = []
+      userchats.forEach((userchat: { chatId: string; userId: IUser }) => {
+        users.push(userchat.userId)
+      })
+
+      return users
+    } catch (error) {
+      throw new Error(`Getting all users of chat error: ${error.message}`)
     }
   },
   async searchChats(
@@ -227,7 +256,8 @@ export const Mutation = {
           } else {
             if (isAuth.userId === String(chat.owner)) {
               await createUserChat(userId, chatId)
-              return []
+              const allChats = await getAllUserChats(userId)
+              return allChats
             }
             throw new Error("You are not owner of this chat!")
           }
@@ -288,15 +318,16 @@ export const Mutation = {
             await Chat.findByIdAndDelete(chatId)
           } else {
             // Delete yourself from chat (UserChat model)
-            await UserChat.deleteOne({ chatId, userId: isAuth.userId })
+            await UserChat.deleteMany({ chatId, userId: isAuth.userId })
           }
 
           const allChats = await getAllUserChats(isAuth.userId)
           return allChats
         } else {
           // Delete user from chat (UserChat model)
-          await UserChat.deleteOne({ chatId, userId })
-          return []
+          await UserChat.deleteMany({ chatId, userId })
+          const allChats = await getAllUserChats(userId)
+          return allChats
         }
       } else if (chat.type === "individual") {
         await Message.deleteMany({ chat: chatId })

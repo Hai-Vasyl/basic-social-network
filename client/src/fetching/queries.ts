@@ -69,6 +69,15 @@ export const GET_USER_CHATS = gql`
   }
 `
 
+export const GET_USER_CHATS_ONLY = gql`
+  query GET_USER_CHATS_ONLY($userId: ID) {
+    userChats(userId: $userId) {
+      id
+      type
+    }
+  }
+`
+
 export const GET_USER_NOTIFICATIONS = gql`
   query GET_USER_NOTIFICATIONS {
     getNotifications {
@@ -92,6 +101,18 @@ export const GET_USER_NOTIFICATIONS = gql`
         type
         image
       }
+    }
+  }
+`
+
+export const GET_CHAT_USERS = gql`
+  query GET_CHAT_USERS($chatId: ID!) {
+    getChatUsers(chatId: $chatId) {
+      id
+      username
+      email
+      typeUser
+      ava
     }
   }
 `

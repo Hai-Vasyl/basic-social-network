@@ -28,6 +28,7 @@ const UserCard: React.FC<IUserCardProps> = ({
   const history = useHistory()
   let isPinned = false
   let chatId: string
+
   chats.forEach((chat) => {
     if (chat.owners && chat.owners.find((owner) => owner.id === user.id)) {
       isPinned = true

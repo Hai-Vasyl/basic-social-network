@@ -43,14 +43,7 @@ const Notification: React.FC<INotifProps> = ({
           </div>
           <div className={styles.notify__title}>{notif.title}</div>
         </div>
-        <ButtonTab
-          Icon={BsX}
-          click={() =>
-            notifAccessDenied
-              ? dispatch({ type: DELETE_NOTIFICATION, payload: notif.id })
-              : denyAccess
-          }
-        />
+        <ButtonTab Icon={BsX} click={denyAccess} />
       </div>
       <div className={styles.notify__section}>
         <div>

@@ -80,4 +80,21 @@ export const Mutation = {
       throw new Error(`Checking notification error: ${error.message}`)
     }
   },
+  async deleteNotification(
+    _: any,
+    { notifId }: IField,
+    { isAuth }: { isAuth: IIsAuth }
+  ) {
+    try {
+      if (!isAuth.auth) {
+        throw new Error("Access denied!")
+      }
+      //TODO: add validation and check in models
+
+      await Notification.findByIdAndDelete(notifId)
+      return "Notification deleted successfully!"
+    } catch (error) {
+      throw new Error(`Deleting notification error: ${error.message}`)
+    }
+  },
 }

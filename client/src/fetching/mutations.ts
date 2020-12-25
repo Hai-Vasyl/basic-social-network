@@ -59,6 +59,12 @@ export const CREATE_NOTIFICATION = gql`
   }
 `
 
+export const DELETE_NOTIFICATION = gql`
+  mutation DELETE_NOTIFICATION($notifId: ID!) {
+    deleteNotification(notifId: $notifId)
+  }
+`
+
 export const CHECK_NOTIFICATION = gql`
   mutation CHECK_NOTIFICATION($notifId: ID!) {
     checkNotification(notifId: $notifId) {

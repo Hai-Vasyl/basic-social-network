@@ -50,6 +50,26 @@
     color: getColor(title-simple);
     font-size: 0.8em;
   }
+  &__checkbox {
+    width: 30px;
+    height: 30px;
+    border: 1px solid getColor(second-light-accent);
+    display: flex;
+    margin-right: 10px;
+    margin-left: 5px;
+    background-color: transparent;
+  }
+  &__check {
+    transition: getTransition(main);
+    opacity: 0;
+    visibility: hidden;
+    margin: auto;
+    font-size: 1.3em;
+    &__active {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
 }
 
 .card_light {

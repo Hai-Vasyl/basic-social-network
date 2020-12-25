@@ -8,6 +8,7 @@ import {
   CHECK_NOTIFICATION,
   ADD_USER_ACCESS,
   CREATE_NOTIFICATION,
+  DELETE_NOTIFICATION as DELETE_NOTIFICATION_MUTATION,
 } from "../fetching/mutations"
 import { useMutation } from "@apollo/client"
 import {
@@ -46,6 +47,7 @@ const Notifications: React.FC = () => {
   const [checkNotification, { data, loading }] = useMutation(CHECK_NOTIFICATION)
   const [addUserAccess] = useMutation(ADD_USER_ACCESS)
   const [createNotification] = useMutation(CREATE_NOTIFICATION)
+  const [deleteNotification] = useMutation(DELETE_NOTIFICATION_MUTATION)
 
   useEffect(() => {
     if (data && data.checkNotification) {
@@ -60,21 +62,29 @@ const Notifications: React.FC = () => {
         chatId: notif.chatId.id,
       },
     })
+    deleteNotification({ variables: { notifId: notif.id } })
     dispatch({ type: DELETE_NOTIFICATION, payload: notif.id })
   }
 
-  const handleDenyAccess = (notif: INotification) => {
+  const handleDenyAccess = (
+    notif: INotification,
+    notifAccessDenied: boolean
+  ) => {
     const { userId, chatId } = notif
-    createNotification({
-      variables: {
-        title: `Access denied for user ${userId.username}`,
-        description: `Access user ${userId.username} to private chat ${chatId.title} was denied by chat owner ${user.id}.`,
-        type: "access-denied",
-        chatId: chatId.id,
-        userId: user.id,
-        channel: userId.id,
-      },
-    })
+    if (!notifAccessDenied) {
+      createNotification({
+        variables: {
+          title: `Access denied for user ${userId.username}`,
+          description: `Access user ${userId.username} to private chat ${chatId.title} was denied by chat owner ${user.id}.`,
+          type: "access-denied",
+          chatId: chatId.id,
+          userId: user.id,
+          channel: userId.id,
+        },
+      })
+    }
+
+    deleteNotification({ variables: { notifId: notif.id } })
     dispatch({ type: DELETE_NOTIFICATION, payload: notif.id })
   }
 
@@ -85,13 +95,14 @@ const Notifications: React.FC = () => {
       <h3 className='popup-title'>Notidications</h3>
       <div className={styles.notifies}>
         {notifications.map((notif) => {
+          const notifAccessDenied = notif.type === "access-denied"
           return (
             <Notification
               key={notif.id}
-              notifAccessDenied={notif.type === "access-denied"}
+              notifAccessDenied={notifAccessDenied}
               notif={notif}
               giveAccess={() => handleAddUserAccess(notif)}
-              denyAccess={() => handleDenyAccess(notif)}
+              denyAccess={() => handleDenyAccess(notif, notifAccessDenied)}
               clickCheck={() =>
                 checkNotification({
                   variables: {
