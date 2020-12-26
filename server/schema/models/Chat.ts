@@ -8,8 +8,9 @@ const schema = new Schema({
   image: {
     type: String,
     default:
-      "https://static.vecteezy.com/system/resources/previews/000/437/500/non_2x/vector-chat-icon.jpg",
+      "https://social-network--chat-user-bucket.s3-eu-west-1.amazonaws.com/social-network-chat-image.jpg",
   },
+  imageKey: { type: String, default: "" },
   owner: { type: Types.ObjectId, ref: "User" },
   owners: [{ type: Types.ObjectId, ref: "User", required: false }],
   type: {

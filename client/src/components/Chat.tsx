@@ -16,7 +16,6 @@ import { IChatOwner, IUserLink, IUserSearch, IChatSearch } from "../interfaces"
 import { IChat } from "../redux/chats/chatsTypes"
 import ChatLink from "./ChatLink"
 import UserLink from "./UserLink"
-import ChatConnect from "../screens/ChatUserConnect"
 import { SET_ACTIVE_CHAT } from "../redux/chatActive/chatActiveTypes"
 import { Link } from "react-router-dom"
 // @ts-ignore

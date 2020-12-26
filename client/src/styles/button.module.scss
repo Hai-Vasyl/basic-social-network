@@ -10,6 +10,7 @@
   &:active {
     box-shadow: none;
     transform: scale(0.95);
+    opacity: 0.5;
   }
   &:hover {
     border-color: getColor(accent);

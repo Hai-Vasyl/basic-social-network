@@ -1,13 +1,14 @@
 import { Chat, User, UserChat, Message } from "../models"
 import { IUser, IIsAuth, IField, IChat } from "../interfaces"
-import { stringify, v4 as uuidv4 } from "uuid"
+import { uploadUserChatBucket } from "../helpers/uploaderUserChatBucket"
+import { v4 as uuidv4 } from "uuid"
 
 interface IAllAnyFields {
   [key: string]: any
 }
 
 async function createChat(
-  { title, description, image, type }: IField,
+  { title, description, image, imageKey, type }: IField,
   isAuth: IIsAuth,
   secondOwner: string | null
 ) {
@@ -20,6 +21,7 @@ async function createChat(
         description,
         date: new Date(),
         image,
+        imageKey,
         owners: [isAuth.userId, secondOwner],
         type,
       })
@@ -30,6 +32,7 @@ async function createChat(
         description,
         date: new Date(),
         image,
+        imageKey,
         owner: isAuth.userId,
         type,
       })
@@ -211,9 +214,20 @@ export const Mutation = {
       }
       //TODO: validation for each field and check in models
 
+      let uploaded
+      if (image) {
+        uploaded = await uploadUserChatBucket(image)
+      }
+
       if (type === "public" || type === "privet") {
         const newChat = await createChat(
-          { title, description, image, type },
+          {
+            title,
+            description,
+            image: uploaded ? uploaded.Location : null,
+            imageKey: uploaded ? uploaded.Key : null,
+            type,
+          },
           isAuth,
           null
         )

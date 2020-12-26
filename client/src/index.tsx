@@ -19,6 +19,7 @@ import { ApolloLink } from "apollo-link"
 import { createHttpLink } from "apollo-link-http"
 import { getMainDefinition } from "@apollo/client/utilities"
 import { WebSocketLink } from "@apollo/client/link/ws"
+import { createUploadLink } from "apollo-upload-client"
 
 // const httpLink = new HttpLink({
 //   uri: "http://localhost:5000",
@@ -94,8 +95,7 @@ import { WebSocketLink } from "@apollo/client/link/ws"
 // const httpLink = new HttpLink({
 //     uri: "http://localhost:5000",
 //   })
-
-const httpLink = new HttpLink({
+const httpLink = createUploadLink({
   uri: "http://localhost:5000",
 })
 
@@ -142,6 +142,7 @@ const splitLink = split(
     )
   },
   websocketLink,
+  //@ts-ignore
   authLink.concat(httpLink)
 )
 

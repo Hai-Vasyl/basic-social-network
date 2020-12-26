@@ -3,12 +3,10 @@ import React from "react"
 import styles from "../styles/button.module"
 
 interface IButtonProps {
-  click(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void | undefined
+  click(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): any
   Icon: any
   title: string
-  exClass: string
+  exClass?: string
 }
 
 const Button: React.FC<IButtonProps> = ({ Icon, click, title, exClass }) => {

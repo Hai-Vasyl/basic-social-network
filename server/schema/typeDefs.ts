@@ -23,6 +23,7 @@ export default gql`
     description: String!
     date: String!
     image: String!
+    imageKey: String!
     owner: User
     owners: [User]!
     type: String!
@@ -84,7 +85,7 @@ export default gql`
     createChat(
       title: String!
       description: String
-      image: String
+      image: Upload!
       type: String!
     ): [Chat]!
     createMessage(content: String!, chat: ID!): Message!
