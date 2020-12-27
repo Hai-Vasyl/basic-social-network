@@ -14,6 +14,7 @@ interface IFieldProps {
   change: (event: React.ChangeEvent<HTMLInputElement>) => any
   exClass?: string
   transparent?: boolean
+  isImportant?: boolean
 }
 
 const Field: React.FC<IFieldProps> = ({
@@ -21,6 +22,7 @@ const Field: React.FC<IFieldProps> = ({
   change,
   exClass,
   transparent,
+  isImportant,
 }) => {
   return (
     <label
@@ -28,7 +30,13 @@ const Field: React.FC<IFieldProps> = ({
         transparent && styles.field_transparent
       } ${exClass}`}
     >
-      <span className={styles.field__title}>{field.title}</span>
+      <span
+        className={`${styles.field__title} ${
+          isImportant && styles.field__title__important
+        }`}
+      >
+        {field.title}
+      </span>
       <input
         className={styles.field__input}
         name={field.param}

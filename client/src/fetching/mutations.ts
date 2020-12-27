@@ -22,7 +22,7 @@ export const CREATE_CHAT = gql`
   mutation CREATE_CHAT(
     $title: String!
     $description: String
-    $image: Upload!
+    $image: Upload
     $type: String!
   ) {
     createChat(

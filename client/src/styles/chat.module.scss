@@ -62,6 +62,7 @@
   &__stacks {
     height: calc(90vh - 48px);
     overflow-y: auto;
+    @extend %scrollbar;
   }
   &__chats_stack {
   }
@@ -376,6 +377,7 @@
   position: relative;
   height: calc(90vh - 48px);
   padding: 15px;
-  @extend %scrollbar;
+  overflow-y: auto;
   background-color: getColor(main-light);
+  @extend %scrollbar;
 }

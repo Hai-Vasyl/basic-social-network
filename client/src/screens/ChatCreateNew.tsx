@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Field from "../components/Field"
 import FieldFile from "../components/FieldFile"
 import Button from "../components/Button"
@@ -9,10 +9,20 @@ import styles from "../styles/chat.module"
 import stylesBtn from "../styles/button.module"
 import { RiChatNewLine } from "react-icons/ri"
 import { useMutation } from "@apollo/client"
+import { SET_CHATS, IChat } from "../redux/chats/chatsTypes"
+import { useDispatch, useSelector } from "react-redux"
+import { RootStore } from "../redux/store"
+import { SET_ACTIVE_CHAT } from "../redux/chatActive/chatActiveTypes"
+import keyWords from "../modules/keyWords"
+import { IAuthErrors } from "../interfaces"
+import FieldPicker from "../components/FieldPicker"
+import { BsLock, BsPeople, BsUpload, BsCheck } from "react-icons/bs"
 
 const ChatCreateNew: React.FC = () => {
+  const { chats } = useSelector((state: RootStore) => state)
+  const dispatch = useDispatch()
   const [form, setForm] = useState([
-    { param: "title", type: "text", value: "", title: "Title", msg: "" },
+    { param: "title", type: "text", value: "", title: "Name", msg: "" },
     {
       param: "description",
       type: "text",
@@ -21,10 +31,65 @@ const ChatCreateNew: React.FC = () => {
       msg: "",
     },
     { param: "image", type: "file", title: "Image", msg: "" },
-    { param: "type", type: "text", value: "", title: "Type", msg: "" },
+    { param: "type", type: "text", value: "public", title: "Type", msg: "" },
   ])
+  const options = [
+    { value: "public", label: "Public" },
+    { value: "privet", label: "Private" },
+  ]
   const [chatImage, setChatImage] = useState<any>(null)
   const [createChat, createChatData] = useMutation(CREATE_CHAT)
+
+  useEffect(() => {
+    if (createChatData.error) {
+      console.log("Error: ", createChatData.error)
+      const errors: IAuthErrors = JSON.parse(
+        (createChatData.error && createChatData.error.message) || "{}"
+      )
+      setForm((prevForm) =>
+        prevForm.map((field) => {
+          let newField = { ...field, msg: "" }
+          Object.keys(errors).forEach((key: string) => {
+            if (key === field.param) {
+              errors[key].msg &&
+                errors[key].msg.forEach((msg) => {
+                  newField.msg += ` ${msg}`
+                })
+              newField.msg = newField.msg.trim()
+            }
+          })
+          return newField
+        })
+      )
+    } else if (createChatData.data) {
+      const data = createChatData.data && createChatData.data.createChat
+      let newChat: IChat = {
+        id: "",
+        title: "",
+        description: "",
+        date: "",
+        channel: "",
+        image: "",
+        type: "",
+      }
+      data.forEach((resChat: IChat) => {
+        let isInclude = false
+        chats.forEach((chat) => {
+          if (chat.id === resChat.id) {
+            isInclude = true
+          }
+        })
+        if (!isInclude) {
+          newChat = resChat
+        }
+      })
+      dispatch({ type: SET_CHATS, payload: data })
+      dispatch({
+        type: SET_ACTIVE_CHAT,
+        payload: { keyWord: keyWords.chatMessages, chatId: newChat.id },
+      })
+    }
+  }, [dispatch, createChatData.data, createChatData.error])
 
   const handleChageFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prevForm) =>
@@ -44,16 +109,9 @@ const ChatCreateNew: React.FC = () => {
       setChatImage(event.target.files[0])
     }
   }
-  console.log("Chat Image: ", chatImage)
 
-  const handleSubmitForm = async (
-    event:
-      | React.FormEvent<HTMLFormElement>
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const handleSubmitForm = async () => {
     try {
-      event.preventDefault()
-
       const [title, description, _, type] = form
 
       createChat({
@@ -64,13 +122,23 @@ const ChatCreateNew: React.FC = () => {
           type: type.value,
         },
       })
-      console.log("Created chat")
     } catch (error) {}
+  }
+
+  const handlePickOption = (value: string) => {
+    setForm((prevForm) =>
+      prevForm.map((field) => {
+        if (field.param === "type") {
+          return { ...field, value, msg: "" }
+        }
+        return field
+      })
+    )
   }
 
   return (
     <div className={styles.chatWrapper}>
-      <form onSubmit={handleSubmitForm}>
+      <div>
         {form.map((field) => {
           if (field.type === "file") {
             return (
@@ -79,25 +147,39 @@ const ChatCreateNew: React.FC = () => {
                 field={field}
                 change={handleChangeFieldFile}
                 file={chatImage}
+                Icon={chatImage ? BsCheck : BsUpload}
+              />
+            )
+          } else if (field.param === "type") {
+            return (
+              <FieldPicker
+                key={field.param}
+                Icon={field.value === "public" ? BsPeople : BsLock}
+                change={handlePickOption}
+                field={field}
+                options={options}
               />
             )
           }
           return (
             <Field
               key={field.param}
+              isImportant={field.param === "title"}
               field={{ ...field }}
               change={handleChageFile}
               transparent
             />
           )
         })}
-        <Button
-          exClass={stylesBtn.btn_primary}
-          click={handleSubmitForm}
-          title='Create chat'
-          Icon={RiChatNewLine}
-        />
-      </form>
+        <div className={stylesBtn.btns}>
+          <Button
+            exClass={stylesBtn.btn_primary}
+            click={handleSubmitForm}
+            title='Create chat'
+            Icon={RiChatNewLine}
+          />
+        </div>
+      </div>
     </div>
   )
 }

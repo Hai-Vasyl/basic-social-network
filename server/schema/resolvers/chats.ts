@@ -2,6 +2,8 @@ import { Chat, User, UserChat, Message } from "../models"
 import { IUser, IIsAuth, IField, IChat } from "../interfaces"
 import { uploadUserChatBucket } from "../helpers/uploaderUserChatBucket"
 import { v4 as uuidv4 } from "uuid"
+import { isEmpty, isUnique, isLength } from "../validation/snippets"
+import { AuthenticationError } from "apollo-server"
 
 interface IAllAnyFields {
   [key: string]: any
@@ -213,20 +215,47 @@ export const Mutation = {
         throw new Error("Access denied!")
       }
       //TODO: validation for each field and check in models
+      title = { value: title, msg: [] }
+      type = { value: type, msg: [] }
+      title = isEmpty(title, "This field cannot be empty!")
+      type = isEmpty(type, "This field cannot be empty!")
+      if (title.msg.length || type.msg.length) {
+        throw new Error(JSON.stringify({ title, type }))
+      }
+
+      title = isLength(title, {
+        min: 3,
+        max: 15,
+        minMsg: "Chat name must contain at least 3 characters!",
+        maxMsg: "Chat name must be no more than 15 characters!",
+      })
+      if (title.msg.length) {
+        throw new Error(JSON.stringify({ title, type }))
+      }
+
+      title = await isUnique(
+        title,
+        "This chat name already exists, choose another one!",
+        Chat,
+        "title"
+      )
+      if (title.msg.length) {
+        throw new Error(JSON.stringify({ title, type }))
+      }
 
       let uploaded
       if (image) {
         uploaded = await uploadUserChatBucket(image)
       }
 
-      if (type === "public" || type === "privet") {
+      if (type.value === "public" || type.value === "privet") {
         const newChat = await createChat(
           {
-            title,
+            title: title.value,
             description,
-            image: uploaded ? uploaded.Location : null,
-            imageKey: uploaded ? uploaded.Key : null,
-            type,
+            image: uploaded && uploaded.Location,
+            imageKey: uploaded && uploaded.Key,
+            type: type.value,
           },
           isAuth,
           null
@@ -240,7 +269,7 @@ export const Mutation = {
         throw new Error("You can't create chat with this type!")
       }
     } catch (error) {
-      throw new Error(`Create new chat error: ${error.message}`)
+      throw new AuthenticationError(error.message)
     }
   },
   async addUserAccess(
