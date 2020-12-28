@@ -6,7 +6,7 @@ import {
 } from "../helpers/crudUserChatBucket"
 import { v4 as uuidv4 } from "uuid"
 import { isEmpty, isUnique, isLength } from "../validation/snippets"
-import { AuthenticationError } from "apollo-server"
+import { createEditValid } from "../validation/chats"
 
 interface IAllAnyFields {
   [key: string]: any
@@ -217,48 +217,29 @@ export const Mutation = {
       if (!isAuth.auth) {
         throw new Error("Access denied!")
       }
-      //TODO: validation for each field and check in models
-      title = { value: title, msg: [] }
-      type = { value: type, msg: [] }
-      title = isEmpty(title, "This field cannot be empty!")
-      type = isEmpty(type, "This field cannot be empty!")
-      if (title.msg.length || type.msg.length) {
-        throw new Error(JSON.stringify({ title, type }))
+
+      const {
+        type: vType,
+        title: vTitle,
+        isError,
+      }: any = await createEditValid({ type, title })
+      if (isError) {
+        throw new Error(JSON.stringify({ title: vTitle, type: vType }))
       }
 
-      title = isLength(title, {
-        min: 3,
-        max: 15,
-        minMsg: "Chat name must contain at least 3 characters!",
-        maxMsg: "Chat name must be no more than 15 characters!",
-      })
-      if (title.msg.length) {
-        throw new Error(JSON.stringify({ title, type }))
-      }
+      if (vType.value === "public" || vType.value === "privet") {
+        let uploaded
+        if (image) {
+          uploaded = await uploadUserChatBucket(image)
+        }
 
-      title = await isUnique(
-        title,
-        "This chat name already exists, choose another one!",
-        Chat,
-        "title"
-      )
-      if (title.msg.length) {
-        throw new Error(JSON.stringify({ title, type }))
-      }
-
-      let uploaded
-      if (image) {
-        uploaded = await uploadUserChatBucket(image)
-      }
-
-      if (type.value === "public" || type.value === "privet") {
         const newChat = await createChat(
           {
-            title: title.value,
+            title: vTitle.value,
             description,
             image: uploaded && uploaded.Location,
             imageKey: uploaded && uploaded.Key,
-            type: type.value,
+            type: vType.value,
           },
           isAuth,
           null
@@ -266,10 +247,16 @@ export const Mutation = {
 
         await createUserChat(isAuth.userId, newChat.id)
 
-        const allChats = await getAllUserChats(isAuth.userId)
-        return allChats
+        return newChat
       } else {
-        throw new Error("You can't create chat with this type!")
+        throw new Error(
+          JSON.stringify({
+            type: {
+              value: vType.value,
+              msg: ["You can't create chat with this type!"],
+            },
+          })
+        )
       }
     } catch (error) {
       throw new Error(error.message)
@@ -277,7 +264,7 @@ export const Mutation = {
   },
   async editChat(
     _: any,
-    { title, description, image, type }: IField,
+    { title, description, image, type, id }: IField,
     { isAuth }: { isAuth: IIsAuth }
   ) {
     try {
@@ -285,37 +272,29 @@ export const Mutation = {
         throw new Error("Access denied!")
       }
 
-      title = { value: title, msg: [] }
-      type = { value: type, msg: [] }
-      title = isEmpty(title, "This field cannot be empty!")
-      type = isEmpty(type, "This field cannot be empty!")
-      if (title.msg.length || type.msg.length) {
-        throw new Error(JSON.stringify({ title, type }))
+      const {
+        type: vType,
+        title: vTitle,
+        isError,
+      }: any = await createEditValid({ type, title }, id)
+      if (isError) {
+        throw new Error(JSON.stringify({ title: vTitle, type: vType }))
       }
 
-      title = isLength(title, {
-        min: 3,
-        max: 15,
-        minMsg: "Chat name must contain at least 3 characters!",
-        maxMsg: "Chat name must be no more than 15 characters!",
-      })
-      if (title.msg.length) {
-        throw new Error(JSON.stringify({ title, type }))
-      }
-
-      title = await isUnique(
-        title,
-        "This chat name already exists, choose another one!",
-        Chat,
-        "title"
-      )
-      if (title.msg.length) {
-        throw new Error(JSON.stringify({ title, type }))
-      }
-
-      const chat: any = await Chat.findOne({ title })
-      if (!chat.id) {
-        throw new Error("Chat with this properties doesn't exists!")
+      const chat: any = await Chat.findById(id)
+      if (!chat) {
+        throw new Error(
+          JSON.stringify({
+            title: {
+              value: vTitle.value,
+              msg: ["This chat doesn't exists!"],
+            },
+            type: {
+              value: vType.value,
+              msg: ["This chat doesn't exists!"],
+            },
+          })
+        )
       }
 
       let uploaded
@@ -324,11 +303,11 @@ export const Mutation = {
       }
 
       await Chat.findByIdAndUpdate(chat.id, {
-        title: title.value,
+        title: vTitle.value,
         description,
-        image: uploaded && uploaded.Location,
-        imageKey: uploaded && uploaded.Key,
-        type: type.value,
+        image: uploaded ? uploaded.Location : chat.image,
+        imageKey: uploaded ? uploaded.Key : chat.imageKey,
+        type: vType.value,
       })
 
       const chatUpdated = await Chat.findById(chat.id)

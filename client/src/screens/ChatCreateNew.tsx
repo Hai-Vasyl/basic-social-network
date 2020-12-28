@@ -7,6 +7,8 @@ import { CREATE_CHAT } from "../fetching/mutations"
 import styles from "../styles/chat.module"
 // @ts-ignore
 import stylesBtn from "../styles/button.module"
+// @ts-ignore
+import stylesInfo from "../styles/chatinfo.module"
 import { RiChatNewLine } from "react-icons/ri"
 import { useMutation } from "@apollo/client"
 import { SET_CHATS, IChat } from "../redux/chats/chatsTypes"
@@ -17,6 +19,8 @@ import keyWords from "../modules/keyWords"
 import { IAuthErrors } from "../interfaces"
 import FieldPicker from "../components/FieldPicker"
 import { BsLock, BsPeople, BsUpload, BsCheck } from "react-icons/bs"
+import ChatModForm from "../components/ChatModForm"
+import LoaderData from "../components/LoaderData"
 
 const ChatCreateNew: React.FC = () => {
   const { chats } = useSelector((state: RootStore) => state)
@@ -42,7 +46,6 @@ const ChatCreateNew: React.FC = () => {
 
   useEffect(() => {
     if (createChatData.error) {
-      console.log("Error: ", createChatData.error)
       const errors: IAuthErrors = JSON.parse(
         (createChatData.error && createChatData.error.message) || "{}"
       )
@@ -62,28 +65,8 @@ const ChatCreateNew: React.FC = () => {
         })
       )
     } else if (createChatData.data) {
-      const data = createChatData.data && createChatData.data.createChat
-      let newChat: IChat = {
-        id: "",
-        title: "",
-        description: "",
-        date: "",
-        channel: "",
-        image: "",
-        type: "",
-      }
-      data.forEach((resChat: IChat) => {
-        let isInclude = false
-        chats.forEach((chat) => {
-          if (chat.id === resChat.id) {
-            isInclude = true
-          }
-        })
-        if (!isInclude) {
-          newChat = resChat
-        }
-      })
-      dispatch({ type: SET_CHATS, payload: data })
+      const newChat = createChatData.data && createChatData.data.createChat
+      dispatch({ type: SET_CHATS, payload: [...chats, newChat] })
       dispatch({
         type: SET_ACTIVE_CHAT,
         payload: { keyWord: keyWords.chatMessages, chatId: newChat.id },
@@ -138,40 +121,17 @@ const ChatCreateNew: React.FC = () => {
 
   return (
     <div className={styles.chatWrapper}>
-      <div>
-        {form.map((field) => {
-          if (field.type === "file") {
-            return (
-              <FieldFile
-                key={field.param}
-                field={field}
-                change={handleChangeFieldFile}
-                file={chatImage}
-                Icon={chatImage ? BsCheck : BsUpload}
-              />
-            )
-          } else if (field.param === "type") {
-            return (
-              <FieldPicker
-                key={field.param}
-                Icon={field.value === "public" ? BsPeople : BsLock}
-                change={handlePickOption}
-                field={field}
-                options={options}
-              />
-            )
-          }
-          return (
-            <Field
-              key={field.param}
-              isImportant={field.param === "title"}
-              field={{ ...field }}
-              change={handleChageField}
-              transparent
-            />
-          )
-        })}
-        <div className={stylesBtn.btns}>
+      <div className='form-wrapper'>
+        <LoaderData load={createChatData.loading} />
+        <ChatModForm
+          handleChangeFieldFile={handleChangeFieldFile}
+          handlePickOption={handlePickOption}
+          form={form}
+          chatImage={chatImage}
+          options={options}
+          handleChageField={handleChageField}
+        />
+        <div className={stylesInfo.info__btns}>
           <Button
             exClass={stylesBtn.btn_primary}
             click={handleSubmitForm}

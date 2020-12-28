@@ -56,6 +56,10 @@ button {
   display: none;
 }
 
+.form-wrapper {
+  position: relative;
+}
+
 .popup-title {
   text-align: center;
   border-bottom: 1px solid getColor(main);

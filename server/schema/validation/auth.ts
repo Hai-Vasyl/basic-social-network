@@ -79,7 +79,7 @@ async function register(fields: IField): Promise<IValidRegisterResult> {
       username: setError(fields.username),
       email: setError(fields.email),
       password: setError(fields.password),
-      isError: false,
+      isError: true,
     }
   }
 }
@@ -145,7 +145,7 @@ async function login(fields: IField): Promise<IValidLoginResult> {
     return {
       email: setError(fields.email),
       password: setError(fields.password),
-      isError: false,
+      isError: true,
     }
   }
 }

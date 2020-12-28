@@ -39,12 +39,10 @@ export const CREATE_CHAT = gql`
       image
       owner {
         id
-      }
-      owners {
-        id
         username
         ava
         email
+        typeUser
       }
       type
     }
@@ -57,12 +55,14 @@ export const EDIT_CHAT = gql`
     $description: String
     $image: Upload
     $type: String!
+    $id: ID!
   ) {
     editChat(
       title: $title
       description: $description
       image: $image
       type: $type
+      id: $id
     ) {
       id
       title
@@ -72,12 +72,10 @@ export const EDIT_CHAT = gql`
       image
       owner {
         id
-      }
-      owners {
-        id
         username
         ava
         email
+        typeUser
       }
       type
     }

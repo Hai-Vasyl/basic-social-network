@@ -21,10 +21,14 @@ async function isUnique(
   field: IFieldSnippet,
   msg: string,
   Model: any,
-  prop: string
+  prop: string,
+  id?: string
 ) {
   try {
-    const collection = await Model.find({ [prop]: field.value })
+    const query = id
+      ? { [prop]: field.value, _id: { $ne: id } }
+      : { [prop]: field.value }
+    const collection = await Model.find(query)
 
     if (collection.length) {
       field.msg.push(msg)

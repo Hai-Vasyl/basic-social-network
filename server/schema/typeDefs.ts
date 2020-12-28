@@ -87,13 +87,14 @@ export default gql`
       description: String
       image: Upload
       type: String!
-    ): [Chat]!
+    ): Chat!
     createMessage(content: String!, chat: ID!): Message!
     editChat(
       title: String!
       description: String
       image: Upload
       type: String!
+      id: ID!
     ): Chat!
     createNotification(
       title: String!
