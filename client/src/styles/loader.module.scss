@@ -1,0 +1,23 @@
+@import "base";
+
+.loader {
+  @extend %flex-center;
+  padding: 25px 0;
+  &__spinner {
+    width: 70px;
+    height: 70px;
+    border: 5px solid getColor(bg-light);
+    border-bottom-color: getColor(second-light-accent);
+    border-radius: 50%;
+    animation: spin getTransition(spin);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -2,13 +2,14 @@
 
 .wrapper {
   display: flex;
-  background-color: transparent;
-  border: 1px solid getColor(second-light);
+  background-color: getColor(second-light-accent);
+  border: 1px solid getColor(second-lighter);
   padding: 2px;
   border-radius: getRadius(main);
   width: 30px;
   height: 30px;
   & > * {
+    font-size: 18px;
     margin: auto;
   }
 }

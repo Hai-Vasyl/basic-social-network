@@ -49,7 +49,7 @@ const ToolbarMain: React.FC = () => {
         return (
           <Toolbar
             Icon={BsPencilSquare}
-            title='Edit information of'
+            title='Settings of'
             routeParams={{
               chatId: route.chatId,
               keyWord: keyWords.chatMessages,

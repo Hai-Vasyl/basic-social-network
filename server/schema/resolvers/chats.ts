@@ -1,6 +1,9 @@
 import { Chat, User, UserChat, Message } from "../models"
 import { IUser, IIsAuth, IField, IChat } from "../interfaces"
-import { uploadUserChatBucket } from "../helpers/uploaderUserChatBucket"
+import {
+  uploadUserChatBucket,
+  updateUserChatBucket,
+} from "../helpers/crudUserChatBucket"
 import { v4 as uuidv4 } from "uuid"
 import { isEmpty, isUnique, isLength } from "../validation/snippets"
 import { AuthenticationError } from "apollo-server"
@@ -269,7 +272,69 @@ export const Mutation = {
         throw new Error("You can't create chat with this type!")
       }
     } catch (error) {
-      throw new AuthenticationError(error.message)
+      throw new Error(error.message)
+    }
+  },
+  async editChat(
+    _: any,
+    { title, description, image, type }: IField,
+    { isAuth }: { isAuth: IIsAuth }
+  ) {
+    try {
+      if (!isAuth.auth) {
+        throw new Error("Access denied!")
+      }
+
+      title = { value: title, msg: [] }
+      type = { value: type, msg: [] }
+      title = isEmpty(title, "This field cannot be empty!")
+      type = isEmpty(type, "This field cannot be empty!")
+      if (title.msg.length || type.msg.length) {
+        throw new Error(JSON.stringify({ title, type }))
+      }
+
+      title = isLength(title, {
+        min: 3,
+        max: 15,
+        minMsg: "Chat name must contain at least 3 characters!",
+        maxMsg: "Chat name must be no more than 15 characters!",
+      })
+      if (title.msg.length) {
+        throw new Error(JSON.stringify({ title, type }))
+      }
+
+      title = await isUnique(
+        title,
+        "This chat name already exists, choose another one!",
+        Chat,
+        "title"
+      )
+      if (title.msg.length) {
+        throw new Error(JSON.stringify({ title, type }))
+      }
+
+      const chat: any = await Chat.findOne({ title })
+      if (!chat.id) {
+        throw new Error("Chat with this properties doesn't exists!")
+      }
+
+      let uploaded
+      if (image) {
+        uploaded = await updateUserChatBucket(image, chat.imageKey)
+      }
+
+      await Chat.findByIdAndUpdate(chat.id, {
+        title: title.value,
+        description,
+        image: uploaded && uploaded.Location,
+        imageKey: uploaded && uploaded.Key,
+        type: type.value,
+      })
+
+      const chatUpdated = await Chat.findById(chat.id)
+      return chatUpdated
+    } catch (error) {
+      throw new Error(error.message)
     }
   },
   async addUserAccess(

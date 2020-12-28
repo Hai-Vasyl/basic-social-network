@@ -39,11 +39,6 @@ export interface IUserLink {
   ava: string
 }
 
-// export interface ISearched {
-//   users: IUserLink
-//   chats: IChatLink
-// }
-
 export interface IUserSearch {
   id: string
   username: string
@@ -79,4 +74,12 @@ export interface IChatCard {
   title: string
   type: string
   image: string
+}
+
+export interface IField {
+  param: string
+  type: string
+  value?: string
+  title: string
+  msg: string
 }

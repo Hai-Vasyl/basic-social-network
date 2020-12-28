@@ -46,6 +46,12 @@ button {
   }
 }
 
+.plug-text {
+  padding: 10px 0;
+  text-align: center;
+  color: getColor(second-lighter);
+}
+
 .btn-handler {
   display: none;
 }

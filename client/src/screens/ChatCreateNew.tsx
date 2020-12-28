@@ -91,7 +91,7 @@ const ChatCreateNew: React.FC = () => {
     }
   }, [dispatch, createChatData.data, createChatData.error])
 
-  const handleChageFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChageField = (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prevForm) =>
       prevForm.map((field) => {
         if (event.target.name === field.param) {
@@ -166,7 +166,7 @@ const ChatCreateNew: React.FC = () => {
               key={field.param}
               isImportant={field.param === "title"}
               field={{ ...field }}
-              change={handleChageFile}
+              change={handleChageField}
               transparent
             />
           )

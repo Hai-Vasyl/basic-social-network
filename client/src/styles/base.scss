@@ -12,7 +12,8 @@ $colors: (
   accent-gradient: #8a41ac,
   title-simple: rgb(199, 199, 199),
   danger: rgb(247, 120, 120),
-  bg: #2b2b3992,
+  bg: rgba(43, 43, 57, 0.573),
+  bg-light: hsla(240, 14%, 25%, 0.51),
 );
 $shadows: (
   main: (
@@ -61,6 +62,7 @@ $paddings: (
 );
 $transitions: (
   main: 0.3s ease,
+  spin: 1s linear infinite,
 );
 $gradients: (
   main:

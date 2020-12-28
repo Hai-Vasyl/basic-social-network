@@ -51,6 +51,39 @@ export const CREATE_CHAT = gql`
   }
 `
 
+export const EDIT_CHAT = gql`
+  mutation EDIT_CHAT(
+    $title: String!
+    $description: String
+    $image: Upload
+    $type: String!
+  ) {
+    editChat(
+      title: $title
+      description: $description
+      image: $image
+      type: $type
+    ) {
+      id
+      title
+      channel
+      description
+      date
+      image
+      owner {
+        id
+      }
+      owners {
+        id
+        username
+        ava
+        email
+      }
+      type
+    }
+  }
+`
+
 export const CREATE_NOTIFICATION = gql`
   mutation CREATE_NOTIFICATION(
     $title: String!

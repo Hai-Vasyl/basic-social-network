@@ -43,6 +43,8 @@
   &__main {
   }
   &__title {
+    @extend %flex-center;
+    justify-content: space-between;
     text-decoration: none;
     color: getColor(font);
     font-size: 1.5em;
@@ -134,4 +136,8 @@
     color: getColor(title-simple);
     margin-bottom: 0px;
   }
+}
+
+.btn_setting_close {
+  margin-bottom: 10px;
 }

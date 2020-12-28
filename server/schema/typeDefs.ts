@@ -89,6 +89,12 @@ export default gql`
       type: String!
     ): [Chat]!
     createMessage(content: String!, chat: ID!): Message!
+    editChat(
+      title: String!
+      description: String
+      image: Upload
+      type: String!
+    ): Chat!
     createNotification(
       title: String!
       description: String

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux"
 import { RootStore } from "../redux/store"
 import UserInfo from "../components/UserInfo"
 import ChatInfoComponent from "../components/ChatInfo"
+import Loader from "../components/Loader"
 
 interface IChatInfoProps {
   connect?: string
@@ -38,12 +39,11 @@ const ChatInfo: React.FC<IChatInfoProps> = ({ connect }) => {
     },
   })
 
-  if (loading) {
-    return <div>LOADING ...</div>
-  }
   return (
     <div className={styles.chatWrapper}>
-      {connect === "user" || isIndividualChat ? (
+      {loading ? (
+        <Loader />
+      ) : connect === "user" || isIndividualChat ? (
         <UserInfo
           isConnect={!!connect?.length}
           {...data.getChatUserInfo.user}

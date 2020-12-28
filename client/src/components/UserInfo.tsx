@@ -23,6 +23,7 @@ import keyWords from "../modules/keyWords"
 import { IChat } from "../redux/chats/chatsTypes"
 import { GET_USER_CHATS_ONLY } from "../fetching/queries"
 import ChatCard from "./ChatCard"
+import Loader from "./Loader"
 
 interface IUserInfoProps {
   ava: string
@@ -52,10 +53,13 @@ const UserInfo: React.FC<IUserInfoProps> = (info) => {
   const [chatsUser, setChatsUser] = useState<IUserChat[]>([])
   const [addAccess, addAData] = useMutation(ADD_USER_ACCESS)
   const [removeAccess, removeAData] = useMutation(REMOVE_USER_ACCESS)
-  const { data: userChats, loading } = useQuery(GET_USER_CHATS_ONLY, {
-    variables: { userId: info.id },
-    fetchPolicy: "no-cache",
-  })
+  const { data: userChats, loading: loadUserChats } = useQuery(
+    GET_USER_CHATS_ONLY,
+    {
+      variables: { userId: info.id },
+      fetchPolicy: "no-cache",
+    }
+  )
   const [addUserAccess] = useMutation(ADD_USER_ACCESS, {
     onCompleted({ addUserAccess: chats }) {
       setChatsUser(chats)
@@ -201,32 +205,36 @@ const UserInfo: React.FC<IUserInfoProps> = (info) => {
         />
       </div>
 
-      <div className={styles.access_block}>
-        <div className={styles.access_block__section}>
-          <div className={styles.access_block__title}>
-            Give access to your chats
+      {loadUserChats ? (
+        <Loader />
+      ) : (
+        <div className={styles.access_block}>
+          <div className={styles.access_block__section}>
+            <div className={styles.access_block__title}>
+              Give access to your chats
+            </div>
+            {chats.map((chat) => {
+              if (
+                chat.type === "individual" ||
+                (chat.owner && chat.owner.id !== user.id)
+              ) {
+                return
+              }
+              const isUserConnected = checkIsUserConnectChat(chat.id)
+              return (
+                <ChatCard
+                  key={chat.id}
+                  isCheck
+                  isChecked={isUserConnected}
+                  onConnect={() => toggleConect(isUserConnected, chat.id)}
+                  chat={chat}
+                  isEnvChat
+                />
+              )
+            })}
           </div>
-          {chats.map((chat) => {
-            if (
-              chat.type === "individual" ||
-              (chat.owner && chat.owner.id !== user.id)
-            ) {
-              return
-            }
-            const isUserConnected = checkIsUserConnectChat(chat.id)
-            return (
-              <ChatCard
-                key={chat.id}
-                isCheck
-                isChecked={isUserConnected}
-                onConnect={() => toggleConect(isUserConnected, chat.id)}
-                chat={chat}
-                isEnvChat
-              />
-            )
-          })}
         </div>
-      </div>
+      )}
     </>
   )
 }
