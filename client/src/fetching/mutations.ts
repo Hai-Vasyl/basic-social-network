@@ -201,3 +201,9 @@ export const REMOVE_USER_ACCESS = gql`
     }
   }
 `
+
+export const SET_MESSAGE_TO_UNREAD = gql`
+  mutation SET_MESSAGE_TO_UNREAD($messageId: ID!) {
+    setUnreadMessage(messageId: $messageId)
+  }
+`

@@ -19,6 +19,18 @@ const getInitParams = (filename: string, createReadStream: any) => {
   }
 }
 
+const deleteFile = async (fileKey: string) => {
+  if (fileKey) {
+    // @ts-ignore
+    await s3
+      .deleteObject({
+        Key: fileKey,
+        Bucket: AWS_CHAT_USER_BUCKET,
+      })
+      .promise()
+  }
+}
+
 export const uploadUserChatBucket = async (file: any) => {
   try {
     const { createReadStream, filename } = await file
@@ -35,15 +47,7 @@ export const updateUserChatBucket = async (file: any, fileKey: string) => {
   try {
     const { createReadStream, filename } = await file
 
-    if (fileKey) {
-      // @ts-ignore
-      await s3
-        .deleteObject({
-          Key: fileKey,
-          Bucket: AWS_CHAT_USER_BUCKET,
-        })
-        .promise()
-    }
+    deleteFile(fileKey)
 
     const params: any = getInitParams(filename, createReadStream)
 
@@ -51,5 +55,13 @@ export const updateUserChatBucket = async (file: any, fileKey: string) => {
     return uploaded
   } catch (error) {
     throw new Error(`Updating file in aws bucket error: ${error.message}`)
+  }
+}
+
+export const deleteUserChatBucket = async (fileKey: string) => {
+  try {
+    deleteFile(fileKey)
+  } catch (error) {
+    throw new Error(`Deleting file in aws bucket error: ${error.message}`)
   }
 }

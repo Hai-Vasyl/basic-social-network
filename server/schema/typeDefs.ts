@@ -35,6 +35,11 @@ export default gql`
     owner: User!
     chat: Chat!
   }
+  # type UnreadMessage {
+  #   id: ID!
+  #   userId: User!
+  #   messageId: Message!
+  # }
   type UserChat {
     id: ID!
     userId: User!
@@ -80,6 +85,7 @@ export default gql`
     getChatUserInfo(isChat: Boolean!, id: ID!): ChatUserInfo
     getNotifications: [Notification]!
     getChatUsers(chatId: ID!): [User]!
+    getUnreadMessages: [Message]!
   }
   type Mutation {
     createChat(
@@ -108,6 +114,7 @@ export default gql`
     checkNotification(notifId: ID!): Notification!
     addUserAccess(chatId: ID, userId: ID!): [Chat]!
     removeUserAccess(chatId: ID!, userId: ID): [Chat]!
+    setUnreadMessage(messageId: ID!): String!
   }
   type Subscription {
     newMessage(channels: [String]!): Message!

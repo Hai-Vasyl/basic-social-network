@@ -10,6 +10,7 @@ export const NEW_MESSAGE = gql`
         id
         username
         ava
+        typeUser
       }
       chat {
         id

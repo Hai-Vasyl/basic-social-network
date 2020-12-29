@@ -3,9 +3,9 @@ import { IUser, IIsAuth, IField, IChat } from "../interfaces"
 import {
   uploadUserChatBucket,
   updateUserChatBucket,
+  deleteUserChatBucket,
 } from "../helpers/crudUserChatBucket"
 import { v4 as uuidv4 } from "uuid"
-import { isEmpty, isUnique, isLength } from "../validation/snippets"
 import { createEditValid } from "../validation/chats"
 
 interface IAllAnyFields {
@@ -399,9 +399,9 @@ export const Mutation = {
       if (chat.type === "privet" || chat.type === "public") {
         if (isAuth.userId === userId) {
           if (String(chat.owner) === isAuth.userId) {
-            //delete all related Data
             await Message.deleteMany({ chat: chatId })
             await UserChat.deleteMany({ chatId })
+            await deleteUserChatBucket(chat.imageKey)
             await Chat.findByIdAndDelete(chatId)
           } else {
             // Delete yourself from chat (UserChat model)

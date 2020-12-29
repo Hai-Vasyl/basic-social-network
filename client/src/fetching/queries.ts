@@ -134,6 +134,25 @@ export const GET_CHAT_MESSAGES = gql`
     }
   }
 `
+
+export const GET_UNREAD_MESSAGES = gql`
+  query GET_UNREAD_MESSAGES {
+    getUnreadMessages {
+      id
+      content
+      date
+      owner {
+        id
+        username
+        ava
+      }
+      chat {
+        id
+      }
+    }
+  }
+`
+
 export const SEARCH_CHATS = gql`
   query SEARCH_CHATS($searchStr: String!) {
     searchChats(searchStr: $searchStr) {

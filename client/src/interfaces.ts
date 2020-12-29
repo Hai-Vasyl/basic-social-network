@@ -83,3 +83,35 @@ export interface IField {
   title: string
   msg: string
 }
+
+export interface IMessage {
+  id: string
+  content: string
+  date: string
+  owner: {
+    id: string
+    username: string
+    ava: string
+  }
+  chat: {
+    id: string
+  }
+}
+
+export interface IMessageToast {
+  id: string
+  content: string
+  date: string
+  owner: {
+    id: string
+    username: string
+    ava: string
+    typeUser: string
+  }
+  chat: {
+    id: string
+    title: string
+    type: string
+    image: string
+  }
+}

@@ -13,27 +13,39 @@ import {
 // @ts-ignore
 import styles from "../styles/navbar.module"
 import { useQuery } from "@apollo/client"
-import { GET_USER_NOTIFICATIONS } from "../fetching/queries"
+import {
+  GET_USER_NOTIFICATIONS,
+  GET_UNREAD_MESSAGES,
+} from "../fetching/queries"
 import { SET_NOTIFICATIONS } from "../redux/notifications/notifTypes"
 import { CHAT_TOGGLE, NOTIFICATIONS_TOGGLE } from "../redux/toggle/toggleTypes"
+import { SET_UNREAD_MESSAGES } from "../redux/unreadMsgs/msgsTypes"
 
 const Navbar: React.FC = () => {
   const {
     auth: { user, token },
     toggle: { dropDown, authForm, chat, notifications: notifToggle },
     notifications: { notifications },
+    unreadMsgs: { messages },
   } = useSelector((state: RootStore) => state)
   const dispatch = useDispatch()
-  const { data, loading, error } = useQuery(GET_USER_NOTIFICATIONS)
+  const { data: dataNotifications } = useQuery(GET_USER_NOTIFICATIONS)
+  const { data: dataMessages } = useQuery(GET_UNREAD_MESSAGES)
 
   useEffect(() => {
-    const notifData = data && data.getNotifications
+    const notifData = dataNotifications && dataNotifications.getNotifications
     if (notifData) {
       dispatch({ type: SET_NOTIFICATIONS, payload: notifData })
     }
-  }, [dispatch, data])
+  }, [dispatch, dataNotifications])
 
-  console.log("NOTIFICATIONS", data)
+  useEffect(() => {
+    const messages = dataMessages && dataMessages.getUnreadMessages
+    if (messages) {
+      dispatch({ type: SET_UNREAD_MESSAGES, payload: messages })
+    }
+  }, [dispatch, dataMessages])
+
   const handleDropDown = () => {
     dispatch({ type: DROPDOWN_TOGGLE })
   }
@@ -82,6 +94,13 @@ const Navbar: React.FC = () => {
                     }`}
                     onClick={() => dispatch({ type: CHAT_TOGGLE })}
                   >
+                    <span
+                      className={`${styles.link__counter} ${
+                        countUnreadNotif && styles.link__counter__appear
+                      }`}
+                    >
+                      {messages.length > 25 ? "25+" : messages.length}
+                    </span>
                     <BsChatDots />
                   </button>
                   <button

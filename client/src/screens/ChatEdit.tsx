@@ -14,16 +14,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { RootStore } from "../redux/store"
 import { SET_ACTIVE_CHAT } from "../redux/chatActive/chatActiveTypes"
 import { IOwner, IAuthErrors } from "../interfaces"
-import {
-  BsLock,
-  BsPeople,
-  BsUpload,
-  BsCheck,
-  BsPencilSquare,
-  BsArrowLeft,
-} from "react-icons/bs"
+import { BsExclamationTriangle, BsX } from "react-icons/bs"
 import { GET_CHAT_INFO, GET_CHAT_USERS } from "../fetching/queries"
-import { EDIT_CHAT } from "../fetching/mutations"
+import { EDIT_CHAT, REMOVE_USER_ACCESS } from "../fetching/mutations"
 import { convertDate } from "../helpers/convertDate"
 import UserCard from "../components/UserCard"
 import Loader from "../components/Loader"
@@ -38,6 +31,7 @@ const ChatEdit: React.FC = () => {
   const {
     chats,
     currentChat: { route },
+    auth: { user },
   } = useSelector((state: RootStore) => state)
   const dispatch = useDispatch()
   const { data: chatUsers, loading: loadChatUsers } = useQuery(GET_CHAT_USERS, {
@@ -79,7 +73,9 @@ const ChatEdit: React.FC = () => {
   ]
   const [chatImage, setChatImage] = useState<any>(null)
   const [editChat, editChatData] = useMutation(EDIT_CHAT)
+  const [removeUserAccess, removeAccessData] = useMutation(REMOVE_USER_ACCESS)
   const [flipSettings, setFlipSettings] = useState(false)
+  const [flipDelete, setFlipDelete] = useState(false)
 
   const resetForm = useCallback(() => {
     const chatDataFromInfo = chatInfo && chatInfo.getChatUserInfo.chat
@@ -106,33 +102,20 @@ const ChatEdit: React.FC = () => {
   }, [chatInfo, editChatData.data])
 
   useEffect(() => {
-    // const chatDataFromInfo = chatInfo && chatInfo.getChatUserInfo.chat
-    // const chatDataFromUpdate = editChatData.data && editChatData.data.editChat
-    // if (chatDataFromUpdate || chatDataFromInfo) {
-    //   setForm((prevForm) =>
-    //     prevForm.map((field) => {
-    //       let fieldInfo = field
-    //       Object.keys(chatDataFromUpdate || chatDataFromInfo).forEach(
-    //         (info) => {
-    //           if (info === field.param && info !== "image") {
-    //             if (chatDataFromUpdate) {
-    //               fieldInfo = { ...fieldInfo, value: chatDataFromUpdate[info] }
-    //             } else {
-    //               fieldInfo = { ...fieldInfo, value: chatDataFromInfo[info] }
-    //             }
-    //           }
-    //         }
-    //       )
-    //       return fieldInfo
-    //     })
-    //   )
-    // }
+    const removeAData =
+      removeAccessData.data && removeAccessData.data.removeUserAccess
+    if (removeAData) {
+      dispatch({ type: SET_CHATS, payload: removeAData })
+      dispatch({ type: SET_ACTIVE_CHAT, payload: { keyWord: "", chatId: "" } })
+    }
+  }, [dispatch, removeAccessData.data])
+
+  useEffect(() => {
     resetForm()
   }, [resetForm])
 
   useEffect(() => {
     if (editChatData.error) {
-      console.log("Error: ", editChatData.error)
       const errors: IAuthErrors = JSON.parse(
         (editChatData.error && editChatData.error.message) || "{}"
       )
@@ -153,7 +136,6 @@ const ChatEdit: React.FC = () => {
       )
     } else if (editChatData.data) {
       const newChat = editChatData.data && editChatData.data.editChat
-      console.log("New modified Chat: ", newChat)
       dispatch({
         type: SET_CHATS,
         payload: [...chats].map((chat) => {
@@ -187,19 +169,21 @@ const ChatEdit: React.FC = () => {
   }
 
   const handleSubmitForm = async () => {
-    try {
-      const [title, description, _, type] = form
+    const [title, description, _, type] = form
 
-      editChat({
-        variables: {
-          title: title.value,
-          description: description.value,
-          image: chatImage,
-          type: type.value,
-          id: route.chatId,
-        },
-      })
-    } catch (error) {}
+    editChat({
+      variables: {
+        title: title.value,
+        description: description.value,
+        image: chatImage,
+        type: type.value,
+        id: route.chatId,
+      },
+    })
+  }
+
+  const handleDeleteChat = () => {
+    removeUserAccess({ variables: { userId: user.id, chatId: route.chatId } })
   }
 
   const handlePickOption = (value: string) => {
@@ -244,7 +228,9 @@ const ChatEdit: React.FC = () => {
       ) : (
         <>
           <div className='form-wrapper'>
-            <LoaderData load={editChatData.loading} />
+            <LoaderData
+              load={editChatData.loading || removeAccessData.loading}
+            />
             <ChatModForm
               toggleFlipSettings={toggleFlipSettings}
               handleChangeFieldFile={handleChangeFieldFile}
@@ -258,17 +244,32 @@ const ChatEdit: React.FC = () => {
               <Button
                 exClass={stylesBtn.btn_primary}
                 click={handleSubmitForm}
-                // click={() => {}}
                 title='Apply editing'
                 Icon={AiOutlineEdit}
               />
-              <Button
-                exClass={stylesBtn.btn_simple}
-                // click={handleSubmitForm}
-                click={() => {}}
-                title='Delete chat'
-                Icon={RiChatDeleteLine}
-              />
+              {flipDelete ? (
+                <>
+                  <Button
+                    exClass={stylesBtn.btn_simple}
+                    click={() => setFlipDelete(false)}
+                    title='Cancel all'
+                    Icon={BsX}
+                  />
+                  <Button
+                    exClass={stylesBtn.btn_simple}
+                    click={handleDeleteChat}
+                    title='Delete forever'
+                    Icon={BsExclamationTriangle}
+                  />
+                </>
+              ) : (
+                <Button
+                  exClass={stylesBtn.btn_simple}
+                  click={() => setFlipDelete(true)}
+                  title='Delete chat'
+                  Icon={RiChatDeleteLine}
+                />
+              )}
             </div>
           </div>
           {loadChatUsers ? (

@@ -73,3 +73,11 @@ export interface IChat {
   owners?: IUser[]
   type: string
 }
+
+export interface IMessage {
+  id: string
+  content: string
+  date: string
+  owner: string
+  chat: string
+}
