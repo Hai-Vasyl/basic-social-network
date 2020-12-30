@@ -63,6 +63,7 @@ $paddings: (
 $transitions: (
   main: 0.3s ease,
   spin: 1s linear infinite,
+  second: 0.6s ease,
 );
 $gradients: (
   main:
@@ -103,7 +104,7 @@ $gradients: (
 }
 %popup-fade-out {
   // @extend %center-position;
-  position: absolute;
+  position: fixed;
   top: calc(50% + 21px);
   left: 50%;
   box-shadow: getShadow(main);

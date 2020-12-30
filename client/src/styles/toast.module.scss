@@ -1,0 +1,125 @@
+@import "base";
+
+.wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 400px;
+  max-width: 100%;
+  z-index: 15;
+}
+
+@keyframes drag-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.toast {
+  display: flex;
+  background-color: getColor(secondary);
+  cursor: default;
+  margin-bottom: 10px;
+  box-shadow: getShadow(main);
+  animation: drag-in getTransition(second);
+  &:last-child {
+    margin-bottom: 0;
+  }
+  &__preview_image {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    position: relative;
+    padding: 5px;
+    border: 1px solid getColor(second-light);
+    margin: 10px;
+  }
+  &__image {
+    @extend %image;
+    border-radius: 50%;
+  }
+  &__icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    background-color: getColor(secondary);
+    border-radius: 50%;
+    border: 1px solid getColor(second-light);
+    & > * {
+      margin: auto;
+      font-size: 14px;
+    }
+  }
+  &__info {
+    flex: 1;
+  }
+  &__header {
+    @extend %flex-center;
+    justify-content: space-between;
+    padding: 10px 0;
+    padding-bottom: 5px;
+    padding-right: 10px;
+  }
+  &__title {
+    color: getColor(title-simple);
+  }
+  &__btn_close {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    background-color: transparent;
+    border: 1px solid getColor(second-lighter);
+    border-radius: getRadius(main);
+    & > * {
+      margin: auto;
+      font-size: 13px;
+    }
+  }
+  &__body {
+    padding-right: 10px;
+    padding-bottom: 5px;
+    height: 25px;
+    overflow: hidden;
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      z-index: 5;
+      background-image: linear-gradient(
+        to right,
+        transparent,
+        transparent,
+        transparent,
+        transparent,
+        getColor(secondary),
+        getColor(secondary)
+      );
+    }
+  }
+  &__member {
+    font-size: 0.9em;
+    color: getColor(accent);
+    margin-right: 5px;
+  }
+  &__content {
+    font-size: 0.9em;
+  }
+  &__footer {
+    border-top: 1px solid getColor(second-light);
+  }
+  &__date {
+    font-size: 0.75em;
+    color: getColor(title-simple);
+  }
+}

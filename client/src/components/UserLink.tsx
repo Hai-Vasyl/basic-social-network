@@ -2,7 +2,6 @@ import React from "react"
 import { useDispatch } from "react-redux"
 import { SET_ACTIVE_CHAT } from "../redux/chatActive/chatActiveTypes"
 import { IUserLink } from "../interfaces"
-import { BsPerson } from "react-icons/bs"
 // @ts-ignore
 import styles from "../styles/chat.module"
 
@@ -30,10 +29,14 @@ const UserLink: React.FC<IUserLinkProps> = ({ user, userId, keyWord }) => {
     >
       <div className={styles.chat_link__img_container}>
         <img className={styles.chat_link__img} src={user.ava} alt='chatImage' />
-        <BsPerson className={styles.chat_link__type} />
       </div>
-      <div className={styles.chat_link__title_container}>
-        <span className={styles.chat_link__title}>{user.username}</span>
+      <div className={styles.chat_link__info}>
+        <div className={styles.chat_link__title_container}>
+          <div className={styles.chat_link__title_content}>
+            <span className={styles.chat_link__title}>{user.username}</span>
+            <span className={styles.chat_link__last_msg}>{user.email}</span>
+          </div>
+        </div>
       </div>
     </button>
   )

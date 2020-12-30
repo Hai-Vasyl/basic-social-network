@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
                   >
                     <span
                       className={`${styles.link__counter} ${
-                        countUnreadNotif && styles.link__counter__appear
+                        messages.length && styles.link__counter__appear
                       }`}
                     >
                       {messages.length > 25 ? "25+" : messages.length}

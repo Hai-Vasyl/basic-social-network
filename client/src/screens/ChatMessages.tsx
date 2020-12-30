@@ -40,7 +40,7 @@ const ChatMessages: React.FC = () => {
       >
         Search messages
       </div>
-      <MsgContainer />
+      <MsgContainer message={message} />
       <div className={styles.create_msg}>
         <button
           className={`${styles.create_msg__btn} ${styles.create_msg__clip_file}`}

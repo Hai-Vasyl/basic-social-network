@@ -4,9 +4,10 @@ import { SET_AUTH } from "./redux/auth/authTypes"
 import { useDispatch, useSelector } from "react-redux"
 import Navbar from "./components/Navbar"
 import Routes from "./components/Routes"
-import { useQuery, useSubscription } from "@apollo/client"
+import { useQuery, useSubscription, useMutation } from "@apollo/client"
 import { GET_USER_CHATS } from "./fetching/queries"
 import { NEW_MESSAGE, NEW_NOTIFICATION } from "./fetching/subscriptions"
+import { SET_MESSAGE_TO_UNREAD } from "./fetching/mutations"
 import { SET_CHATS, IChat } from "./redux/chats/chatsTypes"
 import {
   SET_ACTIVE_CHAT,
@@ -22,6 +23,13 @@ import {
 import Chat from "./components/Chat"
 import Notifications from "./components/Notifications"
 import { SET_NOTIFICATION } from "./redux/notifications/notifTypes"
+import { SET_UNREAD_MESSAGE } from "./redux/unreadMsgs/msgsTypes"
+import { IMessageToast } from "./interfaces"
+import { RiUserSettingsLine } from "react-icons/ri"
+import { BsPeople, BsLock } from "react-icons/bs"
+import Toast from "./components/Toast"
+// @ts-ignore
+import stylesToast from "./styles/toast.module"
 
 const App: React.FC = () => {
   const [initLoad, setInitLoad] = useState(true)
@@ -31,6 +39,7 @@ const App: React.FC = () => {
     searchChat: { searchStr },
     auth: { user },
     queueChats: { chats: queueChats },
+    toggle: { chat },
   } = useSelector((state: RootStore) => state)
   const { data, loading: chatsLoading } = useQuery(GET_USER_CHATS, {
     pollInterval: 60000,
@@ -41,6 +50,49 @@ const App: React.FC = () => {
   const { data: newNotification } = useSubscription(NEW_NOTIFICATION, {
     variables: { channels: [user.id] },
   })
+  const [messageToasts, setMessageToasts] = useState<IMessageToast[]>([
+    // {
+    //   id: "1",
+    //   content: "Some new messge from some user!",
+    //   date: new Date(),
+    //   owner: {
+    //     id: "1",
+    //     username: "User_One",
+    //     ava:
+    //       "https://www.pngkey.com/png/detail/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png",
+    //     typeUser: "admin",
+    //   },
+    //   chat: {
+    //     id: "1",
+    //     title: "Some_chat",
+    //     type: "individual",
+    //     image:
+    //       "https://www.pinclipart.com/picdir/big/559-5594866_necktie-drawing-vector-round-avatar-user-icon-png.png",
+    //   },
+    // },
+    // {
+    //   id: "2",
+    //   content: "Some new messge from some user!",
+    //   date: new Date(),
+    //   owner: {
+    //     id: "2",
+    //     username: "User_One",
+    //     ava:
+    //       "https://www.pngkey.com/png/detail/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png",
+    //     typeUser: "admin",
+    //   },
+    //   chat: {
+    //     id: "2",
+    //     title: "Some_chat",
+    //     type: "privet",
+    //     image:
+    //       "https://www.pinclipart.com/picdir/big/559-5594866_necktie-drawing-vector-round-avatar-user-icon-png.png",
+    //   },
+    // },
+  ])
+  const [setUnreadMessage, unreadMessageData] = useMutation(
+    SET_MESSAGE_TO_UNREAD
+  )
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -114,15 +166,49 @@ const App: React.FC = () => {
   }, [route, chatsLoading])
 
   useEffect(() => {
-    if (
-      newMsgData &&
-      newMsgData.newMessage &&
-      route.chatId === newMsgData.newMessage.chat.id
-    ) {
-      dispatch({ type: ADD_MESSAGE_CHAT, payload: newMsgData.newMessage })
+    const interval = setInterval(() => {
+      if (messageToasts.length) {
+        setMessageToasts((prevToasts) =>
+          prevToasts.filter((toast) => toast.id !== prevToasts[0].id)
+        )
+      }
+    }, 10000)
+    return () => {
+      clearInterval(interval)
     }
+  }, [messageToasts])
+
+  useEffect(() => {
+    const newMsg = newMsgData && newMsgData.newMessage
+
+    if (newMsg) {
+      if (newMsg.chat.id === route.chatId) {
+        dispatch({ type: ADD_MESSAGE_CHAT, payload: newMsgData.newMessage })
+      }
+
+      if (newMsg.owner.id !== user.id) {
+        if (chat && newMsg.chat.id !== route.chatId) {
+          setMessageToasts((prevToasts) => [...prevToasts, newMsg])
+          dispatch({ type: SET_UNREAD_MESSAGE, payload: newMsg })
+          setUnreadMessage({ variables: { messageId: newMsg.id } })
+        } else if (!chat) {
+          setMessageToasts((prevToasts) => [...prevToasts, newMsg])
+          dispatch({ type: SET_UNREAD_MESSAGE, payload: newMsg })
+          setUnreadMessage({ variables: { messageId: newMsg.id } })
+        }
+      }
+    }
+
+    // if (
+    //   newMsgData &&
+    //   newMsgData.newMessage &&
+    //   route.chatId === newMsgData.newMessage.chat.id
+    // ) {
+    //   dispatch({ type: ADD_MESSAGE_CHAT, payload: newMsgData.newMessage })
+    // }
   }, [dispatch, newMsgData])
 
+  console.log("UNREAD__MESSAGE: ", { unreadMessageData })
   if (initLoad) {
     return <div>LOADING ...</div>
   }
@@ -134,6 +220,40 @@ const App: React.FC = () => {
       <Auth />
       <Chat />
       <Notifications />
+      <div className={stylesToast.wrapper}>
+        {messageToasts.map((toast) => {
+          return (
+            <Toast
+              key={toast.id}
+              click={() => {}}
+              Icon={
+                toast.chat.type === "individual"
+                  ? toast.owner.typeUser === "admin"
+                    ? RiUserSettingsLine
+                    : RiUserSettingsLine
+                  : toast.chat.type === "public"
+                  ? BsPeople
+                  : BsLock
+              }
+              image={
+                toast.chat.type === "individual"
+                  ? toast.owner.ava
+                  : toast.chat.image
+              }
+              title={
+                toast.chat.type === "individual"
+                  ? toast.owner.username
+                  : toast.chat.title
+              }
+              member={
+                toast.chat.type !== "individual" ? toast.owner.username : ""
+              }
+              content={toast.content}
+              date={toast.date}
+            />
+          )
+        })}
+      </div>
     </div>
   )
 }
