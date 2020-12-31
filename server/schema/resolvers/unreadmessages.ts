@@ -25,7 +25,7 @@ export const Query = {
 }
 
 export const Mutation = {
-  async setUnreadMessage(
+  async setMessageRead(
     _: any,
     { messageId }: IField,
     { isAuth }: { isAuth: IIsAuth }
@@ -36,15 +36,32 @@ export const Mutation = {
       }
       //TODO: validation for each field and check in models
 
-      const message = new UnreadMessage({
-        userId: isAuth.userId,
-        messageId,
-      })
-      await message.save()
+      await UnreadMessage.deleteMany({ messageId, userId: isAuth.userId })
 
-      return "Message set to unread successfully!"
+      return "Message read successfully!"
     } catch (error) {
-      throw new Error(`Setting chat message to unread error: ${error.message}`)
+      throw new Error(`Chat message read error: ${error.message}`)
+    }
+  },
+  async deleteUnreadMessages(
+    _: any,
+    { messages }: IField,
+    { isAuth }: { isAuth: IIsAuth }
+  ) {
+    try {
+      if (!isAuth.auth) {
+        throw new Error("Access denied!")
+      }
+      //TODO: validation for each field and check in models
+
+      await UnreadMessage.deleteMany({
+        messageId: { $in: messages },
+        userId: isAuth.userId,
+      })
+
+      return "Unread messages deleted successfully!"
+    } catch (error) {
+      throw new Error(`Deleting unread chat messages error: ${error.message}`)
     }
   },
 }

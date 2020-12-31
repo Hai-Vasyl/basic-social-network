@@ -16,6 +16,13 @@ export default gql`
     typeUser: String!
     date: String!
   }
+  type Message {
+    id: ID!
+    content: String!
+    date: String!
+    owner: User!
+    chat: Chat!
+  }
   type Chat {
     id: ID!
     title: String!
@@ -27,13 +34,7 @@ export default gql`
     owner: User
     owners: [User]!
     type: String!
-  }
-  type Message {
-    id: ID!
-    content: String!
-    date: String!
-    owner: User!
-    chat: Chat!
+    lastMessage: Message
   }
   # type UnreadMessage {
   #   id: ID!
@@ -110,11 +111,12 @@ export default gql`
       userId: ID
       channel: String!
     ): Notification!
+    deleteUnreadMessages(messages: [ID!]!): String!
     deleteNotification(notifId: ID!): String!
     checkNotification(notifId: ID!): Notification!
     addUserAccess(chatId: ID, userId: ID!): [Chat]!
     removeUserAccess(chatId: ID!, userId: ID): [Chat]!
-    setUnreadMessage(messageId: ID!): String!
+    setMessageRead(messageId: ID!): String!
   }
   type Subscription {
     newMessage(channels: [String]!): Message!

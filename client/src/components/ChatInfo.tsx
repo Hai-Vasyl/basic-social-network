@@ -116,6 +116,11 @@ const ChatInfo: React.FC<IChatInfoProps> = (info) => {
 
   const isNotified =
     queueChats.length && queueChats.find((chatId) => chatId === info.id)
+
+  const members =
+    chatUsers &&
+    info &&
+    chatUsers.getChatUsers.filter((user: IOwner) => user.id !== info.owner.id)
   return (
     <>
       <ChatInfoBasic
@@ -127,7 +132,7 @@ const ChatInfo: React.FC<IChatInfoProps> = (info) => {
       {loadChatUsers ? (
         <Loader />
       ) : (
-        <UserLinks members={chatUsers.getChatUsers} owner={info.owner} />
+        <UserLinks members={members} owner={info.owner} />
       )}
     </>
   )

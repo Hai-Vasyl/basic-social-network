@@ -1,6 +1,7 @@
 import {
   SET_UNREAD_MESSAGES,
   SET_UNREAD_MESSAGE,
+  DELETE_UNREAD_MESSAGES,
   UnreadMsgsReducerTypes,
 } from "./msgsTypes"
 import { IMessage } from "../../interfaces"
@@ -27,6 +28,13 @@ const unreadMsgsReducer = (
       return {
         ...state,
         messages: [...state.messages, action.payload],
+      }
+    case DELETE_UNREAD_MESSAGES:
+      return {
+        ...state,
+        messages: state.messages.filter(
+          (msg) => msg.chat.id !== action.payload
+        ),
       }
     default:
       return state

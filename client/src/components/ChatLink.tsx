@@ -28,27 +28,21 @@ const ChatLink: React.FC<IChatLinkProps> = ({
   const dispatch = useDispatch()
   const {
     unreadMsgs: { messages },
+    auth: { user },
   } = useSelector((state: RootStore) => state)
 
-  const getlastMessageAndCount = () => {
+  const getMessageCount = () => {
     let count = 0
-    let allMessages: IMessage[] = []
     messages.forEach((msg) => {
       if (msg.chat.id === chat.id) {
         count++
-        allMessages.push(msg)
       }
     })
 
-    return {
-      count,
-      lastMsg:
-        allMessages[allMessages.length - 1] &&
-        allMessages[allMessages.length - 1].content,
-    }
+    return count
   }
 
-  const msgParams = getlastMessageAndCount()
+  const msgCount = getMessageCount()
 
   return (
     <button
@@ -85,18 +79,30 @@ const ChatLink: React.FC<IChatLinkProps> = ({
             <span className={styles.chat_link__title}>
               {chatIndividual ? chatOwner?.username : chat.title}
             </span>
-            {msgParams.lastMsg && (
+            {chat.lastMessage && chat.lastMessage.id && (
               <span className={styles.chat_link__last_msg}>
-                {msgParams.lastMsg}
+                {chat.type !== "individual" ? (
+                  <span className={styles.chat_link__msg_username}>
+                    {chat.lastMessage.owner.id === user.id
+                      ? "You"
+                      : chat.lastMessage.owner.username}
+                    :
+                  </span>
+                ) : (
+                  chat.lastMessage.owner.id === user.id && (
+                    <span className={styles.chat_link__msg_username}>You:</span>
+                  )
+                )}
+                {chat.lastMessage.content}
               </span>
             )}
           </div>
           <span
             className={`${styles.chat_link__counter_msg} ${
-              msgParams.count && styles.chat_link__counter_msg__active
+              msgCount && styles.chat_link__counter_msg__active
             }`}
           >
-            <span>{msgParams.count > 25 ? "25+" : msgParams.count}</span>
+            <span>{msgCount > 25 ? "25+" : msgCount}</span>
           </span>
         </div>
       </div>

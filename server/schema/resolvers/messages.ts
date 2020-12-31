@@ -1,4 +1,4 @@
-import { Message, Chat } from "../models"
+import { Message, Chat, UserChat, UnreadMessage } from "../models"
 import { IField, IIsAuth } from "../interfaces"
 
 export const Query = {
@@ -64,6 +64,7 @@ export const Mutation = {
       if (!chat?.id) {
         throw new Error("Chat is not exists!")
       }
+
       const message = new Message({
         content,
         chat: chatId,
@@ -71,6 +72,17 @@ export const Mutation = {
         date: new Date(),
       })
       const newMessage = await message.save()
+      await Chat.updateOne({ _id: chatId }, { lastMessage: newMessage.id })
+
+      const chatUsers: any = await UserChat.find({ chatId })
+
+      for (let i = 0; i < chatUsers.length; i++) {
+        const unreadMsg = new UnreadMessage({
+          userId: chatUsers[i].userId,
+          messageId: newMessage.id,
+        })
+        await unreadMsg.save()
+      }
 
       pubsub.publish(chat.channel, { newMessage })
       return newMessage

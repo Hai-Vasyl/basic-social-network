@@ -19,6 +19,7 @@ const schema = new Schema({
     default: "public",
     enum: ["public", "privet", "individual"],
   },
+  lastMessage: { type: Types.ObjectId, ref: "Message" },
 })
 
 export default model("Chat", schema)

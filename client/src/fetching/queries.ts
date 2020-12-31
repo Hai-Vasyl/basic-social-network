@@ -65,6 +65,19 @@ export const GET_USER_CHATS = gql`
         email
       }
       type
+      lastMessage {
+        id
+        content
+        date
+        owner {
+          id
+          username
+          email
+        }
+        chat {
+          id
+        }
+      }
     }
   }
 `

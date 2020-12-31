@@ -231,12 +231,16 @@
   }
   &__last_msg {
     text-align: left;
-    font-size: 0.9em;
+    font-size: 0.85em;
     color: getColor(title-simple);
-    height: 19px;
+    height: 17px;
     overflow: hidden;
     padding-right: 30px;
     animation: fade-in getTransition(second);
+  }
+  &__msg_username {
+    color: getColor(accent);
+    margin-right: 5px;
   }
   &__counter_msg {
     visibility: hidden;

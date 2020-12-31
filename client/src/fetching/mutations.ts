@@ -45,6 +45,19 @@ export const CREATE_CHAT = gql`
         typeUser
       }
       type
+      lastMessage {
+        id
+        content
+        date
+        owner {
+          id
+          username
+          email
+        }
+        chat {
+          id
+        }
+      }
     }
   }
 `
@@ -78,6 +91,19 @@ export const EDIT_CHAT = gql`
         typeUser
       }
       type
+      lastMessage {
+        id
+        content
+        date
+        owner {
+          id
+          username
+          email
+        }
+        chat {
+          id
+        }
+      }
     }
   }
 `
@@ -175,6 +201,19 @@ export const ADD_USER_ACCESS = gql`
         email
       }
       type
+      lastMessage {
+        id
+        content
+        date
+        owner {
+          id
+          username
+          email
+        }
+        chat {
+          id
+        }
+      }
     }
   }
 `
@@ -198,12 +237,31 @@ export const REMOVE_USER_ACCESS = gql`
         email
       }
       type
+      lastMessage {
+        id
+        content
+        date
+        owner {
+          id
+          username
+          email
+        }
+        chat {
+          id
+        }
+      }
     }
   }
 `
 
-export const SET_MESSAGE_TO_UNREAD = gql`
-  mutation SET_MESSAGE_TO_UNREAD($messageId: ID!) {
-    setUnreadMessage(messageId: $messageId)
+export const SET_MESSAGE_READ = gql`
+  mutation SET_MESSAGE_READ($messageId: ID!) {
+    setMessageRead(messageId: $messageId)
+  }
+`
+
+export const DELETE_UNREAD_MESSAGES = gql`
+  mutation DELETE_UNREAD_MESSAGES($messages: [ID!]!) {
+    deleteUnreadMessages(messages: $messages)
   }
 `

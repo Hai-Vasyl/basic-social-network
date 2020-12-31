@@ -6,37 +6,52 @@ import styles from "../styles/toast.module"
 
 interface IToastProps {
   click(event: React.MouseEvent<HTMLDivElement, MouseEvent>): any
+  close(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): any
   Icon?: any
-  image: string
+  Image: any
   title: string
   member?: string
   content: string
   date: string
+  isNotification?: boolean
 }
 
 const Toast: React.FC<IToastProps> = ({
   click,
   Icon,
-  image,
+  Image,
   title,
   member,
   content,
   date,
+  close,
+  isNotification,
 }) => {
   return (
-    <div onClick={click} className={styles.toast}>
+    <div
+      onClick={click}
+      className={`${styles.toast} ${isNotification && styles.toast__notif}`}
+    >
       <div className={styles.toast__preview_image}>
-        <img src={image} alt='img' className={styles.toast__image} />
-        {Icon && (
-          <div className={styles.toast__icon}>
-            <Icon />
+        {isNotification ? (
+          <div className={styles.toast__image_icon}>
+            <Image />
           </div>
+        ) : (
+          <>
+            <img src={Image} alt='img' className={styles.toast__image} />
+            {Icon && (
+              <div className={styles.toast__icon}>
+                <Icon />
+              </div>
+            )}
+          </>
         )}
       </div>
       <div className={styles.toast__info}>
         <div className={styles.toast__header}>
           <span className={styles.toast__title}>{title}</span>
-          <button className={styles.toast__btn_close}>
+          <button className={styles.toast__btn_close} onClick={close}>
             <BsX />
           </button>
         </div>

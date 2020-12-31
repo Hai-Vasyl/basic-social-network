@@ -1,4 +1,4 @@
-import { User } from "../models"
+import { User, Message } from "../models"
 
 export const Chat = {
   async owner({ owner }: { owner: string }) {
@@ -25,6 +25,14 @@ export const Chat = {
       }
     } catch (error) {
       throw new Error(`Getting chat owners error: ${error.message}`)
+    }
+  },
+  async lastMessage({ lastMessage }: { lastMessage: string }) {
+    try {
+      const message = await Message.findById(lastMessage)
+      return message
+    } catch (error) {
+      throw new Error(`Getting last message of chat error: ${error.message}`)
     }
   },
 }
