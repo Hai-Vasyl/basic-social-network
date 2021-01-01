@@ -319,6 +319,11 @@ const App: React.FC = () => {
     }
   }
 
+  // TODO: dummy f()
+  const dummyFunction = () => {
+    console.log("Something imporant!")
+  }
+
   if (initLoad) {
     return <div>LOADING ...</div>
   }
