@@ -16,26 +16,7 @@ import {
   UPDATE_NOTIFICATION,
   DELETE_NOTIFICATION,
 } from "../redux/notifications/notifTypes"
-// id
-//       title
-//       description
-//       channel
-//       active
-//       date
-//       type
-//       userId {
-//         id
-//         username
-//         email
-//         typeUser
-//         ava
-//       }
-//       chatId {
-//         id
-//         title
-//         type
-//         image
-//       }
+import notifTypes from "../modules/notifTypes"
 
 const Notifications: React.FC = () => {
   const dispatch = useDispatch()
@@ -55,32 +36,59 @@ const Notifications: React.FC = () => {
     }
   }, [dispatch, data])
 
+  const getInitVariableConfig = (
+    userId: { username: string; id: string },
+    chatId: { title: string; id: string },
+    type: string
+  ) => {
+    return {
+      title: `Access ${
+        type === notifTypes.accessAllowed.keyWord ? "allowed" : "denied"
+      } for user ${userId.username}`,
+      description: `Access user ${userId.username} to private chat ${
+        chatId.title
+      } was ${
+        type === notifTypes.accessAllowed.keyWord ? "allowed" : "denied"
+      } by chat owner ${user.username}.`,
+      type:
+        type === notifTypes.accessAllowed.keyWord
+          ? notifTypes.accessAllowed.keyWord
+          : notifTypes.accessDenied.keyWord,
+      chatId: chatId.id,
+      userId: user.id,
+      channel: userId.id,
+    }
+  }
+
   const handleAddUserAccess = (notif: INotification) => {
+    const { userId, chatId } = notif
     addUserAccess({
       variables: {
-        userId: notif.userId.id,
-        chatId: notif.chatId.id,
+        userId: userId.id,
+        chatId: chatId.id,
       },
+    })
+
+    createNotification({
+      variables: getInitVariableConfig(
+        userId,
+        chatId,
+        notifTypes.accessAllowed.keyWord
+      ),
     })
     deleteNotification({ variables: { notifId: notif.id } })
     dispatch({ type: DELETE_NOTIFICATION, payload: notif.id })
   }
 
-  const handleDenyAccess = (
-    notif: INotification,
-    notifAccessDenied: boolean
-  ) => {
-    const { userId, chatId } = notif
-    if (!notifAccessDenied) {
+  const handleDenyAccess = (notif: INotification) => {
+    const { userId, chatId, type } = notif
+    if (type === notifTypes.access.keyWord) {
       createNotification({
-        variables: {
-          title: `Access denied for user ${userId.username}`,
-          description: `Access user ${userId.username} to private chat ${chatId.title} was denied by chat owner ${user.id}.`,
-          type: "access-denied",
-          chatId: chatId.id,
-          userId: user.id,
-          channel: userId.id,
-        },
+        variables: getInitVariableConfig(
+          userId,
+          chatId,
+          notifTypes.accessDenied.keyWord
+        ),
       })
     }
 
@@ -95,14 +103,12 @@ const Notifications: React.FC = () => {
       <h3 className='popup-title'>Notidications</h3>
       <div className={styles.notifies}>
         {notifications.map((notif) => {
-          const notifAccessDenied = notif.type === "access-denied"
           return (
             <Notification
               key={notif.id}
-              notifAccessDenied={notifAccessDenied}
               notif={notif}
               giveAccess={() => handleAddUserAccess(notif)}
-              denyAccess={() => handleDenyAccess(notif, notifAccessDenied)}
+              denyAccess={() => handleDenyAccess(notif)}
               clickCheck={() =>
                 checkNotification({
                   variables: {

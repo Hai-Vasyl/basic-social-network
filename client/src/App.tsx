@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import Auth from "./components/Auth"
 import { SET_AUTH } from "./redux/auth/authTypes"
 import { useDispatch, useSelector } from "react-redux"
@@ -28,7 +28,7 @@ import Chat from "./components/Chat"
 import Notifications from "./components/Notifications"
 import { SET_NOTIFICATION } from "./redux/notifications/notifTypes"
 import { SET_UNREAD_MESSAGE } from "./redux/unreadMsgs/msgsTypes"
-import { CHAT_OPEN } from "./redux/toggle/toggleTypes"
+import { CHAT_OPEN, NOTIFICATIONS_TOGGLE } from "./redux/toggle/toggleTypes"
 import { IMessageToast } from "./interfaces"
 import { RiUserSettingsLine } from "react-icons/ri"
 import { BsPeople, BsLock } from "react-icons/bs"
@@ -41,13 +41,14 @@ import notifTypes from "./modules/notifTypes"
 
 const App: React.FC = () => {
   const [initLoad, setInitLoad] = useState(true)
+  const prevMessage = useRef(null)
   const {
     chats,
     currentChat: { route },
     searchChat: { searchStr },
     auth: { user },
     queueChats: { chats: queueChats },
-    toggle: { chat },
+    toggle: { chat, notifications },
   } = useSelector((state: RootStore) => state)
   const { data, loading: chatsLoading } = useQuery(GET_USER_CHATS, {
     pollInterval: 60000,
@@ -196,36 +197,40 @@ const App: React.FC = () => {
     }
   }, [route, chatsLoading])
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (messageToasts.length) {
-  //       setMessageToasts((prevToasts) =>
-  //         prevToasts.filter((toast) => toast.id !== prevToasts[0].id)
-  //       )
-  //     }
-  //   }, 10000)
-  //   return () => {
-  //     clearInterval(interval)
-  //   }
-  // }, [messageToasts])
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (messageToasts.length) {
+        setMessageToasts((prevToasts) =>
+          prevToasts.filter((toast) => toast.id !== prevToasts[0].id)
+        )
+      }
+    }, 10000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [messageToasts])
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (notifToasts.length) {
-  //       setNotifToasts((prevToasts) =>
-  //         prevToasts.filter((toast) => toast.id !== prevToasts[0].id)
-  //       )
-  //     }
-  //   }, 10000)
-  //   return () => {
-  //     clearInterval(interval)
-  //   }
-  // }, [notifToasts])
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (notifToasts.length) {
+        setNotifToasts((prevToasts) =>
+          prevToasts.filter((toast) => toast.id !== prevToasts[0].id)
+        )
+      }
+    }, 10000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [notifToasts])
 
   useEffect(() => {
     const newMsg = newMsgData && newMsgData.newMessage
 
     if (newMsg) {
+      if (prevMessage.current === newMsg.id) {
+        return
+      }
+      prevMessage.current = newMsg.id
       if (newMsg.chat.id === route.chatId) {
         dispatch({ type: ADD_MESSAGE_CHAT, payload: newMsgData.newMessage })
       }
@@ -280,12 +285,27 @@ const App: React.FC = () => {
     setMessageToasts(messageToasts.filter((msg) => msg.id !== messageId))
   }
 
+  const handlePopupNotifications = (notifId: string) => {
+    if (!notifications) {
+      dispatch({ type: NOTIFICATIONS_TOGGLE })
+    }
+    setNotifToasts(notifToasts.filter((notif) => notif.id !== notifId))
+  }
+
   const handleCloseToast = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     messageId: string
   ) => {
     event.stopPropagation()
     setMessageToasts(messageToasts.filter((msg) => msg.id !== messageId))
+  }
+
+  const handleCloseNotifToast = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    notifId: string
+  ) => {
+    event.stopPropagation()
+    setNotifToasts(notifToasts.filter((notif) => notif.id !== notifId))
   }
 
   const getIconToastByType = (type: string) => {
@@ -298,8 +318,6 @@ const App: React.FC = () => {
         return notifTypes.access.icon
     }
   }
-
-  console.log({ notifToasts })
 
   if (initLoad) {
     return <div>LOADING ...</div>
@@ -317,8 +335,8 @@ const App: React.FC = () => {
           return (
             <Toast
               key={toast.id}
-              close={(event) => handleCloseToast(event, toast.id)}
-              click={() => {}}
+              close={(event) => handleCloseNotifToast(event, toast.id)}
+              click={() => handlePopupNotifications(toast.id)}
               isNotification
               Image={getIconToastByType(toast.type)}
               title={toast.title}

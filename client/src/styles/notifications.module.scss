@@ -43,7 +43,7 @@
     @extend %flex-center;
   }
   &__icon {
-    margin-right: 10px;
+    margin-right: 7px;
     border: 1px solid getColor(second-light);
     display: flex;
     width: 30px;
@@ -51,7 +51,7 @@
     border-radius: 50%;
     & > * {
       margin: auto;
-      font-size: 0.8em;
+      font-size: 18px;
     }
   }
   &__title {

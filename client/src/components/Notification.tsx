@@ -1,6 +1,6 @@
 import React from "react"
 import ButtonTab from "./ButtonTab"
-import { BsX, BsLock, BsCheck, BsExclamationCircle } from "react-icons/bs"
+import { BsX, BsCheck } from "react-icons/bs"
 import { convertDate } from "../helpers/convertDate"
 import UserCard from "./UserCard"
 import ChatCard from "./ChatCard"
@@ -11,12 +11,10 @@ import stylesBtn from "../styles/button.module"
 import styles from "../styles/notifications.module"
 import { AiOutlineClose, AiOutlineCheck } from "react-icons/ai"
 import { INotification } from "../redux/notifications/notifTypes"
-import { DELETE_NOTIFICATION } from "../redux/notifications/notifTypes"
-import { useDispatch } from "react-redux"
+import notifTypes from "../modules/notifTypes"
 
 interface INotifProps {
   notif: INotification
-  notifAccessDenied: boolean
   clickCheck(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): any
   giveAccess(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): any
   denyAccess(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): any
@@ -27,9 +25,17 @@ const Notification: React.FC<INotifProps> = ({
   clickCheck,
   giveAccess,
   denyAccess,
-  notifAccessDenied,
 }) => {
-  const dispatch = useDispatch()
+  const getIconByTypeAccess = (type: string) => {
+    switch (type) {
+      case notifTypes.accessAllowed.keyWord:
+        return <notifTypes.accessAllowed.icon />
+      case notifTypes.accessDenied.keyWord:
+        return <notifTypes.accessDenied.icon />
+      default:
+        return <notifTypes.access.icon />
+    }
+  }
 
   return (
     <div className={styles.notify} key={notif.id}>
@@ -39,7 +45,7 @@ const Notification: React.FC<INotifProps> = ({
         </button>
         <div className={styles.notify__title_wrapper}>
           <div className={styles.notify__icon}>
-            {notifAccessDenied ? <BsExclamationCircle /> : <BsLock />}
+            {getIconByTypeAccess(notif.type)}
           </div>
           <div className={styles.notify__title}>{notif.title}</div>
         </div>
@@ -55,7 +61,10 @@ const Notification: React.FC<INotifProps> = ({
         </div>
         <div className={styles.notify__card}>
           <h4 className={styles.notify__card_title}>
-            {notifAccessDenied ? "Chat owner" : "Requester"}:
+            {notif.type === notifTypes.access.keyWord
+              ? "Requester"
+              : "Chat owner"}
+            :
           </h4>
           <UserCard
             isLink={false}
@@ -68,7 +77,7 @@ const Notification: React.FC<INotifProps> = ({
           <h4 className={styles.notify__card_title}>Chat:</h4>
           <ChatCard isEnvChat={false} chat={notif.chatId} lighter />
         </div>
-        {!notifAccessDenied && (
+        {notif.type === notifTypes.access.keyWord && (
           <div className={styles.notify__btns}>
             <Button
               exClass={stylesBtn.btn_primary}

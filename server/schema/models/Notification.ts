@@ -9,7 +9,7 @@ const schema = new Schema({
   type: {
     type: String,
     required: true,
-    enum: ["access", "access-denied"],
+    enum: ["access", "access-denied", "access-allowed"],
     default: "access",
   },
   chatId: { type: Types.ObjectId, ref: "Chat" },
